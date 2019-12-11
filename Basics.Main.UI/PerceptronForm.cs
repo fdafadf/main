@@ -70,7 +70,7 @@ namespace Basics.Main.UI
             Func<double[], double> classifier = input => Line(input[0]) < input[1] ? -1 : 1;
 
             // Random preceptron
-            Perceptron perceptron = new Perceptron(FunctionArgumentsCount);
+            Perceptron perceptron = new Perceptron(FunctionArgumentsCount, -FunctionImageSize, FunctionImageSize);
 
             // Random data to train
             IEnumerable<TestData> testItems = new TestDataFactory(FunctionArgumentsCount, classifier, -FunctionImageSize, FunctionImageSize).Generate(TrainSamplesCount);

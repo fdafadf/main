@@ -10,15 +10,15 @@ namespace Basics.Main.UI
         public double BiasWeight;
         public double Bias = -1;
 
-        public Perceptron(int size)
+        public Perceptron(int size, double min, double max)
         {
             Weights = new double[size];
-            Rand(-100, +100);
+            Rand(min, max);
         }
 
         public void Rand(double min, double max)
         {
-            Weights.Fill(-100, +100);
+            Weights.Fill(min, max);
             BiasWeight = Extensions.Random.NextDouble();
         }
 
