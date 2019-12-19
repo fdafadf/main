@@ -3,3 +3,13 @@
 ################################################################################
 
 /Basics.Main.UI/bin/Debug
+/Basics.Main.UI/obj/Debug
+/Basics.Main.UI/Basics.Main.UI.csproj
+/.vs
+/Basics.Core/obj
+/Basics.Core/bin/Debug
+/Basics.Core/.vs/Basics/v15
+/Basics.Physics.Test.UI/bin/Debug
+/Basics.Physics.Test.UI/obj
+/Basics.Physics.Test.UI.Forms/bin/Debug
+/Basics.Physics.Test.UI.Forms/obj/Debug

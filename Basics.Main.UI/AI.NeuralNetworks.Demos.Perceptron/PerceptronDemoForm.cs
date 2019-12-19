@@ -1,26 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
+﻿using Basics.Main.UI;
+using System;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Basics.Main.UI
+namespace Basics.AI.NeuralNetworks.Demos.Perceptron
 {
-    public partial class PerceptronForm : Form
+    public partial class PerceptronDemoForm : Form
     {
         public const int FunctionArgumentsCount = 2;
         public const int FunctionImageSize = 100;
         public const double TrainAlpha = 0.5;
         public const int TrainSamplesCount = 20;
-        public const int TrainIterations = 1000;
+        public const int MaxTrainIterations = 10000;
 
         Bitmap Bitmap = new Bitmap(FunctionImageSize * 2, FunctionImageSize * 2);
 
-        public PerceptronForm()
+        public PerceptronDemoForm()
         {
             InitializeComponent();
             Generate();
@@ -62,31 +58,48 @@ namespace Basics.Main.UI
 
             // Random line function
             double a = Extensions.Random.NextDouble() * 2 + 0.1;
-            double b = Extensions.Random.NextDouble() * 10;
+            double b = Extensions.Random.NextDouble() * 100;
             Func<double, double> Line = x => a * x + b;
 
             // Classifiers based on line function
-            Func<double, double> activationFunction = input => input < 0 ? -1 : 1;
-            Func<double[], double> classifier = input => Line(input[0]) < input[1] ? -1 : 1;
+            activationFunction = input => input < 0 ? -1 : 1;
+            classifier = input => Line(input[0]) < input[1] ? -1 : 1;
 
             // Random preceptron
-            Perceptron perceptron = new Perceptron(FunctionArgumentsCount, -FunctionImageSize, FunctionImageSize);
+            perceptron = new AI.NeuralNetworks.Perceptron(FunctionArgumentsCount, activationFunction, - 50, 50);
 
             // Random data to train
-            IEnumerable<TestData> testItems = new TestDataFactory(FunctionArgumentsCount, classifier, -FunctionImageSize, FunctionImageSize).Generate(TrainSamplesCount);
+            testItems = new PointsNeuralIOGenerator(FunctionArgumentsCount, classifier, -FunctionImageSize, FunctionImageSize).Generate(TrainSamplesCount).ToArray();
 
             // Train
-            perceptron.Train(testItems, activationFunction, TrainAlpha, TrainIterations);
+            perceptron.Train(testItems, TrainAlpha, MaxTrainIterations);
 
             // Draw perceprtron output
             Bitmap.DrawFunctionOutput((x, y) => perceptron.Output(new double[] { x, y }), PixelToFunctionDomain);
             Bitmap.DrawTestData(testItems, FunctionDomainToPixel);
         }
 
+        AI.NeuralNetworks.Perceptron perceptron;
+        AI.NeuralNetworks.NeuralIO[] testItems;
+        Func<double, double> activationFunction;
+        Func<double[], double> classifier;
+
         private void drawAndTrain_Click(object sender, EventArgs e)
         {
             Generate();
             Refresh();
+        }
+
+        private void PerceptronForm_DoubleClick(object sender, EventArgs e)
+        {
+            int testDataSize = testItems.Count();
+
+            for (int i = 0; i < testDataSize; i++)
+            {
+                double output = activationFunction(perceptron.Output(testItems[i].Input));
+                double outputError = testItems[i].Output - output;
+                Console.WriteLine($"({testItems[i].Input[0]}, {testItems[i].Input[1]}) {outputError}");
+            }
         }
     }
 }

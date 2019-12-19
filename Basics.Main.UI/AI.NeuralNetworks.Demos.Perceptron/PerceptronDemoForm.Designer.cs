@@ -1,6 +1,6 @@
-﻿namespace Basics.Main.UI
+﻿namespace Basics.AI.NeuralNetworks.Demos.Perceptron
 {
-    partial class PerceptronForm
+    partial class PerceptronDemoForm
     {
         /// <summary>
         /// Required designer variable.
@@ -49,6 +49,7 @@
             this.Controls.Add(this.drawAndTrain);
             this.Name = "PerceptronForm";
             this.Text = "Perceptron Demo";
+            this.DoubleClick += new System.EventHandler(this.PerceptronForm_DoubleClick);
             this.ResumeLayout(false);
 
         }

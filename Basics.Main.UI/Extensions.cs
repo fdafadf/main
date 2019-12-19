@@ -1,7 +1,10 @@
-﻿using System;
+﻿using Basics.AI.NeuralNetworks;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
+using System.Windows.Forms;
 
 namespace Basics.Main.UI
 {
@@ -11,7 +14,40 @@ namespace Basics.Main.UI
 
         public static readonly Random Random = new Random();
 
-        public static void Fill(this Random self, double[] values, double min, double max)
+        public static void SetItems(this ComboBox self, IEnumerable<FileInfo> files)
+        {
+            self.Items.Clear();
+
+            foreach (FileInfo trainDataFile in files)
+            {
+                self.Items.Add(trainDataFile);
+            }
+
+            if (self.Items.Count > 0)
+            {
+                self.SelectedIndex = 0;
+            }
+        }
+
+        public static double[] ToNeuralInput(this Games.TicTacToe.GameState self)
+        {
+            double[] result = new double[9];
+            self.ToNeuralInput(result);
+            return result;
+        }
+
+        public static void ToNeuralInput(this Games.TicTacToe.GameState self, double[] input)
+        {
+            for (int y = 0; y < self.BoardSize; y++)
+            {
+                for (int x = 0; x < self.BoardSize; x++)
+                {
+                    input[y * self.BoardSize + x] = self[x, y] == Games.TicTacToe.FieldState.Cross ? 2 : (self[x, y] == Games.TicTacToe.FieldState.Nought ? -2 : 0);
+                }
+            }
+        }
+
+        public static void FillWithRandomValues(this Random self, double[] values, double min, double max)
         {
             for (int i = 0; i < values.Length; i++)
             {
@@ -19,9 +55,9 @@ namespace Basics.Main.UI
             }
         }
 
-        public static double[] Fill(this double[] values, double min, double max)
+        public static double[] FillWithRandomValues(this double[] values, double min, double max)
         {
-            Random.Fill(values, min, max);
+            Random.FillWithRandomValues(values, min, max);
             return values;
         }
 
@@ -47,11 +83,11 @@ namespace Basics.Main.UI
             self.DrawEllipse(pen, (float)x1, (float)y1, (float)x2, (float)y2);
         }
 
-        public static void DrawTestData(this Bitmap self, IEnumerable<TestData> testData, Translation2d translation)
+        public static void DrawTestData(this Bitmap self, IEnumerable<NeuralIO> testData, Translation2d translation)
         {
             using (Graphics graphics = Graphics.FromImage(self))
             {
-                foreach (TestData testItem in testData)
+                foreach (NeuralIO testItem in testData)
                 {
                     translation(testItem.Input[0], testItem.Input[1], out double px, out double py);
                     Pen pen = testItem.Output < 0 ? Pens.Blue : Pens.Red;

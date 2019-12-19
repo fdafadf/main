@@ -1,0 +1,59 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.489
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Basics.Core", "Basics.Core\Basics.Core.csproj", "{B279A1FB-6B76-43F6-A93A-BE11BD2FC04C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Basics.Physics.Test.UI", "Basics.Physics.Test.UI\Basics.Physics.Test.UI.csproj", "{FCF8054E-FD40-43A6-8FF9-E01C51B6D8A1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Basics.Physics.Test.UI.Forms", "Basics.Physics.Test.UI.Forms\Basics.Physics.Test.UI.Forms.csproj", "{6C760C54-6934-48F1-B2A2-C1C2CA595750}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Basics.Main.UI", "Basics.Main.UI\Basics.Main.UI.csproj", "{7BA0BE40-F229-4E68-8F99-799F8D3F7618}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Workspace", "Workspace", "{0610A2D2-F534-4084-870D-C77411C358C8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Perceptron.TicTacToe", "Perceptron.TicTacToe", "{70EEE669-B0B4-4577-A1FF-D47F95353F87}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TrainData", "TrainData", "{3BD7FD87-301A-4CB6-819B-7C9CAFC11603}"
+	ProjectSection(SolutionItems) = preProject
+		Workspace\Perceptron.TicTacToe\TrainData\Default.txt = Workspace\Perceptron.TicTacToe\TrainData\Default.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Networks", "Networks", "{F2A0FDB9-798A-42A6-A3EA-913C17AE5644}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B279A1FB-6B76-43F6-A93A-BE11BD2FC04C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B279A1FB-6B76-43F6-A93A-BE11BD2FC04C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B279A1FB-6B76-43F6-A93A-BE11BD2FC04C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B279A1FB-6B76-43F6-A93A-BE11BD2FC04C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FCF8054E-FD40-43A6-8FF9-E01C51B6D8A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FCF8054E-FD40-43A6-8FF9-E01C51B6D8A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FCF8054E-FD40-43A6-8FF9-E01C51B6D8A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FCF8054E-FD40-43A6-8FF9-E01C51B6D8A1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C760C54-6934-48F1-B2A2-C1C2CA595750}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C760C54-6934-48F1-B2A2-C1C2CA595750}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C760C54-6934-48F1-B2A2-C1C2CA595750}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C760C54-6934-48F1-B2A2-C1C2CA595750}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7BA0BE40-F229-4E68-8F99-799F8D3F7618}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7BA0BE40-F229-4E68-8F99-799F8D3F7618}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7BA0BE40-F229-4E68-8F99-799F8D3F7618}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7BA0BE40-F229-4E68-8F99-799F8D3F7618}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{70EEE669-B0B4-4577-A1FF-D47F95353F87} = {0610A2D2-F534-4084-870D-C77411C358C8}
+		{3BD7FD87-301A-4CB6-819B-7C9CAFC11603} = {70EEE669-B0B4-4577-A1FF-D47F95353F87}
+		{F2A0FDB9-798A-42A6-A3EA-913C17AE5644} = {70EEE669-B0B4-4577-A1FF-D47F95353F87}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F117A375-DD19-4D45-B235-3B83F162D15D}
+	EndGlobalSection
+EndGlobal
