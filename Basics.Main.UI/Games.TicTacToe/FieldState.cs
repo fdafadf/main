@@ -2,8 +2,8 @@
 {
     public enum FieldState : ushort
     {
-        Empty,
-        Nought,
-        Cross
+        Empty = 0,
+        Cross = 1,
+        Nought = 2,
     }
 }

@@ -1,4 +1,5 @@
-﻿using Basics.Main.UI;
+﻿using Basics.Games.TicTacToe;
+using Basics.Main.UI;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,12 +9,19 @@ namespace Basics.AI.NeuralNetworks
 {
     public class Perceptron : INeuron
     {
-        public double[] Weights;
+        public double[] Weights { get; }
         public double BiasWeight;
-        public double Bias = -1;
-        Func<double, double> ActivationFunction;
+        public double Bias = 1;
+        IActivationFunction ActivationFunction;
 
-        public Perceptron(int size, Func<double, double> activationFunction, double min, double max)
+        public Perceptron(double[] weights, double bias, IActivationFunction activationFunction)
+        {
+            Weights = weights;
+            BiasWeight = bias;
+            ActivationFunction = activationFunction;
+        }
+
+        public Perceptron(int size, IActivationFunction activationFunction, double min, double max)
         {
             Weights = new double[size];
             ActivationFunction = activationFunction;
@@ -23,47 +31,69 @@ namespace Basics.AI.NeuralNetworks
         public void Rand(double min, double max)
         {
             Weights.FillWithRandomValues(min, max);
-            BiasWeight = Extensions.Random.NextDouble();
+            BiasWeight = Basics.Main.UI.Extensions.Random.NextDouble();
         }
 
-        public double Output(double[] input)
+        public double Evaluate(double[] input)
+        {
+            double sum = Sum(input);
+            return ActivationFunction.Value(sum);
+        }
+
+        public double Evaluate(double[] input, out double outputDerivative)
+        {
+            double sum = Sum(input);
+            double output = ActivationFunction.Value(sum);
+            outputDerivative = ActivationFunction.DerivativeValue(output);
+            return output;
+        }
+
+        internal void ToNeuralInput(GameState nextGameState, double[] input)
+        {
+            throw new NotImplementedException();
+        }
+
+        public double Sum(double[] input)
         {
             return input.Product(Weights) + Bias * BiasWeight;
         }
 
-        public void Train(IEnumerable<NeuralIO> testData, double alpha, int maxIterations)
+        public void Train(IEnumerable<NeuralIO> testData, double alpha, int maxEpoches)
         {
             NeuralIO[] test = testData.ToArray();
             int testDataSize = test.Count();
-            int performedIterations = 0;
+            int epoch = 0;
             double meanSquaredError = double.MaxValue;
 
-            while (performedIterations++ < maxIterations)
+            while (epoch++ < maxEpoches)
             {
                 double outputErrorSum = 0;
 
                 for (int i = 0; i < testDataSize; i++)
                 {
-                    double targetOutput = ActivationFunction(Output(test[i].Input));
-                    double outputError = test[i].Output - targetOutput;
+                    double outputDerivative;
+                    double output = Evaluate(test[i].Input, out outputDerivative);
+                    double outputError = test[i].Output[0] - output;
+                    //double outputError = targetOutput - test[i].Output;
                     outputErrorSum += outputError * outputError;
 
-                    if (targetOutput != test[i].Output)
+                    if (output != test[i].Output[0])
                     {
                         Bias = Bias + alpha * outputError * BiasWeight / 2;
 
                         for (int w = 0; w < Weights.Length; w++)
                         {
-                            Weights[w] = Weights[w] + alpha * outputError * test[i].Input[w] / 2;
+                            //Weights[w] += alpha * outputError * test[i].Input[w] / 2;
+                            Weights[w] += alpha * outputError * test[i].Input[w] * outputDerivative;
                         }
                     }
                 }
 
                 meanSquaredError = 1.0 / (2.0 * testDataSize) * outputErrorSum;
 
-                if (performedIterations % 100 == 0)
+                if (epoch % 100 == 0)
                 {
-                    Console.WriteLine($"Mean squared error after {performedIterations} iterations is {meanSquaredError:F8}");
+                    Console.WriteLine($"Mean squared error after {epoch} epoches is {meanSquaredError:F8}");
                 }
 
                 if (meanSquaredError < 0.0001)
@@ -72,7 +102,7 @@ namespace Basics.AI.NeuralNetworks
                 }
             }
 
-            Console.WriteLine($"Perceptron trained after {performedIterations} iterations");
+            Console.WriteLine($"Perceptron trained after {epoch} epoches");
             Console.WriteLine($"Mean squared error: {meanSquaredError:F8}");
         }
     }

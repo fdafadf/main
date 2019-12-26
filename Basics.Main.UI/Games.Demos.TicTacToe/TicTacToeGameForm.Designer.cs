@@ -1,6 +1,6 @@
-﻿namespace Basics.AI.NeuralNetworks.Demos.NeuralTicTacToe
+﻿namespace Basics.Games.Demos.TicTacToe
 {
-    partial class TicTacToeNeuralNetworkForm
+    partial class TicTacToeGameForm
     {
         /// <summary>
         /// Required designer variable.
@@ -28,31 +28,33 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.panel1 = new Basics.AI.NeuralNetworks.Demos.NeuralTicTacToe.TicTacToeNeuralBoardControl();
+            this.boardControl = new Basics.Games.Demos.TicTacToe.TicTacToeBoardControl();
             this.SuspendLayout();
             // 
-            // panel1
+            // ticTacToeBoardControl1
             // 
-            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel1.Location = new System.Drawing.Point(77, 64);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(365, 229);
-            this.panel1.TabIndex = 0;
+            this.boardControl.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.boardControl.Location = new System.Drawing.Point(145, 44);
+            this.boardControl.Name = "ticTacToeBoardControl1";
+            this.boardControl.Size = new System.Drawing.Size(260, 232);
+            this.boardControl.TabIndex = 0;
+            this.boardControl.OnAction += new Basics.Games.Forms.GameActionHandler<Basics.Games.TicTacToe.GameAction>(this.ticTacToeBoardControl1_OnAction);
             // 
-            // TicTacToeNeuralNetworkForm
+            // TicTacToeForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.panel1);
-            this.Name = "TicTacToeNeuralNetworkForm";
-            this.Text = "TicTacToeNeuralNetworkForm";
+            this.Controls.Add(this.boardControl);
+            this.Name = "TicTacToeForm";
+            this.Text = "Tic Tac Toe";
+            this.Load += new System.EventHandler(this.TicTacToeForm_Load);
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private Basics.AI.NeuralNetworks.Demos.NeuralTicTacToe.TicTacToeNeuralBoardControl panel1;
+        private TicTacToeBoardControl boardControl;
     }
 }

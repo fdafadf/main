@@ -13,3 +13,16 @@
 /Basics.Physics.Test.UI/obj
 /Basics.Physics.Test.UI.Forms/bin/Debug
 /Basics.Physics.Test.UI.Forms/obj/Debug
+/Basics.MLNet/obj
+/Basics.MLNet2/bin/Debug
+/Basics.MLNet/bin/Debug/netcoreapp2.1
+/Basics.MLNet2/obj/Debug
+/Basics.MLNet3/bin/Debug/netstandard2.0
+/Basics.MLNet3/obj
+/packages
+/Basics.Main.UI/NNL.cs
+/Basics.Main.UI/NN.cs
+/Basics.Main.UI/N.cs
+/Basics.Main.UI/AI.NeuralNetworks/NeuralNetworkLayerExcluded.cs
+/Basics.Main.UI/AI.NeuralNetworks/NeuralNetworkExcluded.cs
+/Basics.MLNet3/Basics.MLNet.csproj.user

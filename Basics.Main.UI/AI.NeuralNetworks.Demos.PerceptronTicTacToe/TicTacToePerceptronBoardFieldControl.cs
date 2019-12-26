@@ -9,6 +9,7 @@ namespace Basics.AI.NeuralNetworks.Demos.PerceptronTicTacToe
     public class PerceptronTicTacToeBoardFieldControl : TicTacToeBoardFieldControl
     {
         public double Output;
+        public string Output2;
 
         public PerceptronTicTacToeBoardFieldControl(BoardCoordinates coordinates) : base(coordinates)
         {
@@ -21,6 +22,7 @@ namespace Basics.AI.NeuralNetworks.Demos.PerceptronTicTacToe
             if (FieldState == FieldState.Empty)
             {
                 e.Graphics.DrawString($"{Output:F6}", SystemFonts.CaptionFont, Brushes.Black, 0, 0);
+                e.Graphics.DrawString($"{Output2:F6}", SystemFonts.CaptionFont, Brushes.Black, 0, 20);
             }
         }
     }

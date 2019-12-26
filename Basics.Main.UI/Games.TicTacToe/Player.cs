@@ -7,8 +7,8 @@
 
         static Player()
         {
-            Player.Nought.Opposite = Player.Cross;
-            Player.Cross.Opposite = Player.Nought;
+            Nought.Opposite = Cross;
+            Cross.Opposite = Nought;
         }
 
         public FieldState FieldState { get; private set; }
@@ -16,7 +16,15 @@
 
         private Player(FieldState state)
         {
-            this.FieldState = state;
+            FieldState = state;
+        }
+
+        public bool IsCross
+        {
+            get
+            {
+                return FieldState == FieldState.Cross;
+            }
         }
     }
 }

@@ -1,9 +1,12 @@
 ﻿using Basics.AI.NeuralNetworks;
+using Basics.Games.TicTacToe;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 
 namespace Basics.Main.UI
@@ -13,6 +16,98 @@ namespace Basics.Main.UI
         public delegate void Translation2d(double ix, double iy, out double ox, out double oy);
 
         public static readonly Random Random = new Random();
+
+        public static Dictionary<TKey, TValue> Unique<TKey, TValue>(this IEnumerable<TValue> self, Func<TValue, TKey> keySelector)
+        {
+            Dictionary<TKey, TValue> result = new Dictionary<TKey, TValue>();
+
+            foreach (TValue value in self)
+            {
+                TKey key = keySelector(value);
+
+                if (result.ContainsKey(key) == false)
+                {
+                    result.Add(key, value);
+                }
+            }
+
+            return result;
+        }
+
+        public static string Concatenate<T>(this IEnumerable<T> self, string separator)
+        {
+            return string.Join(separator, self);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int IndexOfMin<T>(this IEnumerable<T> self, Func<T, IComparable> valueSelector)
+        {
+            int result = -1;
+            var enumerator = self.GetEnumerator();
+
+            if (enumerator.MoveNext())
+            {
+                result = 0;
+                IComparable min = valueSelector(enumerator.Current);
+                int index = 1;
+                
+                while (enumerator.MoveNext())
+                {
+                    IComparable value = valueSelector(enumerator.Current);
+
+                    if (min.CompareTo(value) > 0)
+                    {
+                        min = value;
+                        result = index;
+                    }
+
+                    index++;
+                }
+            }
+
+            return result;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int IndexOfMin<T>(this IEnumerable<T> self) where T : IComparable
+        {
+            return self.IndexOfMin(item => item);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int IndexOfMax<T>(this IEnumerable<T> self, Func<T, IComparable> valueSelector)
+        {
+            int result = -1;
+            var enumerator = self.GetEnumerator();
+
+            if (enumerator.MoveNext())
+            {
+                result = 0;
+                IComparable max = valueSelector(enumerator.Current);
+                int index = 1;
+
+                while (enumerator.MoveNext())
+                {
+                    IComparable value = valueSelector(enumerator.Current);
+
+                    if (max.CompareTo(value) < 0)
+                    {
+                        max = value;
+                        result = index;
+                    }
+
+                    index++;
+                }
+            }
+
+            return result;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int IndexOfMax<T>(this T[] self) where T : IComparable
+        {
+            return self.IndexOfMax(item => item);
+        }
 
         public static void SetItems(this ComboBox self, IEnumerable<FileInfo> files)
         {
@@ -29,22 +124,58 @@ namespace Basics.Main.UI
             }
         }
 
-        public static double[] ToNeuralInput(this Games.TicTacToe.GameState self)
+        public static void ForEach<T>(this T[] self, Action<T> action)
         {
-            double[] result = new double[9];
-            self.ToNeuralInput(result);
+            foreach (T item in self)
+            {
+                action(item);
+            }
+        }
+
+        public static string AsString(this double[] self, string format)
+        {
+            return string.Join(",", self.Select(i => i.ToString(format)));
+        }
+
+        public static string AsString<T>(this T[] self)
+        {
+            return string.Join(",", self.Select(i => i.ToString()));
+        }
+
+        public static double[] ToDouble(this int[] self)
+        {
+            double[] result = new double[self.Length];
+
+            for (int i = 0; i < self.Length; i++)
+            {
+                result[i] = self[i];
+            }
+
             return result;
         }
 
-        public static void ToNeuralInput(this Games.TicTacToe.GameState self, double[] input)
+        public static T Add<T>(this ToolStripItemCollection self, ContextMenuStrip contextMenu) where T : ToolStripDropDownItem
         {
-            for (int y = 0; y < self.BoardSize; y++)
+            T menu = Activator.CreateInstance<T>();
+            menu.Text = contextMenu.Text;
+
+            while (contextMenu.Items.Count > 0)
             {
-                for (int x = 0; x < self.BoardSize; x++)
-                {
-                    input[y * self.BoardSize + x] = self[x, y] == Games.TicTacToe.FieldState.Cross ? 2 : (self[x, y] == Games.TicTacToe.FieldState.Nought ? -2 : 0);
-                }
+                menu.DropDownItems.Add(contextMenu.Items[0]);
             }
+
+            self.Add(menu);
+            return menu as T;
+        }
+
+        public static double[] Fill(this Random self, double[] values)
+        {
+            for (int i = 0; i < values.Length; i++)
+            {
+                values[i] = self.NextDouble();
+            }
+
+            return values;
         }
 
         public static void FillWithRandomValues(this Random self, double[] values, double min, double max)
@@ -83,15 +214,18 @@ namespace Basics.Main.UI
             self.DrawEllipse(pen, (float)x1, (float)y1, (float)x2, (float)y2);
         }
 
-        public static void DrawTestData(this Bitmap self, IEnumerable<NeuralIO> testData, Translation2d translation)
+        public static void DrawTestData(this Bitmap self, IEnumerable<NeuralIO> testData, Func<double[], Pen> classifier, Translation2d translation)
         {
-            using (Graphics graphics = Graphics.FromImage(self))
+            if (testData != null)
             {
-                foreach (NeuralIO testItem in testData)
+                using (Graphics graphics = Graphics.FromImage(self))
                 {
-                    translation(testItem.Input[0], testItem.Input[1], out double px, out double py);
-                    Pen pen = testItem.Output < 0 ? Pens.Blue : Pens.Red;
-                    graphics.DrawEllipse(pen, px - 3, py - 3, 6, 6);
+                    foreach (NeuralIO testItem in testData)
+                    {
+                        translation(testItem.Input[0], testItem.Input[1], out double px, out double py);
+                        Pen pen = classifier(testItem.Output);//[0] < 0 ? Pens.Blue : Pens.Red;
+                        graphics.DrawEllipse(pen, px - 3, py - 3, 6, 6);
+                    }
                 }
             }
         }
@@ -101,12 +235,15 @@ namespace Basics.Main.UI
             double min = double.MaxValue;
             double max = double.MinValue;
 
+            double[,] outputs = new double[self.Width, self.Height];
+
             for (int py = 0; py < self.Height; py++)
             {
                 for (int px = 0; px < self.Width; px++)
                 {
                     translation(px, py, out double x, out double y);
                     double output = func(x, y);
+                    outputs[px, py] = output;
                     if (output < min) min = output;
                     if (output > max) max = output;
                 }
@@ -116,8 +253,8 @@ namespace Basics.Main.UI
             {
                 for (int px = 0; px < self.Width; px++)
                 {
-                    translation(px, py, out double x, out double y);
-                    double output = func(x, y);
+                    //translation(px, py, out double x, out double y);
+                    double output = outputs[px, py];
 
                     if (output < 0)
                     {

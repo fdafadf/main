@@ -1,14 +1,29 @@
-﻿namespace Basics.AI.NeuralNetworks
+﻿using Basics.Main.UI;
+using System.Linq;
+
+namespace Basics.AI.NeuralNetworks
 {
     public class NeuralIO
     {
-        public readonly double[] Input;
-        public readonly double Output;
+        public double[] Input { get; }
+        public double[] Output { get; }
 
         public NeuralIO(double[] input, double output)
         {
             Input = input;
+            Output = new[] { output };
+        }
+
+        public NeuralIO(double[] input, double[] output)
+        {
+            Input = input;
             Output = output;
+        }
+
+        public NeuralIO(double[] input, int[] output)
+        {
+            Input = input;
+            Output = output.ToDouble();
         }
     }
 }

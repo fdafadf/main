@@ -6,6 +6,12 @@ namespace Basics.Games.TicTacToe
 {
     public class TicTacToeGame : IGame<GameState, GameAction, Player>
     {
+        public static TicTacToeGame Instance = new TicTacToeGame();
+
+        protected TicTacToeGame()
+        {
+        }
+
         public IEnumerable<GameAction> GetAllowedActions(GameState state)
         {
             return state.GetEmptyFields().Select(f => new GameAction { X = f.X, Y = f.Y });

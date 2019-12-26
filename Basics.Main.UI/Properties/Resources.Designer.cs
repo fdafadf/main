@@ -61,7 +61,13 @@ namespace Basics.Main.UI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to O.O
+        ///.XX
+        ///X..
+        ///
+        ///OXO
+        ///.O.
+        ///X...
         /// </summary>
         internal static string TicTacToeTrainData {
             get {

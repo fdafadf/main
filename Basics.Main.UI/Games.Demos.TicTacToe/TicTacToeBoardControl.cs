@@ -6,6 +6,10 @@ using System.Windows.Forms;
 
 namespace Basics.Games.Demos.TicTacToe
 {
+    public class TicTacToeBoardControl : TicTacToeBoardControl<TicTacToeBoardFieldControl>
+    {
+    }
+
     public class TicTacToeBoardControl<TFieldControl> : BoardControl<GameState, GameAction> where TFieldControl : TicTacToeBoardFieldControl
     {
         private const int BoardSize = 3;

@@ -2,6 +2,9 @@
 {
     public interface INeuron
     {
-        double Output(double[] input);
+        double[] Weights { get; }
+        //double Sum(double[] input);
+        double Evaluate(double[] input);
+        //double Evaluate(double[] input, out double outputDerivative);
     }
 }

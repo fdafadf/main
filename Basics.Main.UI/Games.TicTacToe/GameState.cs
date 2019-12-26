@@ -10,8 +10,12 @@ namespace Basics.Games.TicTacToe
     {
         public static GameState Parse(string text)
         {
+            return GameState.Parse(text.Split('\n'));
+        }
+
+        public static GameState Parse(params string[] lines)
+        {
             GameState result = new GameState();
-            string[] lines = text.Split('\n');
             int nonEmptyFields = 0;
 
             for (int y = 0; y < 3; y++)
@@ -44,7 +48,6 @@ namespace Basics.Games.TicTacToe
         }
 
         public Player CurrentPlayer { get; private set; }
-        //public Player Winner { get; private set; }
         private FieldState[,] BoardFields;
         public uint BoardSize { get; }
 
@@ -205,6 +208,19 @@ namespace Basics.Games.TicTacToe
             }
 
             return builder.ToString();
+        }
+
+        public override int GetHashCode()
+        {
+            return (int)BoardFields[0, 0]
+                + 10 * (int)BoardFields[0, 1]
+                + 100 * (int)BoardFields[0, 2]
+                + 1000 * (int)BoardFields[1, 0]
+                + 10000 * (int)BoardFields[1, 1]
+                + 100000 * (int)BoardFields[1, 2]
+                + 1000000 * (int)BoardFields[2, 0]
+                + 10000000 * (int)BoardFields[2, 1]
+                + 100000000 * (int)BoardFields[2, 2];
         }
     }
 

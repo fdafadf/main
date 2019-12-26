@@ -23,11 +23,8 @@ namespace Basics.AI.NeuralNetworks.Demos.PerceptronTicTacToe
 
         private void TicTacToePerceptronForm_Load(object sender, EventArgs e)
         {
-            string workspacePath = ConfigurationManager.AppSettings["WorkspacePath"];
-            string trainDataDirectoryPath = Path.Combine(workspacePath, "Perceptron.TicTacToe", "TrainData");
-            trainDataSetsControl.SetItems(new DirectoryInfo(trainDataDirectoryPath).EnumerateFiles());
-            string networksDirectoryPath = Path.Combine(workspacePath, "Perceptron.TicTacToe", "Networks");
-            perceptronsControl.SetItems(new DirectoryInfo(networksDirectoryPath).EnumerateFiles());
+            trainDataSetsControl.SetItems(new DirectoryInfo(Program.TicTacToePerceptronTrainDataDirectoryPath).EnumerateFiles());
+            perceptronsControl.SetItems(new DirectoryInfo(Program.TicTacToePerceptronNetworksDirectoryPath).EnumerateFiles());
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -38,7 +35,7 @@ namespace Basics.AI.NeuralNetworks.Demos.PerceptronTicTacToe
         private void perceptronTicTacToeBoardControl1_OnAction(GameAction action)
         {
             GameState currentGameState = boardControl.GameState;
-            GameState nextGameState = boardControl.Game.Play(currentGameState, action);
+            GameState nextGameState = TicTacToeGame.Instance.Play(currentGameState, action);
             boardControl.BoardState = nextGameState;
         }
 
@@ -51,13 +48,13 @@ namespace Basics.AI.NeuralNetworks.Demos.PerceptronTicTacToe
 
             foreach (GameState gameState in gameStates)
             {
-                foreach (GameAction action in boardControl.Game.GetAllowedActions(gameState))
+                foreach (GameAction action in TicTacToeGame.Instance.GetAllowedActions(gameState))
                 {
-                    GameState gameNextState = boardControl.Game.Play(gameState, action);
-                    double output = gameNextState.GetWinner().ToOutput();
-                    var testDataItem = new TicTacToeNeuralIO(gameNextState, output);
-                    Console.WriteLine(testDataItem);
-                    loadedTrainData.Add(testDataItem);
+                    //GameState gameNextState = boardControl.Game.Play(gameState, action);
+                    //double output = gameNextState.GetWinner().ToOutput();
+                    //var testDataItem = new TicTacToeNeuralIO(gameNextState, output);
+                    //Console.WriteLine(testDataItem);
+                    //loadedTrainData.Add(testDataItem);
                 }
             }
 

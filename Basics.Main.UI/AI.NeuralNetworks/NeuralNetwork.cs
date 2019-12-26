@@ -1,31 +1,122 @@
-﻿using System.Collections.Generic;
+﻿using Basics.Main.UI;
+using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace Basics.AI.NeuralNetworks
 {
     public class NeuralNetwork
     {
-        List<NeuralNetworkLayer> Layers = new List<NeuralNetworkLayer>();
-        List<double[]> LayersOutput = new List<double[]>();
+        NeuralNetworkLayer[] Layers;
 
-        public void AddLayer(int inputSize, int outputSize)
+        public double[] Output => Layers.Last().Output;
+
+        public NeuralNetwork(int inputSize, int[] layersSize, IActivationFunction activationFunction, Random random)
         {
-            NeuralNetworkLayer layer = new NeuralNetworkLayer(inputSize, outputSize);
-            LayersOutput.Add(new double[outputSize]);
-            Layers.Add(layer);
+            double[] input = new double[inputSize];
+            Layers = new NeuralNetworkLayer[layersSize.Length];
+
+            for (int i = 0; i < layersSize.Length; i++)
+            {
+                double[] output = new double[layersSize[i]];
+                Layers[i] = new NeuralNetworkLayer(input, output, activationFunction, random);
+                input = output;
+            }
         }
 
-        public double[] Evaluate(double[] input)
+        public void Evaluate(double[] input)
         {
-            double[] layerInput = input;
+            Layers.First().Input = input;
+            Layers.ForEach(layer => layer.Evaluate());
+        }
 
-            for (int i = 0; i < Layers.Count; i++)
+        public double Train(IEnumerable<NeuralIO> trainData, int maxEpoches, double alpha)
+        {
+            double meanSquaredError = double.MaxValue;
+
+            for (int i = 0; i < maxEpoches; i++)
             {
-                Layers[i].Evaluate(layerInput, LayersOutput[i]);
-                layerInput = LayersOutput[i];
+                meanSquaredError = Train(trainData, alpha);
+
+                if (i % 500 == 0)
+                {
+                    Console.WriteLine($"MSQ: {meanSquaredError}");
+                }
             }
 
-            return LayersOutput.Last();
+            return meanSquaredError;
+        }
+
+        public double Train(IEnumerable<NeuralIO> trainData, double alpha)
+        {
+            double errorSum = 0;
+
+            foreach (var item in trainData)
+            {
+                errorSum += Train(item, alpha);
+            }
+
+            return 1.0 / (2.0 * trainData.Count()) * errorSum;
+        }
+
+        public double Train(NeuralIO trainData, double alpha)
+        {
+            return Train(trainData.Input, trainData.Output, alpha);
+        }
+
+        public double Train(double[] trainingInput, double[] trainingOutput, double alpha)
+        {
+            double errorSum = 0;
+
+            Evaluate(trainingInput);
+
+            for (int i = 0; i < trainingOutput.Length; i++)
+            {
+                double outputError = trainingOutput[i] - Layers.Last().Output[i];
+                errorSum += outputError * outputError;
+            }
+
+            Layers.Last().CalculateError(trainingOutput);
+
+            for (int l = Layers.Length - 2; l >= 0; l--)
+            {
+                Layers[l].CalculateError(Layers[l + 1]);
+            }
+
+            for (int l = Layers.Length - 1; l >= 0; l--)
+            {
+                NeuralNetworkLayer layer = Layers[l];
+                Neuron2[] neurons = layer.Neurons;
+
+                for (int n = 0; n < neurons.Length; n++)
+                {
+                    for (int w = 0; w < layer.Input.Length; w++)
+                    {
+                        neurons[n].Weights[w] -= alpha * neurons[n].Error * layer.Input[w];
+                    }
+                }
+            }
+
+            return errorSum;
+        }
+
+        //public void WriteWeights(TextWriter writer)
+        //{
+        //    writer.Write(string.Join(" ", Layers.Select(l => l.ToString())));
+        //}
+
+        public double[][][] GetWeights()
+        {
+            return Layers.Select(layer => layer.GetWeights()).ToArray();
+        }
+
+        public void SetWeights(double[][][] weights)
+        {
+            for (int i = 0; i < Layers.Length; i++)
+            {
+                Layers[i].SetWeights(weights[i]);
+            }
         }
     }
 }

@@ -7,8 +7,7 @@ namespace Basics.AI.NeuralNetworks.Demos.PerceptronTicTacToe
 {
     public class PerceptronTicTacToeBoardControl : TicTacToeBoardControl<PerceptronTicTacToeBoardFieldControl>
     {
-        public readonly Basics.AI.NeuralNetworks.Perceptron Perceptron = new TicTacToePerceptron();
-        public readonly TicTacToeGame Game = new TicTacToeGame();
+        public readonly NeuralNetworks.Perceptron Perceptron = new TicTacToePerceptron();
         public GameState GameState { get; private set; }
 
         public PerceptronTicTacToeBoardControl()
@@ -30,10 +29,10 @@ namespace Basics.AI.NeuralNetworks.Demos.PerceptronTicTacToe
                     if (fieldControl.FieldState == FieldState.Empty)
                     {
                         GameAction gameAction = fieldControl.Coordinates.ToGameAction();
-                        GameState nextGameState = Game.Play(value, gameAction);
+                        GameState nextGameState = TicTacToeGame.Instance.Play(value, gameAction);
                         double[] input = new double[9];
-                        nextGameState.ToNeuralInput(input);
-                        fieldControl.Output = Perceptron.Output(input);
+                        Perceptron.ToNeuralInput(nextGameState, input);
+                        fieldControl.Output = Perceptron.Sum(input);
                     }
 
                     fieldControl.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;

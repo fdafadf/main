@@ -13,7 +13,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Basics.Main.UI", "Basics.Ma
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Workspace", "Workspace", "{0610A2D2-F534-4084-870D-C77411C358C8}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Perceptron.TicTacToe", "Perceptron.TicTacToe", "{70EEE669-B0B4-4577-A1FF-D47F95353F87}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TicTacToe.Perceptron", "TicTacToe.Perceptron", "{70EEE669-B0B4-4577-A1FF-D47F95353F87}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TrainData", "TrainData", "{3BD7FD87-301A-4CB6-819B-7C9CAFC11603}"
 	ProjectSection(SolutionItems) = preProject
@@ -21,6 +21,23 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TrainData", "TrainData", "{
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Networks", "Networks", "{F2A0FDB9-798A-42A6-A3EA-913C17AE5644}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TicTacToe.NeuralNetwork", "TicTacToe.NeuralNetwork", "{1C9C3525-F67F-4BE0-8826-F0ADA83B8125}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TrainData", "TrainData", "{20786789-4E35-4AB3-9091-B280E92B0574}"
+	ProjectSection(SolutionItems) = preProject
+		Workspace\TicTacToe.NeuralNetwork\TrainData\Default.txt = Workspace\TicTacToe.NeuralNetwork\TrainData\Default.txt
+		Workspace\TicTacToe.NeuralNetwork\TrainData\Game.txt = Workspace\TicTacToe.NeuralNetwork\TrainData\Game.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Networks", "Networks", "{FE354AA1-1D89-4907-B225-E6E57B0BD02E}"
+	ProjectSection(SolutionItems) = preProject
+		Workspace\TicTacToe.NeuralNetwork\Networks\DrawThemself.txt = Workspace\TicTacToe.NeuralNetwork\Networks\DrawThemself.txt
+		Workspace\TicTacToe.NeuralNetwork\Networks\Empty.txt = Workspace\TicTacToe.NeuralNetwork\Networks\Empty.txt
+		Workspace\TicTacToe.NeuralNetwork\Networks\Game.txt = Workspace\TicTacToe.NeuralNetwork\Networks\Game.txt
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Basics.MLNet", "Basics.MLNet3\Basics.MLNet.csproj", "{062176BE-B4BC-4F65-8B1B-140EF00489B8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -44,6 +61,10 @@ Global
 		{7BA0BE40-F229-4E68-8F99-799F8D3F7618}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7BA0BE40-F229-4E68-8F99-799F8D3F7618}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7BA0BE40-F229-4E68-8F99-799F8D3F7618}.Release|Any CPU.Build.0 = Release|Any CPU
+		{062176BE-B4BC-4F65-8B1B-140EF00489B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{062176BE-B4BC-4F65-8B1B-140EF00489B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{062176BE-B4BC-4F65-8B1B-140EF00489B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{062176BE-B4BC-4F65-8B1B-140EF00489B8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -52,6 +73,9 @@ Global
 		{70EEE669-B0B4-4577-A1FF-D47F95353F87} = {0610A2D2-F534-4084-870D-C77411C358C8}
 		{3BD7FD87-301A-4CB6-819B-7C9CAFC11603} = {70EEE669-B0B4-4577-A1FF-D47F95353F87}
 		{F2A0FDB9-798A-42A6-A3EA-913C17AE5644} = {70EEE669-B0B4-4577-A1FF-D47F95353F87}
+		{1C9C3525-F67F-4BE0-8826-F0ADA83B8125} = {0610A2D2-F534-4084-870D-C77411C358C8}
+		{20786789-4E35-4AB3-9091-B280E92B0574} = {1C9C3525-F67F-4BE0-8826-F0ADA83B8125}
+		{FE354AA1-1D89-4907-B225-E6E57B0BD02E} = {1C9C3525-F67F-4BE0-8826-F0ADA83B8125}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F117A375-DD19-4D45-B235-3B83F162D15D}

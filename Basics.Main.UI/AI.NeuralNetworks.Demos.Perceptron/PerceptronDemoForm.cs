@@ -16,10 +16,15 @@ namespace Basics.AI.NeuralNetworks.Demos.Perceptron
 
         Bitmap Bitmap = new Bitmap(FunctionImageSize * 2, FunctionImageSize * 2);
 
+
+        NeuralNetworks.Perceptron perceptron;
+        NeuralIO[] testItems;
+        IActivationFunction activationFunction;
+        Func<double[], double> classifier;
+
         public PerceptronDemoForm()
         {
             InitializeComponent();
-            Generate();
         }
 
         protected override void OnPaint(PaintEventArgs e)
@@ -36,13 +41,37 @@ namespace Basics.AI.NeuralNetworks.Demos.Perceptron
             switch (e.KeyCode)
             {
                 case Keys.Space:
-                    Generate();
+                    Train();
                     Refresh();
                     break;
             }
         }
 
-        private void Generate()
+        private void NewRandomPerceptron()
+        {
+            // Random line function
+            double a = Extensions.Random.NextDouble() * 2 + 0.1;
+            double b = Extensions.Random.NextDouble() * 100;
+            Func<double, double> Line = x => a * x + b;
+
+            // Classifiers based on line function
+            activationFunction = activationFunctionControl.SelectedItem as IActivationFunction;
+            classifier = input => Line(input[0]) < input[1] ? -1 : 1;
+
+            // Random preceptron
+            perceptron = new NeuralNetworks.Perceptron(FunctionArgumentsCount, activationFunction, -50, 50);
+
+            // Random data to train
+            testItems = new PointsNeuralIOGenerator(FunctionArgumentsCount, classifier, -FunctionImageSize, FunctionImageSize).Generate(TrainSamplesCount).ToArray();
+        }
+
+        private void Train()
+        {
+            // Train
+            perceptron.Train(testItems, TrainAlpha, MaxTrainIterations);
+        }
+
+        private void DrawOutputOnBitmap()
         {
             void PixelToFunctionDomain(double px, double py, out double x, out double y)
             {
@@ -56,37 +85,15 @@ namespace Basics.AI.NeuralNetworks.Demos.Perceptron
                 py = FunctionImageSize - y;
             }
 
-            // Random line function
-            double a = Extensions.Random.NextDouble() * 2 + 0.1;
-            double b = Extensions.Random.NextDouble() * 100;
-            Func<double, double> Line = x => a * x + b;
-
-            // Classifiers based on line function
-            activationFunction = input => input < 0 ? -1 : 1;
-            classifier = input => Line(input[0]) < input[1] ? -1 : 1;
-
-            // Random preceptron
-            perceptron = new AI.NeuralNetworks.Perceptron(FunctionArgumentsCount, activationFunction, - 50, 50);
-
-            // Random data to train
-            testItems = new PointsNeuralIOGenerator(FunctionArgumentsCount, classifier, -FunctionImageSize, FunctionImageSize).Generate(TrainSamplesCount).ToArray();
-
-            // Train
-            perceptron.Train(testItems, TrainAlpha, MaxTrainIterations);
-
             // Draw perceprtron output
-            Bitmap.DrawFunctionOutput((x, y) => perceptron.Output(new double[] { x, y }), PixelToFunctionDomain);
-            Bitmap.DrawTestData(testItems, FunctionDomainToPixel);
+            Bitmap.DrawFunctionOutput((x, y) => perceptron.Sum(new double[] { x, y }), PixelToFunctionDomain);
+            Bitmap.DrawTestData(testItems, o => o[0] < 0 ? Pens.Blue : Pens.Red, FunctionDomainToPixel);
         }
-
-        AI.NeuralNetworks.Perceptron perceptron;
-        AI.NeuralNetworks.NeuralIO[] testItems;
-        Func<double, double> activationFunction;
-        Func<double[], double> classifier;
 
         private void drawAndTrain_Click(object sender, EventArgs e)
         {
-            Generate();
+            Train();
+            DrawOutputOnBitmap();
             Refresh();
         }
 
@@ -96,10 +103,24 @@ namespace Basics.AI.NeuralNetworks.Demos.Perceptron
 
             for (int i = 0; i < testDataSize; i++)
             {
-                double output = activationFunction(perceptron.Output(testItems[i].Input));
-                double outputError = testItems[i].Output - output;
+                double output = activationFunction.Value(perceptron.Sum(testItems[i].Input));
+                double outputError = testItems[i].Output[0] - output;
                 Console.WriteLine($"({testItems[i].Input[0]}, {testItems[i].Input[1]}) {outputError}");
             }
+        }
+
+        private void PerceptronDemoForm_Load(object sender, EventArgs e)
+        {
+            activationFunctionControl.SelectedIndex = 0;
+            NewRandomPerceptron();
+            DrawOutputOnBitmap();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            NewRandomPerceptron();
+            DrawOutputOnBitmap();
+            Refresh();
         }
     }
 }
