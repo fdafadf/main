@@ -9,7 +9,5 @@ namespace Basics.Games
     {
         TGameState Play(TGameState state, TGameAction action);
         IEnumerable<TGameAction> GetAllowedActions(TGameState state);
-        //bool IsWinner(TGameState state, TPlayer player);
-        //bool IsLooser(TGameState state, TPlayer player);
     }
 }

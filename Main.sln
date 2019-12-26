@@ -37,7 +37,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Networks", "Networks", "{FE
 		Workspace\TicTacToe.NeuralNetwork\Networks\Game.txt = Workspace\TicTacToe.NeuralNetwork\Networks\Game.txt
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Basics.MLNet", "Basics.MLNet3\Basics.MLNet.csproj", "{062176BE-B4BC-4F65-8B1B-140EF00489B8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Basics.MLNet", "Basics.MLNet\Basics.MLNet.csproj", "{062176BE-B4BC-4F65-8B1B-140EF00489B8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

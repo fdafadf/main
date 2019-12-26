@@ -26,3 +26,8 @@
 /Basics.Main.UI/AI.NeuralNetworks/NeuralNetworkLayerExcluded.cs
 /Basics.Main.UI/AI.NeuralNetworks/NeuralNetworkExcluded.cs
 /Basics.MLNet3/Basics.MLNet.csproj.user
+/Basics.MLNet/bin/Debug/netstandard2.0
+/Basics.MLNet/Basics.MLNet.csproj.user
+*.user
+/Basics.MLNet_
+/Basics.MLNet2
