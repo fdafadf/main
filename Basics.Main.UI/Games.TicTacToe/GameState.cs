@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Basics.AI.NeuralNetworks.TicTacToe;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -8,6 +9,9 @@ namespace Basics.Games.TicTacToe
 {
     public class GameState : IGameState<Player>
     {
+        public const char DefaultCrossCharater = 'X';
+        public const char DefaultNoughtCharater = 'O';
+
         public static GameState Parse(string text)
         {
             return GameState.Parse(text.Split('\n'));
@@ -24,12 +28,12 @@ namespace Basics.Games.TicTacToe
                 {
                     FieldState fieldState;
 
-                    if (GameStatePrintSettings.Default.CrossCharater.Equals(lines[y][x]))
+                    if (DefaultCrossCharater.Equals(lines[y][x]))
                     {
                         fieldState = FieldState.Cross;
                         nonEmptyFields++;
                     }
-                    else if (GameStatePrintSettings.Default.NoughtCharater.Equals(lines[y][x]))
+                    else if (DefaultNoughtCharater.Equals(lines[y][x]))
                     {
                         fieldState = FieldState.Nought;
                         nonEmptyFields++;
@@ -145,19 +149,14 @@ namespace Basics.Games.TicTacToe
             return null;
         }
 
-        //public bool IsFinal()
-        //{
-        //    return this.GetWinner().HasValue;
-        //}
-
-        public double[] ToArray(Func<FieldState, double> inputFunction)
+        public T[] ToArray<T>(Func<FieldState, T> inputFunction)
         {
-            double[] result = new double[9];
+            T[] result = new T[9];
             ToArray(inputFunction, result);
             return result;
         }
 
-        public void ToArray(Func<FieldState, double> inputFunction, double[] result)
+        public void ToArray<T>(Func<FieldState, T> inputFunction, T[] result)
         {
             for (int y = 0; y < BoardSize; y++)
             {
@@ -204,22 +203,19 @@ namespace Basics.Games.TicTacToe
 
         public override string ToString()
         {
+            return ToString('.', DefaultNoughtCharater, DefaultCrossCharater);
+        }
+
+        public virtual string ToString(char empty, char nought, char cross)
+        {
             StringBuilder builder = new StringBuilder();
+            var charMap = TicTacToeNeuralIOLoader.InputFunctions.Map(empty, nought, cross);
 
-            for (uint y = 0; y < this.BoardSize; y++)
+            for (uint y = 0; y < BoardSize; y++)
             {
-                for (uint x = 0; x < this.BoardSize; x++)
+                for (uint x = 0; x < BoardSize; x++)
                 {
-                    char c;
-
-                    switch (this.BoardFields[x, y])
-                    {
-                        case FieldState.Cross: c = GameStatePrintSettings.Default.CrossCharater; break;
-                        case FieldState.Nought: c = GameStatePrintSettings.Default.NoughtCharater; break;
-                        default: c = GameStatePrintSettings.Default.EmptyCharater; break;
-                    }
-
-                    builder.Append(c);
+                    builder.Append(charMap(BoardFields[x, y]));
                 }
 
                 builder.AppendLine();

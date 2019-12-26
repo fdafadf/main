@@ -11,9 +11,9 @@ namespace Basics.AI.NeuralNetworks.TicTacToe
         public static class InputFunctions
         {
             public static Func<FieldState, double> Unipolar = Map(0.5, 1, 0);
-            public static Func<FieldState, double> Bipolar = Map(0, 1, -1);
+            public static Func<FieldState, double> Bipolar = Map(0.0, 1, -1);
 
-            public static Func<FieldState, double> Map(double empty, double nought, double cross)
+            public static Func<FieldState, T> Map<T>(T empty, T nought, T cross)
             {
                 return fieldState =>
                 {
