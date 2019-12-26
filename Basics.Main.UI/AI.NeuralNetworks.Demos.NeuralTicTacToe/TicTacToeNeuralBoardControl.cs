@@ -64,13 +64,13 @@ namespace Basics.AI.NeuralNetworks.Demos.NeuralTicTacToe
             }
         }
 
-        private static Dictionary<int, TicTacToeNeuralIO> allStatesByHash;
+        private static Dictionary<int, GameStateNeuralIO<GameState>> allStatesByHash;
         
-        public static TicTacToeNeuralIO Find(GameState gameState)
+        public static GameStateNeuralIO<GameState> Find(GameState gameState)
         {
             if (allStatesByHash == null)
             {
-                allStatesByHash = new Dictionary<int, TicTacToeNeuralIO>();
+                allStatesByHash = new Dictionary<int, GameStateNeuralIO<GameState>>();
                 var uniqueGameStates = TicTacToeNeuralIOGenerator.Instance.GetAllUniqueStates(TicTacToeNeuralNetwork.DefaultInputFunction, new TicTacToeMinMaxProbabilitiesEvaluator());
 
                 foreach (var item in uniqueGameStates)

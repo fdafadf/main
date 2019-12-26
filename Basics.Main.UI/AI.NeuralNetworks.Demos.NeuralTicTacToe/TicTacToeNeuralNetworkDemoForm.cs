@@ -40,7 +40,7 @@ namespace Basics.AI.NeuralNetworks.Demos.NeuralTicTacToe
             foreach (string trainDataFilePath in Directory.EnumerateFiles(Program.TicTacToeNeuralNetworkTrainDataDirectoryPath, "*.txt"))
             {
                 FileInfo trainDataFile = new FileInfo(trainDataFilePath);
-                Properties.AddTrainingSet(trainDataFile.Name, () => TicTacToeNeuralIO.Load(trainDataFile, (NeuralNetwork as TicTacToeNeuralNetwork).InputFunction));
+                Properties.AddTrainingSet(trainDataFile.Name, () => TicTacToeNeuralIOLoader.Load(trainDataFile, (NeuralNetwork as TicTacToeNeuralNetwork).InputFunction));
             }
 
             Properties.AddTrainingSet("All States", () =>

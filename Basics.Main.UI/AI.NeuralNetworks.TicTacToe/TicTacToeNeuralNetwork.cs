@@ -11,7 +11,7 @@ namespace Basics.AI.NeuralNetworks.TicTacToe
 {
     public class TicTacToeNeuralNetwork : NeuralNetwork
     {
-        public static Func<FieldState, double> DefaultInputFunction = TicTacToeNeuralIO.InputFunctions.Unipolar;
+        public static Func<FieldState, double> DefaultInputFunction = TicTacToeNeuralIOLoader.InputFunctions.Unipolar;
 
         public static Dictionary<string, Func<GameState, GameAction>> LoadAIs()
         {
@@ -30,7 +30,7 @@ namespace Basics.AI.NeuralNetworks.TicTacToe
 
             GameAction mlNetPredict(GameState gameState)
             {
-                var predictions = TicTacToeGameActionPrediction.Predict(gameState, TicTacToeNeuralIO.InputFunctions.Bipolar, i => mlNet.Predict(i));
+                var predictions = TicTacToeGameActionPrediction.Predict(gameState, TicTacToeNeuralIOLoader.InputFunctions.Bipolar, i => mlNet.Predict(i));
                 int index;
 
                 if (gameState.CurrentPlayer.IsCross)
@@ -65,7 +65,7 @@ namespace Basics.AI.NeuralNetworks.TicTacToe
         public static GameAction GetBestAction(NeuralNetwork network, GameState gameState)
         {
             double[] input = new double[9];
-            TicTacToeNeuralIO.ToInput(gameState, TicTacToeNeuralIO.InputFunctions.Unipolar, input);
+            gameState.ToArray(TicTacToeNeuralIOLoader.InputFunctions.Unipolar, input);
             network.Evaluate(input);
             GameAction bestAction = null;
             double bestActionValue = double.MinValue;
@@ -99,7 +99,7 @@ namespace Basics.AI.NeuralNetworks.TicTacToe
         public void Evaluate(GameState gameState)
         {
             double[] input = new double[9];
-            TicTacToeNeuralIO.ToInput(gameState, InputFunction, input);
+            gameState.ToArray(InputFunction, input);
             Evaluate(input);
         }
     }

@@ -150,6 +150,24 @@ namespace Basics.Games.TicTacToe
         //    return this.GetWinner().HasValue;
         //}
 
+        public double[] ToArray(Func<FieldState, double> inputFunction)
+        {
+            double[] result = new double[9];
+            ToArray(inputFunction, result);
+            return result;
+        }
+
+        public void ToArray(Func<FieldState, double> inputFunction, double[] result)
+        {
+            for (int y = 0; y < BoardSize; y++)
+            {
+                for (int x = 0; x < BoardSize; x++)
+                {
+                    result[y * BoardSize + x] = inputFunction(this[x, y]);
+                }
+            }
+        }
+
         private bool Equals(BoardCoordinates[] fields, FieldState state)
         {
             return fields.All(f => this.BoardFields[f.X, f.Y] == state);
@@ -222,14 +240,5 @@ namespace Basics.Games.TicTacToe
                 + 10000000 * (int)BoardFields[2, 1]
                 + 100000000 * (int)BoardFields[2, 2];
         }
-    }
-
-    class GameStatePrintSettings
-    {
-        public static GameStatePrintSettings Default = new GameStatePrintSettings();
-
-        public char CrossCharater = 'X';
-        public char NoughtCharater = 'O';
-        public char EmptyCharater = '.';
     }
 }

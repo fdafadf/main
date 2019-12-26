@@ -48,11 +48,6 @@ namespace Basics.AI.NeuralNetworks
             return output;
         }
 
-        internal void ToNeuralInput(GameState nextGameState, double[] input)
-        {
-            throw new NotImplementedException();
-        }
-
         public double Sum(double[] input)
         {
             return input.Product(Weights) + Bias * BiasWeight;

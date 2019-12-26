@@ -1,5 +1,4 @@
 ﻿using Basics.Main.UI;
-using System.Linq;
 
 namespace Basics.AI.NeuralNetworks
 {

@@ -16,38 +16,38 @@ namespace Basics.AI.NeuralNetworks.TicTacToe
         {
         }
 
-        public IEnumerable<TicTacToeNeuralIO> GetAllUniqueStates(Func<FieldState, double> inputFunction, IGameTreeEvaluator<GameState> outputFunction)
+        public IEnumerable<GameStateNeuralIO<GameState>> GetAllUniqueStates(Func<FieldState, double> inputFunction, IGameTreeEvaluator<GameState> outputFunction)
         {
             return GetFullTree(inputFunction, outputFunction).Flatten().Unique(s => s.GameState.GetHashCode()).Values;
         }
 
-        public TreeNode<TicTacToeNeuralIO> GetFullTree(Func<FieldState, double> inputFunction, IGameTreeEvaluator<GameState> outputFunction)
+        public TreeNode<GameStateNeuralIO<GameState>> GetFullTree(Func<FieldState, double> inputFunction, IGameTreeEvaluator<GameState> outputFunction)
         {
             return GetFullTree(TicTacToeGameStateGenerator.Instance.GetFullTree(), inputFunction, outputFunction);
         }
 
-        private TreeNode<TicTacToeNeuralIO> GetFullTree(TreeNode<GameState> gameNode, Func<FieldState, double> inputFunction, IGameTreeEvaluator<GameState> outputFunction)
+        private TreeNode<GameStateNeuralIO<GameState>> GetFullTree(TreeNode<GameState> gameNode, Func<FieldState, double> inputFunction, IGameTreeEvaluator<GameState> outputFunction)
         {
-            TreeNode<TicTacToeNeuralIO> result;
+            TreeNode<GameStateNeuralIO<GameState>> result;
         
             if (gameNode.Children.Count == 0)
             {
                 double[] output = outputFunction.EvaluateLeaf(gameNode.Data);
-                TicTacToeNeuralIO testData = new TicTacToeNeuralIO(gameNode.Data, inputFunction, output);
-                result = new TreeNode<TicTacToeNeuralIO>(testData);
+                GameStateNeuralIO<GameState> testData = new GameStateNeuralIO<GameState>(gameNode.Data, gameNode.Data.ToArray(inputFunction), output);
+                result = new TreeNode<GameStateNeuralIO<GameState>>(testData);
             }
             else
             {
-                result = new TreeNode<TicTacToeNeuralIO>();
+                result = new TreeNode<GameStateNeuralIO<GameState>>();
         
                 foreach (var childState in gameNode.Children)
                 {
-                    TreeNode<TicTacToeNeuralIO> child = GetFullTree(childState, inputFunction, outputFunction);
+                    TreeNode<GameStateNeuralIO<GameState>> child = GetFullTree(childState, inputFunction, outputFunction);
                     result.Children.Add(child);
                 }
 
                 double[] output = outputFunction.EvaluateNode(gameNode.Data, result.Children.Select(c => c.Data));
-                result.Data = new TicTacToeNeuralIO(gameNode.Data, inputFunction, output);
+                result.Data = new GameStateNeuralIO<GameState>(gameNode.Data, gameNode.Data.ToArray(inputFunction), output);
             }
 
             return result;

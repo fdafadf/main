@@ -14,7 +14,7 @@ namespace Basics.Games.Demos.TicTacToe
 
         public static TicTacToeGameActionPrediction Predict(GameState gameState)
         {
-            var predictions = TicTacToeGameActionPrediction.Predict(gameState, TicTacToeNeuralIO.InputFunctions.Bipolar, input => TicTacToePredicateCallback(input));
+            var predictions = TicTacToeGameActionPrediction.Predict(gameState, TicTacToeNeuralIOLoader.InputFunctions.Bipolar, input => TicTacToePredicateCallback(input));
             int bestActionIndex = TicTacToeWinningProbabilities.FindBest(predictions.Select(p => p.Value), gameState.CurrentPlayer);
             GameAction bestAction = predictions[bestActionIndex].Key;
             return new TicTacToeGameActionPrediction(gameState, predictions, bestAction);

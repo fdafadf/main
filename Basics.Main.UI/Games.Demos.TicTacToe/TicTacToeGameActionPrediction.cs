@@ -16,7 +16,7 @@ namespace Basics.Games.Demos.TicTacToe
             foreach (GameAction gameAction in TicTacToeGame.Instance.GetAllowedActions(gameState))
             {
                 GameState nextGameState = TicTacToeGame.Instance.Play(gameState, gameAction);
-                TicTacToeNeuralIO.ToInput(nextGameState, inputFunction, input);
+                nextGameState.ToArray(inputFunction, input);
                 predictions.Add(gameAction, predictFunction(input));
             }
 

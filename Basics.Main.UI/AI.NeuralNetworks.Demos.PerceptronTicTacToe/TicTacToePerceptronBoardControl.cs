@@ -1,4 +1,5 @@
-﻿using Basics.Games.Demos.TicTacToe;
+﻿using Basics.AI.NeuralNetworks.TicTacToe;
+using Basics.Games.Demos.TicTacToe;
 using Basics.Games.TicTacToe;
 using Basics.Main.UI;
 using System.Linq;
@@ -31,7 +32,7 @@ namespace Basics.AI.NeuralNetworks.Demos.PerceptronTicTacToe
                         GameAction gameAction = fieldControl.Coordinates.ToGameAction();
                         GameState nextGameState = TicTacToeGame.Instance.Play(value, gameAction);
                         double[] input = new double[9];
-                        Perceptron.ToNeuralInput(nextGameState, input);
+                        nextGameState.ToArray(TicTacToeNeuralIOLoader.InputFunctions.Unipolar, input);
                         fieldControl.Output = Perceptron.Sum(input);
                     }
 

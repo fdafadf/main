@@ -30,20 +30,6 @@ namespace Basics.AI.NeuralNetworks
             }
         }
 
-        //public override string ToString()
-        //{
-        //    StringBuilder builder = new StringBuilder();
-        //
-        //    for (int i = 0; i < Neurons.Length; i++)
-        //    {
-        //        builder.Append("{");
-        //        builder.Append(string.Join(",", Neurons[i].Weights.Select(w => w.ToString("F4"))));
-        //        builder.Append("}");
-        //    }
-        //
-        //    return builder.ToString();
-        //}
-
         public double[][] GetWeights()
         {
             return Neurons.Select(neuron => neuron.Weights).ToArray();

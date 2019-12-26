@@ -101,11 +101,6 @@ namespace Basics.AI.NeuralNetworks
             return errorSum;
         }
 
-        //public void WriteWeights(TextWriter writer)
-        //{
-        //    writer.Write(string.Join(" ", Layers.Select(l => l.ToString())));
-        //}
-
         public double[][][] GetWeights()
         {
             return Layers.Select(layer => layer.GetWeights()).ToArray();
