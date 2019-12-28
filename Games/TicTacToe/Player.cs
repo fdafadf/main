@@ -26,5 +26,10 @@
                 return FieldState == FieldState.Cross;
             }
         }
+
+        public override string ToString()
+        {
+            return FieldState.ToString();
+        }
     }
 }

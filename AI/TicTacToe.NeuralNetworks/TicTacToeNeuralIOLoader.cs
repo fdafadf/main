@@ -12,24 +12,8 @@ namespace AI.TicTacToe.NeuralNetworks
     {
         public static class InputFunctions
         {
-            public static Func<FieldState, double> Unipolar = Map(0.5, 1, 0);
-            public static Func<FieldState, double> Bipolar = Map(0.0, 1, -1);
-
-            public static Func<FieldState, T> Map<T>(T empty, T nought, T cross)
-            {
-                return fieldState =>
-                {
-                    switch (fieldState)
-                    {
-                        case FieldState.Cross:
-                            return cross;
-                        case FieldState.Nought:
-                            return nought;
-                        default:
-                            return empty;
-                    }
-                };
-            }
+            public static Func<FieldState, double> Unipolar = FieldStateExtensions.Map(0.5, 1, 0);
+            public static Func<FieldState, double> Bipolar = FieldStateExtensions.Map(0.0, 1, -1);
         }
 
         public static IEnumerable<GameStateNeuralIO<GameState>> LoadBipolarThreeOutputs(StreamReader fileInfo, Func<FieldState, double> inputFunction)

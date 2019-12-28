@@ -37,5 +37,13 @@ namespace AI.MonteCarlo
                 return new MCTreeMove<TGameAction, TGameNode>(entry.Key, entry.Value);
             }
         }
+
+        public override string ToString()
+        {
+            string[] lines = Data.ToString().Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
+            lines[0] += $"  S: {Simulations}";
+            lines[1] += $"  W: {Wins}";
+            return string.Join(Environment.NewLine, lines);
+        }
     }
 }

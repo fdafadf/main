@@ -59,6 +59,7 @@
             this.buttonPlay.TabIndex = 1;
             this.buttonPlay.Text = "Play";
             this.buttonPlay.UseVisualStyleBackColor = true;
+            this.buttonPlay.Click += new System.EventHandler(this.buttonPlay_Click);
             // 
             // noughtPlayerControl
             // 
@@ -74,6 +75,7 @@
             this.noughtPlayerControl.Name = "noughtPlayerControl";
             this.noughtPlayerControl.Size = new System.Drawing.Size(208, 21);
             this.noughtPlayerControl.TabIndex = 2;
+            this.noughtPlayerControl.SelectedIndexChanged += new System.EventHandler(this.noughtPlayerControl_SelectedIndexChanged);
             // 
             // crossPlayerControl
             // 
@@ -89,6 +91,7 @@
             this.crossPlayerControl.Name = "crossPlayerControl";
             this.crossPlayerControl.Size = new System.Drawing.Size(208, 21);
             this.crossPlayerControl.TabIndex = 3;
+            this.crossPlayerControl.SelectedIndexChanged += new System.EventHandler(this.crossPlayerControl_SelectedIndexChanged);
             // 
             // label1
             // 

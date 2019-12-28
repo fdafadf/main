@@ -3,8 +3,6 @@ using Games.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AI.MonteCarlo
 {
@@ -17,16 +15,18 @@ namespace AI.MonteCarlo
         public static readonly double UCT_C = Math.Sqrt(2);
 
         private TGame Game;
+        public TPlayer Player { get; }
         public MCTreeNode<TGameAction, TGameState> CurrentNode { get; private set; }
         private Action<MCTreeNode<TGameAction, TGameState>> PriorFunction;
-        private IGamePlayoutGenerator<TGameState, TPlayer> PlayoutGenerator;
+        private IGamePlayoutGenerator<TGameState, TPlayer, TGameAction> PlayoutGenerator;
         private Random Random;
 
-        public MCTreeSearch(TGame game, TGameState startState, int seed)
+        public MCTreeSearch(TGame game, TPlayer player, TGameState startState, int seed)
         {
             Random = new Random(seed);
             Game = game;
-            PlayoutGenerator = new RandomGamePlayoutGenerator<TGameState, TGameAction, TPlayer>(Game, new Random(seed));
+            Player = player;
+            PlayoutGenerator = new RandomGamePlayoutGenerator<TGameState, TPlayer, TGameAction>(Game, new Random(seed));
             PriorFunction = a => { };
             CurrentNode = new MCTreeNode<TGameAction, TGameState>(null, startState);
         }
@@ -59,135 +59,98 @@ namespace AI.MonteCarlo
                 return true;
             }
         }
-
-        //public MCTreeNode<TGameState> RootNode
-        //{
-        //    get
-        //    {
-        //        return this.rootNode;
-        //    }
-        //}
-
-        //public void Round()
-        //{
-        //    this.Round(this.rootNode);
-        //}
-
-        public void Rounds(int number)
+        
+        public void Round(int repeats)
         {
-            Rounds(this.CurrentNode, number);
+            Round(CurrentNode, repeats);
         }
 
-        public void Rounds(MCTreeNode<TGameAction, TGameState> node, int number)
+        public void Round(MCTreeNode<TGameAction, TGameState> node, int repeats)
         {
-            for (int i = 0; i < number; i++)
+            for (int i = 0; i < repeats; i++)
             {
                 Round(node);
             }
         }
 
-        /*
-        public MCTreeSearchRound<TGameAction, TGameState> RoundWithDetails(MCTreeNode<TGameAction, TGameState> node)
+        public void Round(MCTreeNode<TGameAction, TGameState> node)
         {
-            MCTreeSearchRound<TGameAction, TGameState> result = new MCTreeSearchRound<TGameAction, TGameState>();
-            result.Selection = this.SelectPath(node);
-            var selectedNode = result.Selection.Last();
+            TGameState playoutFinalState;
+            MCTreeNode<TGameAction, TGameState> selectedNode = Select(node);
 
-            if (this.Expand(selectedNode))
+            if (selectedNode.Data.IsFinal)
             {
-                result.Expansion = selectedNode.Children.Random().Value;
-                var playoutFinalState = this.playoutGenerator.Generate(result.Expansion.Data);
-
-                if (this.game.IsWinner(playoutFinalState, result.Expansion.Data.CurrentPlayer))
-                {
-                    this.PropagateWin(result.Expansion);
-                }
-                else
-                {
-                    this.PropagateLoss(result.Expansion);
-                }
+                playoutFinalState = selectedNode.Data;
             }
             else
             {
-                var playoutFinalState = this.playoutGenerator.Generate(selectedNode.Data);
+                if (Expand(selectedNode))
+                {
+                    selectedNode = Random.Next(selectedNode.Children).Value;
+                }
 
-                if (this.game.IsLooser(playoutFinalState, node.Data.CurrentPlayer))
-                {
-                    this.PropagateLoss(selectedNode);
-                }
-                else
-                {
-                    this.PropagateWin(selectedNode);
-                }
+                playoutFinalState = PlayoutGenerator.Generate(selectedNode.Data);
             }
 
-            return result;
+            Propagate(playoutFinalState, selectedNode);
         }
-        */
 
-        public void Round(MCTreeNode<TGameAction, TGameState> node)
+        public MCTreeSearchRound<TGameAction, TGameState> RoundWithDetails()
         {
-            var selectedNode = Select(node);
+            return RoundWithDetails(CurrentNode);
+        }
+
+        public MCTreeSearchRound<TGameAction, TGameState> RoundWithDetails(MCTreeNode<TGameAction, TGameState> node)
+        {
+            MCTreeSearchRound<TGameAction, TGameState> result = new MCTreeSearchRound<TGameAction, TGameState>();
+            result.Selection = SelectPath(node);
+            var selectedNode = result.Selection.Last();
 
             if (Expand(selectedNode))
             {
-                var expandedNode = Random.Next(selectedNode.Children).Value;
-                var playoutFinalState = PlayoutGenerator.Generate(expandedNode.Data);
-
-                
-                if (expandedNode.Data.CurrentPlayer.Equals(playoutFinalState.GetWinner()))
-                {
-                    //Console.WriteLine(playoutFinalState);
-                    //Console.WriteLine("PropagateWin+");
-                    //this.PropagateWin(expandedNode);
-                    Propagate(expandedNode, true);
-                }
-                else
-                {
-                    //Console.WriteLine(playoutFinalState);
-                    //Console.WriteLine("PropagateLoss+");
-                    //this.PropagateLoss(expandedNode);
-                    Propagate(expandedNode, false);
-                }
+                result.Expansion = Random.Next(selectedNode.Children).Value;
+                result.Playout = PlayoutGenerator.GeneratePath(result.Expansion.Data);
+                var playoutFinalState = result.Playout.Last().Item2;
+                Propagate(playoutFinalState, result.Expansion);
             }
             else
             {
                 var playoutFinalState = PlayoutGenerator.Generate(selectedNode.Data);
+                Propagate(playoutFinalState, selectedNode);
+            }
 
-                if (node.Data.CurrentPlayer.Equals(playoutFinalState.GetWinner()))
+            return result;
+        }
+
+        private void Propagate(TGameState playoutFinalState, MCTreeNode<TGameAction, TGameState> node)
+        {
+            TPlayer winner = playoutFinalState.GetWinner();
+
+            if (winner == null)
+            {
+                PropagateDraw(node);
+            }
+            else if (Player.Equals(winner))
+            {
+                if (Player.Equals(node.Data.CurrentPlayer))
                 {
-                    //Console.WriteLine(playoutFinalState);
-                    //Console.WriteLine("PropagateWin");
-                    //this.PropagateWin(selectedNode);
-                    Propagate(selectedNode, true);
+                    PropagateLoss(node);
                 }
                 else
                 {
-                    //Console.WriteLine(playoutFinalState);
-                    //Console.WriteLine("PropagateLoss");
-                    //this.PropagateLoss(selectedNode);
-                    Propagate(selectedNode, false);
+                    PropagateWin(node);
                 }
             }
-        }
-
-        private void Propagate(MCTreeNode<TGameAction, TGameState> node, bool win)
-        {
-            if (node != null)
+            else
             {
-                node.Simulations++;
-
-                if (node.Data.IsFinal)
+                if (Player.Equals(node.Data.CurrentPlayer))
                 {
-                    win = node.Data.CurrentPlayer.Equals(node.Data.GetWinner());
+                    PropagateWin(node);
                 }
-
-                if (win)
+                else
                 {
-                    node.Wins++;
+                    PropagateLoss(node);
                 }
-
-                Propagate(node.Parent, win == false);
             }
         }
 
@@ -195,8 +158,8 @@ namespace AI.MonteCarlo
         {
             if (node != null)
             {
-                node.Simulations++;
-                node.Wins++;
+                node.Simulations += 10;
+                node.Wins += 10;
                 PropagateLoss(node.Parent);
             }
         }
@@ -205,8 +168,18 @@ namespace AI.MonteCarlo
         {
             if (node != null)
             {
-                node.Simulations++;
+                node.Simulations += 10;
                 PropagateWin(node.Parent);
+            }
+        }
+
+        private void PropagateDraw(MCTreeNode<TGameAction, TGameState> node)
+        {
+            if (node != null)
+            {
+                node.Simulations += 10;
+                node.Wins += 5;
+                PropagateDraw(node.Parent);
             }
         }
 

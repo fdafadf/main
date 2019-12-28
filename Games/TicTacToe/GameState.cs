@@ -209,16 +209,19 @@ namespace Games.TicTacToe
         public virtual string ToString(char empty, char nought, char cross)
         {
             StringBuilder builder = new StringBuilder();
-            Func<FieldState, char> charMap = o => ' '; // TicTacToeNeuralIOLoader.InputFunctions.Map(empty, nought, cross);
+            Func<FieldState, char> charMap = FieldStateExtensions.Map(empty, nought, cross);
 
             for (uint y = 0; y < BoardSize; y++)
             {
+                if (y > 0)
+                {
+                    builder.AppendLine();
+                }
+
                 for (uint x = 0; x < BoardSize; x++)
                 {
                     builder.Append(charMap(BoardFields[x, y]));
                 }
-
-                builder.AppendLine();
             }
 
             return builder.ToString();

@@ -66,36 +66,34 @@ namespace Demo
 
         private void ticTacToeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var ais = TicTacToeAI.GetEngines();
+            var engines = TicTacToeAI.GetEngines();
 
-            IGameAI<GameState, Player, GameAction> GetAI(string name)
-            {
-                if (name.Equals("Human"))
-                {
-                    return null;
-                }
-                else
-                {
-                    var result = ais[name];
+            //IGameAI<GameState, Player, GameAction> GetAI(string name)
+            //{
+            //    if (name.Equals("Human"))
+            //    {
+            //        return null;
+            //    }
+            //    else
+            //    {
+            //        var result = ais[name];
+            //
+            //        if (result == null)
+            //        {
+            //            throw new Exception($"{name} is not initialized.");
+            //        }
+            //
+            //        return result;
+            //    }
+            //}
 
-                    if (result == null)
-                    {
-                        throw new Exception($"{name} is not initialized.");
-                    }
-
-                    return result;
-                }
-            }
-
-            using (var settingsForm = new TicTacToeGameSettingsForm())
+            using (var settingsForm = new TicTacToeGameSettingsForm(engines))
             {
                 if (settingsForm.ShowDialog() == DialogResult.OK)
                 {
                     try
                     {
-                        IGameAI<GameState, Player, GameAction> noughtAI = GetAI(settingsForm.Nought);
-                        IGameAI<GameState, Player, GameAction> crossAI = GetAI(settingsForm.Cross);
-                        ShowForm(new TicTacToeGameForm(noughtAI, crossAI));
+                        ShowForm(new TicTacToeGameForm(settingsForm.Nought, settingsForm.Cross));
                     }
                     catch (Exception exception)
                     {
