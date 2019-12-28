@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard1.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="NeuralNetworks\NeuralNetworkExcluded.cs" />
+    <Compile Remove="NeuralNetworks\NeuralNetworkLayerExcluded.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Games\Games.csproj" />
+  </ItemGroup>
+
+</Project>
