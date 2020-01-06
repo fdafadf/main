@@ -10,15 +10,17 @@ namespace AI.MonteCarlo
         where TGame : IGame<TGameState, TGameAction, TPlayer>
         where TGameState : IGameState<TPlayer>
         where TPlayer : IPlayer
-        where TGameAction : IGameAction
+        where TGameAction : class, IGameAction
     {
         public static readonly double UCT_C = Math.Sqrt(2);
 
         private TGame Game;
         public TPlayer Player { get; }
         public MCTreeNode<TGameAction, TGameState> CurrentNode { get; private set; }
+        public MCTreeNode<TGameAction, TGameState> Root { get; set; }
+
         private Action<MCTreeNode<TGameAction, TGameState>> PriorFunction;
-        private IGamePlayoutGenerator<TGameState, TPlayer, TGameAction> PlayoutGenerator;
+        public IGamePlayoutGenerator<TGameState, TPlayer, TGameAction> PlayoutGenerator { get; }
         private Random Random;
 
         public MCTreeSearch(TGame game, TPlayer player, TGameState startState, int seed)
@@ -26,12 +28,24 @@ namespace AI.MonteCarlo
             Random = new Random(seed);
             Game = game;
             Player = player;
-            PlayoutGenerator = new RandomGamePlayoutGenerator<TGameState, TPlayer, TGameAction>(Game, new Random(seed));
+            PlayoutGenerator = new GamePlayoutRandomGenerator<TGameState, TPlayer, TGameAction>(Game, new Random(seed));
             PriorFunction = a => { };
-            CurrentNode = new MCTreeNode<TGameAction, TGameState>(null, startState);
+            Root = new MCTreeNode<TGameAction, TGameState>(null, startState, null);
+            CurrentNode = Root;
         }
 
-        public bool Move(TGameAction action)
+        public MCTreeSearch(TGame game, TPlayer player, TGameState startState, Random random, Func<TGameState, TGameAction> randomActionProvider)
+        {
+            Random = random;
+            Game = game;
+            Player = player;
+            PlayoutGenerator = new GamePlayoutRandomGenerator<TGameState, TPlayer, TGameAction>(Game, randomActionProvider);
+            PriorFunction = a => { };
+            Root = new MCTreeNode<TGameAction, TGameState>(null, startState, null);
+            CurrentNode = Root;
+        }
+
+        public bool Play(TGameAction action)
         {
             Expand(CurrentNode);
             MCTreeNode<TGameAction, TGameState> newNode = CurrentNode.Children[action];
@@ -78,9 +92,9 @@ namespace AI.MonteCarlo
             TGameState playoutFinalState;
             MCTreeNode<TGameAction, TGameState> selectedNode = Select(node);
 
-            if (selectedNode.Data.IsFinal)
+            if (selectedNode.GameState.IsFinal)
             {
-                playoutFinalState = selectedNode.Data;
+                playoutFinalState = selectedNode.GameState;
             }
             else
             {
@@ -89,10 +103,22 @@ namespace AI.MonteCarlo
                     selectedNode = Random.Next(selectedNode.Children).Value;
                 }
 
-                playoutFinalState = PlayoutGenerator.Generate(selectedNode.Data);
+                playoutFinalState = PlayoutGenerator.Generate(selectedNode.GameState);
             }
 
             Propagate(playoutFinalState, selectedNode);
+        }
+
+        public IEnumerable<MCTreeSearchRound<TGameAction, TGameState>> RoundWithDetails(int repeats)
+        {
+            List<MCTreeSearchRound<TGameAction, TGameState>> result = new List<MCTreeSearchRound<TGameAction, TGameState>>();
+
+            for (int i = 0; i < repeats; i++)
+            {
+                result.Add(RoundWithDetails(CurrentNode));
+            }
+
+            return result;
         }
 
         public MCTreeSearchRound<TGameAction, TGameState> RoundWithDetails()
@@ -103,22 +129,36 @@ namespace AI.MonteCarlo
         public MCTreeSearchRound<TGameAction, TGameState> RoundWithDetails(MCTreeNode<TGameAction, TGameState> node)
         {
             MCTreeSearchRound<TGameAction, TGameState> result = new MCTreeSearchRound<TGameAction, TGameState>();
+            result.Path = GameTreeNode<TGameState, TGameAction, MCTreeNode<TGameAction, TGameState>>.GetPath(node);
             result.Selection = SelectPath(node);
             var selectedNode = result.Selection.Last();
+            TGameState playoutFinalState;
 
-            if (Expand(selectedNode))
+            if (selectedNode.GameState.IsFinal)
             {
-                result.Expansion = Random.Next(selectedNode.Children).Value;
-                result.Playout = PlayoutGenerator.GeneratePath(result.Expansion.Data);
-                var playoutFinalState = result.Playout.Last().Item2;
-                Propagate(playoutFinalState, result.Expansion);
+                playoutFinalState = selectedNode.GameState;
             }
             else
             {
-                var playoutFinalState = PlayoutGenerator.Generate(selectedNode.Data);
-                Propagate(playoutFinalState, selectedNode);
+                if (Expand(selectedNode))
+                {
+                    result.Expansion = Random.Next(selectedNode.Children).Value;
+                    selectedNode = result.Expansion;
+                }
+
+                result.Playout = PlayoutGenerator.GeneratePath(selectedNode.GameState);
+
+                if (result.Playout.Any())
+                {
+                    playoutFinalState = result.Playout.Last().Item2;
+                }
+                else
+                {
+                    playoutFinalState = selectedNode.GameState;
+                }
             }
 
+            Propagate(playoutFinalState, selectedNode);
             return result;
         }
 
@@ -132,7 +172,7 @@ namespace AI.MonteCarlo
             }
             else if (Player.Equals(winner))
             {
-                if (Player.Equals(node.Data.CurrentPlayer))
+                if (Player.Equals(node.GameState.CurrentPlayer))
                 {
                     PropagateLoss(node);
                 }
@@ -143,7 +183,7 @@ namespace AI.MonteCarlo
             }
             else
             {
-                if (Player.Equals(node.Data.CurrentPlayer))
+                if (Player.Equals(node.GameState.CurrentPlayer))
                 {
                     PropagateWin(node);
                 }
@@ -193,7 +233,7 @@ namespace AI.MonteCarlo
             return SelectUCTPath(node);
         }
 
-        private bool Expand(MCTreeNode<TGameAction, TGameState> node)
+        public bool Expand(MCTreeNode<TGameAction, TGameState> node)
         {
             if (node.IsExpandedAndHasNoChildren)
             {
@@ -204,19 +244,19 @@ namespace AI.MonteCarlo
             {
                 node.Children = new Dictionary<TGameAction, MCTreeNode<TGameAction, TGameState>>();
 
-                foreach (TGameAction action in Game.GetAllowedActions(node.Data))
+                foreach (TGameAction action in Game.GetAllowedActions(node.GameState))
                 {
-                    TGameState state = Game.Play(node.Data, action);
-                    node.Children.Add(action, CreateNode(node, state));
+                    TGameState state = Game.Play(node.GameState, action);
+                    node.Children.Add(action, CreateNode(node, state, action));
                 }
             }
 
             return node.IsExpandedAndHasNoChildren == false;
         }
 
-        private MCTreeNode<TGameAction, TGameState> CreateNode(MCTreeNode<TGameAction, TGameState> parent, TGameState data)
+        private MCTreeNode<TGameAction, TGameState> CreateNode(MCTreeNode<TGameAction, TGameState> parent, TGameState data, TGameAction lastAction)
         {
-            var result = new MCTreeNode<TGameAction, TGameState>(parent, data);
+            var result = new MCTreeNode<TGameAction, TGameState>(parent, data, lastAction);
             PriorFunction(result);
             return result;
         }
@@ -232,6 +272,19 @@ namespace AI.MonteCarlo
                 double logT = Math.Log(node.Simulations);
                 MCTreeNode<TGameAction, TGameState> maxNode = node.Children.Values.MaxItem(n => CalculateUCTWeight(n, logT));
                 return SelectUCT(maxNode);
+            }
+        }
+
+        public IEnumerable<Tuple<MCTreeNode<TGameAction, TGameState>, double>> GetChildrenWeights(MCTreeNode<TGameAction, TGameState> node)
+        {
+            if (node.IsUnexpanded || node.IsExpandedAndHasNoChildren)
+            {
+                return null;
+            }
+            else
+            {
+                double logT = Math.Log(node.Simulations);
+                return node.Children.Select(n => Tuple.Create(n.Value, CalculateUCTWeight(n.Value, logT)));
             }
         }
 
@@ -282,5 +335,7 @@ namespace AI.MonteCarlo
                 return $@"s1({s1})s2({s2})logT({logT})";
             }
         }
+
+
     }
 }
