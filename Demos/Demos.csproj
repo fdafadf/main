@@ -30,13 +30,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x64</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject />
@@ -121,6 +122,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\AI.Keras\AI.Keras.csproj">
+      <Project>{46173EB6-15DD-45BF-ACFA-F5AE7F79685B}</Project>
+      <Name>AI.Keras</Name>
+    </ProjectReference>
     <ProjectReference Include="..\AI.MLNet\AI.MLNet.csproj">
       <Project>{062176be-b4bc-4f65-8b1b-140ef00489b8}</Project>
       <Name>AI.MLNet</Name>

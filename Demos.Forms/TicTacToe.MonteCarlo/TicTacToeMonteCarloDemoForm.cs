@@ -47,9 +47,9 @@ namespace Demos.Forms.TicTacToe.MonteCarlo
 
             if (details.Playout != null)
             {
-                foreach (GameState state in details.Playout.Select(n => n.Item2))
+                foreach (var node in details.Playout)
                 {
-                    Console.WriteLine(state);
+                    Console.WriteLine(node.Item2);
                     Console.WriteLine();
                 }
             }
@@ -79,7 +79,7 @@ namespace Demos.Forms.TicTacToe.MonteCarlo
         private void ticTacToeBoardControl1_OnAction(GameAction gameAction)
         {
             gameState = TicTacToeGame.Instance.Play(gameState, gameAction);
-            mcts.Move(gameAction);
+            mcts.Play(gameAction);
             RefreshLabels();
             ticTacToeBoardControl1.BoardState = gameState;
         }

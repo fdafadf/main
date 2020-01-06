@@ -46,6 +46,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Go.Game\GoBoardControlFieldFeatures.cs" />
+    <Compile Include="Go.Game\GoBoardControlFieldFeaturesHelper.cs" />
+    <Compile Include="Go.Game\GoBoardControlGeometry.cs" />
+    <Compile Include="Go.Game\Utilities.cs" />
+    <Compile Include="Utilities\GameTreeNavigationController.cs" />
+    <Compile Include="Go.Game\GoBoardControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Go.Game\GoBoardControl.Designer.cs">
+      <DependentUpon>GoBoardControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Go.Game\GoGameForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Go.Game\GoGameForm.Designer.cs">
+      <DependentUpon>GoGameForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Settings.cs" />
     <Compile Include="Utilities\ActivationFunctionControl.cs">
       <SubType>Component</SubType>
@@ -128,6 +145,12 @@
   <ItemGroup>
     <EmbeddedResource Include="Base\DemoForm.resx">
       <DependentUpon>DemoForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Go.Game\GoBoardControl.resx">
+      <DependentUpon>GoBoardControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Go.Game\GoGameForm.resx">
+      <DependentUpon>GoGameForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="TicTacToe.MonteCarlo\TicTacToeMonteCarloDemoForm.resx">
       <DependentUpon>TicTacToeMonteCarloDemoForm.cs</DependentUpon>

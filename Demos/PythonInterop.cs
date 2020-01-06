@@ -12,7 +12,7 @@ namespace Demo
     {
         public double[][][] GetAllUniqueStates()
         {
-            var trainingData = TicTacToeNeuralIOGenerator.Instance.GetAllUniqueStates(TicTacToeNeuralIOLoader.InputFunctions.Bipolar, new TicTacToeMinMaxProbabilitiesEvaluator());
+            var trainingData = TicTacToeNeuralIOGenerator.Instance.GetAllUniqueStates(TicTacToeNeuralIOLoader.InputFunctions.Bipolar, new TicTacToeMinMaxSeparatedProbabilitiesEvaluation());
             return ConvertToPython(trainingData);
         }
 

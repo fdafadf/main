@@ -73,7 +73,7 @@ namespace Demos.Forms.TicTacToe.NeuralNetwork
             if (allStatesByHash == null)
             {
                 allStatesByHash = new Dictionary<int, GameStateNeuralIO<GameState>>();
-                var uniqueGameStates = TicTacToeNeuralIOGenerator.Instance.GetAllUniqueStates(TicTacToeNeuralNetwork.DefaultInputFunction, new TicTacToeMinMaxProbabilitiesEvaluator());
+                var uniqueGameStates = TicTacToeNeuralIOGenerator.Instance.GetAllUniqueStates(TicTacToeNeuralNetwork.DefaultInputFunction, new TicTacToeMinMaxSeparatedProbabilitiesEvaluation());
 
                 foreach (var item in uniqueGameStates)
                 {

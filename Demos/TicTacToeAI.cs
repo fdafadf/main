@@ -8,6 +8,8 @@ using Demos.Forms;
 using AI.MonteCarlo;
 using System;
 using TicTacToeAILoader = System.Func<AI.NeuralNetworks.Games.IGameAI<Games.TicTacToe.GameState, Games.TicTacToe.Player, Games.TicTacToe.GameAction>>;
+using AI.Keras;
+using TicTacToeMCTS = AI.MonteCarlo.MCTreeSearch<Games.TicTacToe.TicTacToeGame, Games.TicTacToe.GameState, Games.TicTacToe.GameAction, Games.TicTacToe.Player>;
 
 namespace Demo
 {
@@ -16,7 +18,7 @@ namespace Demo
         public static IDictionary<string, TicTacToeAILoader> GetEngines()
         {
             Dictionary<string, TicTacToeAILoader> result = new Dictionary<string, TicTacToeAILoader>();
-            result.Add("Computer (Keras)", () => null);
+            result.Add("Computer (Keras)", () => new TicTacToeKeras(Settings.TicTacToeKerasModelPath));
             result.Add("Computer (ML.NET)", () => new TicTacToeMLNet(Settings.TicTacToeMLModelPath));
             result.Add("Computer (Monte Carlo)", () => new TicTacToeMonteCarlo());
             return result;
@@ -31,8 +33,10 @@ namespace Demo
 
         public GameAction GenerateMove(GameState gameState)
         {
-            MCTreeSearch<TicTacToeGame, GameState, GameAction, Player> mcts = new MCTreeSearch<TicTacToeGame, GameState, GameAction, Player>(TicTacToeGame.Instance, Player.Cross, gameState, 0);
+            TicTacToeMCTS mcts = new TicTacToeMCTS(TicTacToeGame.Instance, Player.Cross, gameState, 0);
             mcts.Round(1000);
+            mcts.Play(new GameAction(1, 1));
+            mcts.Play(new GameAction(0, 1));
             return mcts.CurrentNode.Children.MaxItem(e => e.Value.Simulations).Key;
         }
     }

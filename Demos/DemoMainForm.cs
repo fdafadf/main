@@ -8,6 +8,7 @@ using Demos.Forms.TicTacToe.NeuralNetwork;
 using Demos.Forms.Xor.NeuralNetwork;
 using Demos.Forms.TicTacToe.MonteCarlo;
 using Demos.Forms.TicTacToe.Game;
+using Demos.Forms.Go.Game;
 
 namespace Demo
 {
@@ -25,6 +26,7 @@ namespace Demo
 
         private void MainForm_Load(object sender, EventArgs e)
         {
+            ShowForm(new GoGameForm());
         }
 
         private void ticTacToePerceptronButton_Click(object sender, EventArgs e)

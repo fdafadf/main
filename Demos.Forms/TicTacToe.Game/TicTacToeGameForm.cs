@@ -5,6 +5,7 @@ using System.Configuration;
 using System.IO;
 using System.Windows.Forms;
 using AI.NeuralNetworks.Games;
+using System.Threading.Tasks;
 
 namespace Demos.Forms.TicTacToe.Game
 {
@@ -104,19 +105,24 @@ namespace Demos.Forms.TicTacToe.Game
             {
                 if (currentState.IsFinal == false)
                 {
-                    GameAction gameAction = currentAI.GenerateMove(currentState);
-                    GameState nextState = TicTacToeGame.Instance.Play(currentState, gameAction);
+                    //Task.Delay(1000).ContinueWith(t =>
+                    //{
+                        GameAction gameAction = currentAI.GenerateMove(currentState);
+                        GameState nextState = TicTacToeGame.Instance.Play(currentState, gameAction);
 
-                    if (nextState == null)
-                    {
-                        MessageBox.Show($"The {currentState.CurrentPlayer.FieldState} lost by illegal move.");
-                    }
-                    else
-                    {
-                        this.boardControl.BoardState = nextState;
-                        currentState = nextState;
-                        MovePlayed();
-                    }
+                        //Invoke((MethodInvoker)delegate
+                        //{
+                            if (nextState == null)
+                            {
+                                MessageBox.Show($"The {currentState.CurrentPlayer.FieldState} lost by illegal move.");
+                            }
+                            else
+                            {
+                                boardControl.BoardState = nextState;
+                                currentState = nextState; MovePlayed();
+                            }
+                        //});
+                    //});
                 }
             }
         }
