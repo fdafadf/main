@@ -4,4 +4,12 @@
     <TargetFramework>netstandard1.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="Draughts\Class1.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Draughts\" />
+  </ItemGroup>
+
 </Project>

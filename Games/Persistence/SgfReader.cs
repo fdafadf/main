@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Games.Sgf
 {
-    public class Parser
+    public class SgfReader
     {
         //public Collection ReadFile(string path)
         //{
@@ -20,7 +20,7 @@ namespace Games.Sgf
             using (StreamReader reader = new StreamReader(stream))
             {
                 Lexer lexer = new Lexer(reader);
-                return this.ParseCollection(lexer);
+                return ParseCollection(lexer);
             }
         }
 
@@ -28,12 +28,12 @@ namespace Games.Sgf
         {
             Collection result;
             List<GameTree> trees = new List<GameTree>();
-            GameTree tree = this.ParseGameTree(lexer);
+            GameTree tree = ParseGameTree(lexer);
 
             while (tree != null)
             {
                 trees.Add(tree);
-                tree = this.ParseGameTree(lexer);
+                tree = ParseGameTree(lexer);
             }
 
             if (trees.Count == 0)
@@ -55,7 +55,7 @@ namespace Games.Sgf
             if (lexer.Peek().Type == LexemeType.OpeningBracket)
             {
                 lexer.Read();
-                Sequence sequence = this.ParseSequence(lexer);
+                Sequence sequence = ParseSequence(lexer);
                 
                 if (sequence == null)
                 {
@@ -64,12 +64,12 @@ namespace Games.Sgf
                 else
                 {
                     List<GameTree> trees = new List<GameTree>();
-                    GameTree tree = this.ParseGameTree(lexer);
+                    GameTree tree = ParseGameTree(lexer);
 
                     while (tree != null)
                     {
                         trees.Add(tree);
-                        tree = this.ParseGameTree(lexer);
+                        tree = ParseGameTree(lexer);
                     }
 
                     result = new GameTree(sequence, trees);
@@ -89,12 +89,12 @@ namespace Games.Sgf
         private Sequence ParseSequence(Lexer lexer)
         {
             List<Node> nodes = new List<Node>();
-            Node node = this.ParseNode(lexer);
+            Node node = ParseNode(lexer);
 
             while (node != null)
             {
                 nodes.Add(node);
-                node = this.ParseNode(lexer);
+                node = ParseNode(lexer);
             }
 
             if (nodes.Count == 0)
@@ -114,7 +114,7 @@ namespace Games.Sgf
             if (lexer.Peek().Type == LexemeType.Semicolon)
             {
                 lexer.Read();
-                NodeProperties properties = this.ParseNodeProperties(lexer);
+                NodeProperties properties = ParseNodeProperties(lexer);
                 result = new Node(properties);
             }
 
@@ -124,12 +124,12 @@ namespace Games.Sgf
         private NodeProperties ParseNodeProperties(Lexer lexer)
         {
             NodeProperties result = new NodeProperties();
-            NodeProperty property = this.ParseNodeProperty(lexer);
+            NodeProperty property = ParseNodeProperty(lexer);
 
             while (property != null)
             {
                 result.Add(property);
-                property = this.ParseNodeProperty(lexer);
+                property = ParseNodeProperty(lexer);
             }
 
             return result;
@@ -251,7 +251,7 @@ namespace Games.Sgf
 
         public Collection(List<GameTree> games)
         {
-            this.Games = games;
+            Games = games;
         }
     }
 
@@ -262,8 +262,8 @@ namespace Games.Sgf
 
         public GameTree(Sequence sequence, List<GameTree> children)
         {
-            this.Sequence = sequence;
-            this.Children = children;
+            Sequence = sequence;
+            Children = children;
         }
     }
 
@@ -273,7 +273,7 @@ namespace Games.Sgf
 
         public Sequence(List<Node> nodes)
         {
-            this.Nodes = nodes;
+            Nodes = nodes;
         }
     }
 
@@ -283,7 +283,7 @@ namespace Games.Sgf
 
         public Node(NodeProperties properties)
         {
-            this.Properties = properties;
+            Properties = properties;
         }
     }
 
@@ -299,8 +299,8 @@ namespace Games.Sgf
 
         public NodeProperty(NodePropertyIdent ident, List<string> values)
         {
-            this.Ident = ident;
-            this.Values = values;
+            Ident = ident;
+            Values = values;
         }
     }
 
@@ -312,7 +312,7 @@ namespace Games.Sgf
         public NodePropertyIdent(string text)
         {
             //this.Type = type;
-            this.Text = text;
+            Text = text;
         }
     }
 

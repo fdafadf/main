@@ -1,6 +1,6 @@
 ﻿namespace Games.Go
 {
-    public class Stone
+    public class Stone : IPlayer
     {
         public static Stone Black { get; private set; }
         public static Stone White { get; private set; }

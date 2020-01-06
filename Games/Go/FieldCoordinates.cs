@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
 namespace Games.Go
 {
-    public struct FieldCoordinates
+    public class FieldCoordinates : IGameAction
     {
-        public static readonly FieldCoordinates Empty = new FieldCoordinates(uint.MaxValue, uint.MaxValue);
+        public static readonly FieldCoordinates Pass = new FieldCoordinates(uint.MaxValue, 1);
         private static readonly char[] GtpCharacters = "abcdefghjklmnopqrst".ToCharArray();
         private static readonly char[] SgfCharacters = "abcdefghijklmnopqrst".ToCharArray();
         private static readonly Regex GtpPattern = new Regex(@"^\s*([abcdefghjklmnopqrst])(\d+)\s*$");
@@ -31,11 +32,11 @@ namespace Games.Go
         {
             if (text == "" || text == "tt")
             {
-                return FieldCoordinates.Empty;
+                return Pass;
             }
             else
             {
-                Match match = FieldCoordinates.SgfPattern.Match(text.ToLower());
+                Match match = SgfPattern.Match(text.ToLower());
 
                 if (match.Success)
                 {
@@ -50,30 +51,46 @@ namespace Games.Go
             }
         }
 
+        public static Dictionary<uint, FieldCoordinates> Cache = new Dictionary<uint, FieldCoordinates>();
+
+        public static FieldCoordinates Get(uint x, uint y)
+        {
+            FieldCoordinates result;
+            uint key = x + y * 100;
+
+            if (Cache.TryGetValue(key, out result) == false)
+            {
+                result = new FieldCoordinates(x, y);
+                Cache.Add(key, result);
+            }
+
+            return result;
+        }
+
         public readonly uint X;
         public readonly uint Y;
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "x")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "y")]
-        public FieldCoordinates(uint x, uint y)
+        private FieldCoordinates(uint x, uint y)
         {
-            this.X = x;
-            this.Y = y;
+            X = x;
+            Y = y;
         }
 
-        public static bool operator ==(FieldCoordinates c, FieldCoordinates d)
-        {
-            return c.X == d.X && c.Y == d.Y;
-        }
-
-        public static bool operator !=(FieldCoordinates c, FieldCoordinates d)
-        {
-            return c.X != d.X || c.Y != d.Y;
-        }
+        //public static bool operator ==(FieldCoordinates c, FieldCoordinates d)
+        //{
+        //    return c.X == d.X && c.Y == d.Y;
+        //}
+        //
+        //public static bool operator !=(FieldCoordinates c, FieldCoordinates d)
+        //{
+        //    return c.X != d.X || c.Y != d.Y;
+        //}
 
         public bool Equals(FieldCoordinates other)
         {
-            return X == other.X && Y == other.Y;
+            return other != null && X == other.X && Y == other.Y;
         }
 
         public override bool Equals(object obj)
@@ -92,7 +109,7 @@ namespace Games.Go
 
         public override string ToString()
         {
-            return this.ToString(FieldCoordinatesFormat.Default);
+            return ToString(FieldCoordinatesFormat.Default);
         }
 
         public string ToString(FieldCoordinatesFormat format)

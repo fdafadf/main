@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Games.Sgf
 {
-    public class Writer
+    public class SgfWriter
     {
         //public void WriteFile(Collection collection, string path)
         //{

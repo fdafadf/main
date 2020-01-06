@@ -59,6 +59,56 @@ namespace Games.Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int IndexOf<T>(this IEnumerable<T> self, Func<T, bool> predicate)
+        {
+            int index = 0;
+
+            foreach (var item in self)
+            {
+                if (predicate(item))
+                {
+                    return index;
+                }
+
+                index++;
+            }
+
+            return -1;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<T> MaxItems<T>(this IEnumerable<T> collection, Func<T, double> valueSelector)
+        {
+            double maxValue;
+            List<T> maxElements = new List<T>();
+            IEnumerator<T> e = collection.GetEnumerator();
+
+            if (e.MoveNext())
+            {
+                maxValue = valueSelector(e.Current);
+                maxElements.Add(e.Current);
+
+                while (e.MoveNext())
+                {
+                    double weight = valueSelector(e.Current);
+
+                    if (weight > maxValue)
+                    {
+                        maxValue = weight;
+                        maxElements.Clear();
+                        maxElements.Add(e.Current);
+                    }
+                    else if (weight == maxValue)
+                    {
+                        maxElements.Add(e.Current);
+                    }
+                }
+            }
+
+            return maxElements;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T MaxItem<T>(this IEnumerable<T> collection, Func<T, double> valueSelector)
         {
             IEnumerator<T> e = collection.GetEnumerator();

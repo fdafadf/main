@@ -1,23 +1,26 @@
-﻿using Games.Utilities;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace Games.Utilities
 {
-    public class RandomGamePlayoutGenerator<TGameState, TPlayer, TGameAction> : IGamePlayoutGenerator<TGameState, TPlayer, TGameAction>
+    public class GamePlayoutRandomGenerator<TGameState, TPlayer, TGameAction> : IGamePlayoutGenerator<TGameState, TPlayer, TGameAction>
         where TGameState : IGameState<TPlayer>
         where TPlayer : IPlayer
         where TGameAction : IGameAction
     {
         private IGame<TGameState, TGameAction, TPlayer> Game;
-        private Func<TGameState, TGameAction> RandomActionMethod;
-        private Random Random;
+        private Func<TGameState, TGameAction> RandomActionProvider;
 
-        public RandomGamePlayoutGenerator(IGame<TGameState, TGameAction, TPlayer> game, Random random)
+        public GamePlayoutRandomGenerator(IGame<TGameState, TGameAction, TPlayer> game, Random random)
         {
-            Random = random;
             Game = game;
-            RandomActionMethod = GetRandomAllowedAction;
+            RandomActionProvider = gameState => GetRandomAllowedAction(random, gameState);
+        }
+
+        public GamePlayoutRandomGenerator(IGame<TGameState, TGameAction, TPlayer> game, Func<TGameState, TGameAction> randomActionProvider)
+        {
+            Game = game;
+            RandomActionProvider = randomActionProvider;
         }
 
         public List<Tuple<TGameAction, TGameState>> GeneratePath(TGameState state)
@@ -27,7 +30,7 @@ namespace Games.Utilities
 
             while (currentState.IsFinal == false)
             {
-                TGameAction action = RandomActionMethod(currentState);
+                TGameAction action = RandomActionProvider(currentState);
                 currentState = Game.Play(currentState, action);
                 result.Add(Tuple.Create(action, currentState));
             }
@@ -41,7 +44,7 @@ namespace Games.Utilities
 
             while (currentState.IsFinal == false)
             {
-                TGameAction action = RandomActionMethod(currentState);
+                TGameAction action = RandomActionProvider(currentState);
                 currentState = Game.Play(currentState, action);
 #if DEBUG
                 if (currentState == null)
@@ -54,9 +57,9 @@ namespace Games.Utilities
             return currentState;
         }
 
-        private TGameAction GetRandomAllowedAction(TGameState state)
+        private TGameAction GetRandomAllowedAction(Random random, TGameState state)
         {
-            return Random.Next(Game.GetAllowedActions(state));
+            return random.Next(Game.GetAllowedActions(state));
         }
     }
 }

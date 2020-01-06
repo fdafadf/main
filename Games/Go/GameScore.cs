@@ -1,6 +1,6 @@
 ﻿namespace Games.Go
 {
-    public struct GameScore
+    public class GameScore
     {
         public uint Black;
         public uint White;

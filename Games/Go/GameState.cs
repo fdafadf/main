@@ -1,220 +1,286 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace Games.Go
 {
-    public class GameState
+    public class GameState : IGameState<Stone>
     {
-        public struct CapturedStonesState
-        {
-            public uint Black;
-            public uint White;
-
-            public void Add(Stone stone, uint numberOfStones)
-            {
-                if (stone.Color.State == FieldState.Black)
-                {
-                    White += numberOfStones;
-                }
-                else
-                {
-                    Black += numberOfStones;
-                }
-            }
-        }
-
-        public FieldState[,] BoardFields;
-        public uint BoardSize { get; }
-        public CapturedStonesState CapturedStones;
-        public FieldCoordinates Ko { get; private set; }
+        private FieldCoordinates PreviousMove { get; }
+        public Stone CurrentPlayer { get; }
+        public GameStateInternal InternalState { get; }
 
         public GameState(uint boardSize)
         {
-            Ko = FieldCoordinates.Empty;
-            BoardSize = boardSize;
-            BoardFields = new FieldState[BoardSize, BoardSize];
+            PreviousMove = null;
+            CurrentPlayer = Stone.Black;
+            InternalState = new GameStateInternal(boardSize);
         }
 
-        public GameState(GameState state)
+        private GameState(FieldCoordinates previousMove, Stone currentPlayer, GameStateInternal internalState)
         {
-            Ko = FieldCoordinates.Empty;
-            CapturedStones = state.CapturedStones;
-            BoardSize = state.BoardSize;
-            BoardFields = new FieldState[BoardSize, BoardSize];
-            Array.Copy(state.BoardFields, BoardFields, state.BoardFields.Length);
+            PreviousMove = previousMove;
+            CurrentPlayer = currentPlayer;
+            InternalState = internalState;
         }
 
-        public GameState Pass()
+        // Final State
+        private GameState(GameStateInternal internalState)
         {
-            return new GameState(this) { Ko = FieldCoordinates.Empty };
+            PreviousMove = FieldCoordinates.Pass;
+            CurrentPlayer = null;
+            InternalState = internalState;
         }
 
-        public GameState Play(uint x, uint y, Stone stone)
+        public bool IsFinal
         {
-            if (Inside(x, y))
+            get
             {
-                if (BoardFields[x, y] == FieldState.Empty)
+                return CurrentPlayer == null;
+            }
+        }
+
+        public Stone GetWinner()
+        {
+            if (IsFinal)
+            {
+                return GameScore.Black > GameScore.White ? Stone.Black : Stone.White;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        Dictionary<FieldCoordinates, GameState> allowedActions;
+
+        public IEnumerable<FieldCoordinates> GetAllowedActions()
+        {
+            if (allowedActions == null)
+            {
+                allowedActions = new Dictionary<FieldCoordinates, GameState>();
+
+                if (IsFinal == false)
                 {
-                    GameState result = new GameState(this);
-                    uint capturedW = result.RemoveGroupIfHasOneBreath(x - 1, y, stone.Opposite.Color.State);
-                    uint capturedE = result.RemoveGroupIfHasOneBreath(x + 1, y, stone.Opposite.Color.State);
-                    uint capturedN = result.RemoveGroupIfHasOneBreath(x, y - 1, stone.Opposite.Color.State);
-                    uint capturedS = result.RemoveGroupIfHasOneBreath(x, y + 1, stone.Opposite.Color.State);
-                    uint capturedStones = capturedN + capturedS + capturedE + capturedW;
-                    result.BoardFields[x, y] = stone.Color.State;
-                    int breaths = result.MarkGroup(x, y, stone.Color.State);
-
-                    if (breaths > 0)
+                    for (byte y = 0; y < InternalState.BoardSize; y++)
                     {
-                        result.ClearMarkedFields(stone.Color.State, FieldState.Empty);
-                        result.CapturedStones.Add(stone, capturedStones);
-
-                        if (capturedStones == 1 && breaths == 1)
+                        for (byte x = 0; x < InternalState.BoardSize; x++)
                         {
-                            if (capturedN > 0)
+                            FieldCoordinates field = FieldCoordinates.Get(x, y);
+
+                            if (field != InternalState.Ko)
                             {
-                                result.Ko = new FieldCoordinates(x, y - 1);
-                            }
-                            else if (capturedS > 0)
-                            {
-                                result.Ko = new FieldCoordinates(x, y + 1);
-                            }
-                            else if (capturedE > 0)
-                            {
-                                result.Ko = new FieldCoordinates(x + 1, y);
-                            }
-                            else if (capturedW > 0)
-                            {
-                                result.Ko = new FieldCoordinates(x - 1, y);
+                                GameStateInternal nextState = InternalState.Play(field.X, field.Y, CurrentPlayer);
+
+                                if (nextState != null)
+                                {
+                                    allowedActions.Add(field, new GameState(field, CurrentPlayer.Opposite, nextState));
+                                }
                             }
                         }
+                    }
 
-                        return result;
+                    if (PreviousMove == FieldCoordinates.Pass)
+                    {
+                        allowedActions.Add(FieldCoordinates.Pass, new GameState(InternalState.Pass()));
+                    }
+                    else
+                    {
+                        allowedActions.Add(FieldCoordinates.Pass, new GameState(FieldCoordinates.Pass, CurrentPlayer.Opposite, InternalState.Pass()));
                     }
                 }
             }
 
-            return null;
+            return allowedActions.Keys;
+        }
+
+        List<FieldCoordinates> allowedActionsForRandomPlayout;
+
+        public IEnumerable<FieldCoordinates> GetAllowedActionsForRandomPlayout()
+        {
+            if (allowedActionsForRandomPlayout == null)
+            {
+                allowedActionsForRandomPlayout = new List<FieldCoordinates>();
+                allowedActionsForRandomPlayout.AddRange(GetAllowedActions().Where(move => PlayoutOptimized.IsTrueEye(InternalState, move.X, move.Y, CurrentPlayer) == false));
+            }
+
+            return allowedActionsForRandomPlayout;
+        }
+
+        public Stack<GameState> RandomPlayout()
+        {
+            Random random = new Random();
+            Stack<GameState> randomPlayout = new Stack<GameState>();
+            randomPlayout.Push(this);
+            GameState lastState = this;
+
+            while (lastState.IsFinal == false)
+            {
+                var legalMoves = lastState.GetAllowedActionsForRandomPlayout().ToList();
+
+                if (legalMoves.Any())
+                {
+                    lastState = lastState.Play(legalMoves[random.Next(0, legalMoves.Count - 1)]);
+                }
+                else
+                {
+                    lastState = lastState.allowedActions[FieldCoordinates.Pass];
+                }
+
+                randomPlayout.Push(lastState);
+
+                //if (legalMoves.Any())
+                //{
+                //    var randomLegalMove = legalMoves[random.Next(0, legalMoves.Count - 1)];
+                //    randomPlayout.Push(currentNode.Play(randomLegalMove));
+                //    passesInRow = 0;
+                //}
+                //else
+                //{
+                //    randomPlayout.Push(currentNode.Pass());
+                //    passesInRow++;
+                //}
+            }
+
+            return randomPlayout;
+        }
+
+        public GameState Play(FieldCoordinates action)
+        {
+            GetAllowedActions();
+            return allowedActions[action];
         }
 
         /// <summary>
-        /// 
+        /// 1|2|3   Simple true eye detector.<br/>
+        /// 4|0|5   0 is true eye for player P only if all 1-8<br/>
+        /// 6|7|8   fields around are P or outside the board.<br/>
         /// </summary>
         /// <param name="x"></param>
         /// <param name="y"></param>
-        /// <param name="boardFieldState"></param>
-        /// <returns>Number of removed stones</returns>
-        private uint RemoveGroupIfHasOneBreath(uint x, uint y, FieldState boardFieldState)
+        /// <param name="stone"></param>
+        /// <returns></returns>
+        
+
+        public static class PlayoutOptimized
         {
-            if (IsInsideAndHasState(x, y, boardFieldState))
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static bool IsTrueEye(GameStateInternal gameState, uint x, uint y, Stone stone)
             {
-                int breaths = MarkGroup(x, y, boardFieldState);
+                int sum = 0;
 
-                if (breaths == 1)
-                {
-                    return ClearMarkedFields(FieldState.Empty, FieldState.Empty);
-                }
+                if (gameState.IsOutsideOrHasState(x + 1, y - 1, stone.Color.State)) sum++;
+                if (gameState.IsOutsideOrHasState(x + 1, y, stone.Color.State)) sum++;
+                if (gameState.IsOutsideOrHasState(x + 1, y + 1, stone.Color.State)) sum++;
+                if (gameState.IsOutsideOrHasState(x, y + 1, stone.Color.State)) sum++;
+                if (gameState.IsOutsideOrHasState(x, y - 1, stone.Color.State)) sum++;
+                if (gameState.IsOutsideOrHasState(x - 1, y - 1, stone.Color.State)) sum++;
+                if (gameState.IsOutsideOrHasState(x - 1, y, stone.Color.State)) sum++;
+                if (gameState.IsOutsideOrHasState(x - 1, y + 1, stone.Color.State)) sum++;
 
-                ClearMarkedFields(boardFieldState, FieldState.Empty);
+                return sum >= 7;
             }
 
-            return 0;
-        }
+            private static int[] Ones = { -1, 1 };
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="markedStoneReplacement"></param>
-        /// <returns>Number of replaced marked stones.</returns>
-        private uint ClearMarkedFields(FieldState markedStoneReplacement, FieldState markedEmptyFieldReplacement)
-        {
-            uint replacedStones = 0;
-
-            for (int y = 0; y < BoardSize; y++)
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static FieldState GetPointWinner(GameStateInternal gameState, uint x, uint y)
             {
-                for (int x = 0; x < BoardSize; x++)
+                if (gameState.BoardFields[x, y] == FieldState.Empty)
                 {
-                    switch (BoardFields[x, y])
+                    FieldState expectedState = FieldState.Empty;
+
+                    if (GetPointWinner_CheckFieldState(gameState, x + 1, y, ref expectedState)
+                        && GetPointWinner_CheckFieldState(gameState, x - 1, y, ref expectedState)
+                        && GetPointWinner_CheckFieldState(gameState, x, y + 1, ref expectedState)
+                        && GetPointWinner_CheckFieldState(gameState, x, y - 1, ref expectedState))
                     {
-                        case FieldState.MarkedStone:
-                            replacedStones++;
-                            BoardFields[x, y] = markedStoneReplacement;
-                            break;
-                        case FieldState.MarkedEmpty:
-                            BoardFields[x, y] = markedEmptyFieldReplacement; // FieldState.Empty;
-                            break;
+                        return expectedState;
                     }
                 }
+
+                return FieldState.Empty;
             }
 
-            return replacedStones;
-        }
-
-        private int MarkGroup(uint x, uint y, FieldState stone)
-        {
-            if (Inside(x, y))
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            private static bool GetPointWinner_CheckFieldState(GameStateInternal gameState, uint x, uint y, ref FieldState expectedState)
             {
-                if (BoardFields[x, y] == stone)
+                if (gameState.Inside(x, y))
                 {
-                    BoardFields[x, y] = FieldState.MarkedStone;
-                    return MarkGroup(x - 1, y, stone) +
-                           MarkGroup(x + 1, y, stone) +
-                           MarkGroup(x, y - 1, stone) +
-                           MarkGroup(x, y + 1, stone);
-                }
-                else if (BoardFields[x, y] == 0)
-                {
-                    BoardFields[x, y] = FieldState.MarkedEmpty;
-                    return 1;
-                }
-            }
+                    FieldState fieldState = gameState.BoardFields[x, y];
 
-            return 0;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool Inside(uint x, uint y)
-        {
-            return x < BoardSize && y < BoardSize;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool HasStateOrIsOutside(uint x, uint y, FieldState stone)
-        {
-            return Inside(x, y) == false || BoardFields[x, y] == stone;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool IsInsideAndHasState(uint x, uint y, FieldState stone)
-        {
-            return Inside(x, y) && BoardFields[x, y] == stone;
-        }
-
-        public List<FieldCoordinates> GetLegalMoves(Stone stone)
-        {
-            List<FieldCoordinates> legalMoves = new List<FieldCoordinates>();
-            
-            for (byte y = 0; y < BoardSize; y++)
-            {
-                for (byte x = 0; x < BoardSize; x++)
-                {
-                    FieldCoordinates coordinates = new FieldCoordinates(x, y);
-
-                    if (IsLegalMove(coordinates, stone))
+                    if (fieldState == FieldState.Empty)
                     {
-                        legalMoves.Add(coordinates);
+                        return false;
+                    }
+                    else
+                    {
+                        if (expectedState == FieldState.Empty)
+                        {
+                            expectedState = fieldState;
+                            return true;
+                        }
+                        else if (expectedState != fieldState)
+                        {
+                            return false;
+                        }
                     }
                 }
-            }
 
-            return legalMoves;
+                return true;
+            }
         }
 
-        private bool IsLegalMove(FieldCoordinates field, Stone stone)
+        //public long CountTotalScoreForBlack()
+        //{
+        //    GameScore score = new GameScore();
+        //    CountTerritoryOnFinalPosition(ref score);
+        //    return (long)score.Black - score.White + CurrentState.CapturedStones.White - CurrentState.CapturedStones.Black;
+        //}
+
+        GameScore gameScore;
+
+        // Wersja działająca tylko dla finalnej pozycji playoutu, 
+        // czyli posiadającej wyłącznie jednopunktowe oczy.
+        private GameScore GameScore
         {
-            return field.Equals(Ko) == false && Play(field.X, field.Y, stone) != null;
+            get
+            {
+                if (gameScore == null)
+                {
+                    gameScore = new GameScore();
+
+                    for (uint y = 0; y < InternalState.BoardSize; y++)
+                    {
+                        for (uint x = 0; x < InternalState.BoardSize; x++)
+                        {
+                            FieldState pointWinner = PlayoutOptimized.GetPointWinner(InternalState, x, y);
+
+                            switch (pointWinner)
+                            {
+                                case FieldState.Black:
+                                    gameScore.Black++;
+                                    break;
+                                case FieldState.White:
+                                    gameScore.White++;
+                                    break;
+                            }
+                        }
+                    }
+
+                    gameScore.Black += InternalState.CapturedStones.White;
+                    gameScore.White += InternalState.CapturedStones.Black;
+                }
+
+                return gameScore;
+            }
+        }
+
+        public override string ToString()
+        {
+            return ToString(CurrentPlayer);
         }
 
         public string ToString(Stone stone)
@@ -225,19 +291,27 @@ namespace Games.Go
             labels[FieldState.Empty] = "·";
             labels[FieldState.MarkedEmpty] = "⸭";
             labels[FieldState.MarkedStone] = "⊙";
-            string illegal = "❌";
+            labels[FieldState.Black] = "X";
+            labels[FieldState.White] = "O";
+            labels[FieldState.Empty] = "·";
+            labels[FieldState.MarkedEmpty] = "⸭";
+            labels[FieldState.MarkedStone] = "⊙";
+            //string illegal = "❌";
+            string illegal = "i";
             StringBuilder builder = new StringBuilder();
             Func<FieldState, string> fieldToText = state => labels[state];
 
-            for (uint y = 0; y < BoardSize; y++)
+            for (uint y = 0; y < InternalState.BoardSize; y++)
             {
-                for (uint x = 0; x < BoardSize; x++)
+                for (uint x = 0; x < InternalState.BoardSize; x++)
                 {
-                    if (BoardFields[x, y] == FieldState.Empty)
+                    if (InternalState.BoardFields[x, y] == FieldState.Empty)
                     {
-                        if (IsLegalMove(new FieldCoordinates(x, y), stone))
+                        GetAllowedActions();
+
+                        if (allowedActions.ContainsKey(FieldCoordinates.Get(x, y)))
                         {
-                            builder.Append(fieldToText(BoardFields[x, y]));
+                            builder.Append(fieldToText(InternalState.BoardFields[x, y]));
                         }
                         else
                         {
@@ -246,7 +320,7 @@ namespace Games.Go
                     }
                     else
                     {
-                        builder.Append(fieldToText(BoardFields[x, y]));
+                        builder.Append(fieldToText(InternalState.BoardFields[x, y]));
                     }
                 }
 
