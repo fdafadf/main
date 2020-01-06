@@ -49,3 +49,5 @@
 /Demos.Forms/Games.Demos.TicTacToe
 /Games/bin/Debug
 /Games/obj
+/Games/bin/Release/netstandard1.0
+/AI/bin/Release/netstandard1.0
