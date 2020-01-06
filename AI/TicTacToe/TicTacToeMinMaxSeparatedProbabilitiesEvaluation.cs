@@ -1,11 +1,13 @@
 ﻿using Games;
 using Games.TicTacToe;
 using Games.Utilities;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace AI.TicTacToe
 {
-    public class TicTacToeMinMaxProbabilitiesEvaluator : IGameTreeEvaluator<GameState>
+    public class TicTacToeMinMaxSeparatedProbabilitiesEvaluation : IGameTreeEvaluator<GameState>
     {
         public double[] EvaluateLeaf(GameState finalState)
         {
@@ -39,6 +41,31 @@ namespace AI.TicTacToe
             }
 
             return result;
+        }
+
+        public static GameAction BestFor(Player currentPlayer, List<KeyValuePair<GameAction, double[]>> predictions)
+        {
+            int currentPlayerIndex = currentPlayer.IsCross ? 1 : 0;
+            int currentOpponentIndex = currentPlayer.IsCross ? 0 : 1;
+            int[] possibilities = new[] { -1, -1, -1 };
+
+            for (int i = 0; i < predictions.Count; i++)
+            {
+                possibilities[predictions[i].Value.IndexOfMax()] = i;
+            }
+
+            if (possibilities[currentPlayerIndex] >= 0)
+            {
+                return predictions[possibilities[currentPlayerIndex]].Key;
+            }
+            else if (possibilities[2] >= 0)
+            {
+                return predictions[possibilities[2]].Key;
+            }
+            else
+            {
+                return predictions[possibilities[currentOpponentIndex]].Key;
+            }
         }
 
         private static double[] Result(FieldState winner)
