@@ -178,9 +178,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AI.NeuralNetworks\AI.NeuralNetworks.csproj">
-      <Project>{16367db7-692c-4484-ac86-06b476846175}</Project>
-      <Name>AI.NeuralNetworks</Name>
+    <ProjectReference Include="..\AI\AI.csproj">
+      <Project>{c0549974-49fa-4548-b8c6-7a9061240f76}</Project>
+      <Name>AI</Name>
     </ProjectReference>
     <ProjectReference Include="..\Games\Games.csproj">
       <Project>{965829bb-0a45-44c9-b9b3-df83a38c9dfc}</Project>

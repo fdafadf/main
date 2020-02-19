@@ -124,25 +124,21 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\KelpNet\KelpNet\KelpNet.csproj">
-      <Project>{750BB541-BF90-471D-A93F-54230B6FB07D}</Project>
-      <Name>KelpNet</Name>
-    </ProjectReference>
     <ProjectReference Include="..\AI.NeuralNetworks.Keras\AI.NeuralNetworks.Keras.csproj">
-      <Project>{46173EB6-15DD-45BF-ACFA-F5AE7F79685B}</Project>
+      <Project>{46173eb6-15dd-45bf-acfa-f5ae7f79685b}</Project>
       <Name>AI.NeuralNetworks.Keras</Name>
     </ProjectReference>
     <ProjectReference Include="..\AI.NeuralNetworks.MLNet\AI.NeuralNetworks.MLNet.csproj">
       <Project>{062176be-b4bc-4f65-8b1b-140ef00489b8}</Project>
       <Name>AI.NeuralNetworks.MLNet</Name>
     </ProjectReference>
-    <ProjectReference Include="..\AI.TFSharp\AI.TFSharp.csproj">
-      <Project>{350104D5-FCB0-4892-90D3-9DF49A2A8CE0}</Project>
-      <Name>AI.TFSharp</Name>
-    </ProjectReference>
     <ProjectReference Include="..\AI.NeuralNetworks\AI.NeuralNetworks.csproj">
       <Project>{16367db7-692c-4484-ac86-06b476846175}</Project>
       <Name>AI.NeuralNetworks</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AI\AI.csproj">
+      <Project>{c0549974-49fa-4548-b8c6-7a9061240f76}</Project>
+      <Name>AI</Name>
     </ProjectReference>
     <ProjectReference Include="..\Demos.AI.Forms\Demos.AI.Forms.csproj">
       <Project>{3ec473c3-a711-409e-bb44-92187ddb1239}</Project>

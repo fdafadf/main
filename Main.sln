@@ -44,13 +44,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demos.AI.Forms", "Demos.AI.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Games", "Games\Games.csproj", "{965829BB-0A45-44C9-B9B3-DF83A38C9DFC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AI.NeuralNetworks", "AI.NeuralNetworks\AI.NeuralNetworks.csproj", "{16367DB7-692C-4484-AC86-06B476846175}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AI.NeuralNetworks", "AI.NeuralNetworks\AI.NeuralNetworks.csproj", "{16367DB7-692C-4484-AC86-06B476846175}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AI.NeuralNetworks.Keras", "AI.NeuralNetworks.Keras\AI.NeuralNetworks.Keras.csproj", "{46173EB6-15DD-45BF-ACFA-F5AE7F79685B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demos.AI.NeuralNetworks.TicTacToe", "Demos.AI.NeuralNetworks.TicTacToe\Demos.AI.NeuralNetworks.TicTacToe.csproj", "{233297C2-8DED-445D-9062-25D36FB7C4F9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demos.AI.NeuralNetworks", "Demos.AI.NeuralNetworks\Demos.AI.NeuralNetworks.csproj", "{C98D1225-1D8E-43F3-A0BC-724A5BEEA218}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AI", "AI\AI.csproj", "{C0549974-49FA-4548-B8C6-7A9061240F76}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -90,10 +92,6 @@ Global
 		{46173EB6-15DD-45BF-ACFA-F5AE7F79685B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{46173EB6-15DD-45BF-ACFA-F5AE7F79685B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{46173EB6-15DD-45BF-ACFA-F5AE7F79685B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{59EAE8C0-F7A7-4EDE-8131-90600B625B5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{59EAE8C0-F7A7-4EDE-8131-90600B625B5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{59EAE8C0-F7A7-4EDE-8131-90600B625B5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{59EAE8C0-F7A7-4EDE-8131-90600B625B5A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{233297C2-8DED-445D-9062-25D36FB7C4F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{233297C2-8DED-445D-9062-25D36FB7C4F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{233297C2-8DED-445D-9062-25D36FB7C4F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -102,6 +100,10 @@ Global
 		{C98D1225-1D8E-43F3-A0BC-724A5BEEA218}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C98D1225-1D8E-43F3-A0BC-724A5BEEA218}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C98D1225-1D8E-43F3-A0BC-724A5BEEA218}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C0549974-49FA-4548-B8C6-7A9061240F76}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C0549974-49FA-4548-B8C6-7A9061240F76}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C0549974-49FA-4548-B8C6-7A9061240F76}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C0549974-49FA-4548-B8C6-7A9061240F76}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -97,13 +97,17 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AI.NeuralNetwork\AI.NeuralNetworks.csproj">
-      <Project>{59eae8c0-f7a7-4ede-8131-90600b625b5a}</Project>
+    <ProjectReference Include="..\AI.NeuralNetworks\AI.NeuralNetworks.csproj">
+      <Project>{16367db7-692c-4484-ac86-06b476846175}</Project>
       <Name>AI.NeuralNetworks</Name>
     </ProjectReference>
     <ProjectReference Include="..\AI.NeuralNetworks\AI.NeuralNetworks.csproj">
       <Project>{16367db7-692c-4484-ac86-06b476846175}</Project>
       <Name>AI.NeuralNetworks</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AI\AI.csproj">
+      <Project>{c0549974-49fa-4548-b8c6-7a9061240f76}</Project>
+      <Name>AI</Name>
     </ProjectReference>
     <ProjectReference Include="..\Demos.AI.NeuralNetworks.TicTacToe\Demos.AI.NeuralNetworks.TicTacToe.csproj">
       <Project>{233297c2-8ded-445d-9062-25d36fb7c4f9}</Project>

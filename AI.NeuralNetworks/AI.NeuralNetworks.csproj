@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{16367DB7-692C-4484-AC86-06B476846175}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>SimpleNeuralNetwork</RootNamespace>
-    <AssemblyName>SimpleNeuralNetwork</AssemblyName>
+    <RootNamespace>AI.NeuralNetworks</RootNamespace>
+    <AssemblyName>AI.NeuralNetworks</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

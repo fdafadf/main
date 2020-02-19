@@ -35,9 +35,6 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Demos.Forms">
-      <HintPath>..\assemblies\Demos.Forms.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -91,13 +88,21 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AI.NeuralNetwork\AI.NeuralNetworks.csproj">
-      <Project>{59EAE8C0-F7A7-4EDE-8131-90600B625B5A}</Project>
+    <ProjectReference Include="..\AI.NeuralNetworks\AI.NeuralNetworks.csproj">
+      <Project>{16367db7-692c-4484-ac86-06b476846175}</Project>
       <Name>AI.NeuralNetworks</Name>
     </ProjectReference>
     <ProjectReference Include="..\AI.NeuralNetworks\AI.NeuralNetworks.csproj">
       <Project>{16367db7-692c-4484-ac86-06b476846175}</Project>
       <Name>AI.NeuralNetworks</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AI\AI.csproj">
+      <Project>{c0549974-49fa-4548-b8c6-7a9061240f76}</Project>
+      <Name>AI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Demos.AI.Forms\Demos.AI.Forms.csproj">
+      <Project>{3ec473c3-a711-409e-bb44-92187ddb1239}</Project>
+      <Name>Demos.AI.Forms</Name>
     </ProjectReference>
     <ProjectReference Include="..\Games\Games.csproj">
       <Project>{965829bb-0a45-44c9-b9b3-df83a38c9dfc}</Project>

@@ -1,19 +1,10 @@
 ﻿using AI.Keras;
-using AI.TFSharp;
 using AI.TicTacToe;
 using AI.TicTacToe.NeuralNetworks;
 using Demos.Forms;
 using Games;
 using Games.Go;
 using Games.Utilities;
-using KelpNet.Common;
-using KelpNet.Common.Functions.Container;
-using KelpNet.Common.Tools;
-using KelpNet.Functions.Activations;
-using KelpNet.Functions.Connections;
-using KelpNet.Functions.Noise;
-using KelpNet.Loss;
-using KelpNet.Optimizers;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -32,76 +23,6 @@ namespace Demo
         [STAThread]
         static void Main()
         {
-            var stack = new FunctionStack(
-                //new Linear(9, 200),
-                //new Linear(200, 125),
-                //new Linear(125, 75),
-                //new Linear(75, 25),
-                //new Linear(25, 3)
-
-                new Linear(9, 125),
-                new ReLU(),
-                new Linear(125, 75),
-                new ReLU(),
-                new Linear(75, 25),
-                new ReLU(),
-                new Linear(25, 3)
-
-                //new Linear(2, 2, name: "l1 Linear"),
-                //new Sigmoid(name: "l1 Sigmoid"),
-                //new Linear(2, 2, name: "l2 Linear")
-            );
-
-            stack.SetOptimizer(new Adam());
-            Random random = new Random();
-            TicTacToeTrainingData.Load(TicTacToeNeuralIOLoader.InputTransforms.Relu, out double[][] inputs, out TicTacToeResultProbabilities[] expectedPredictions);
-            inputs = inputs.Take(500).ToArray();
-            var outputs = expectedPredictions.Take(500).Select(p => p.Probabilities).ToArray();
-
-            void TrainModel(int epoches)
-            {
-                Console.WriteLine($"Training Model (All Possible States)");
-
-                for (int epoch = 0; epoch < epoches; epoch++)
-                {
-                    random.Shuffle(inputs, expectedPredictions);
-                    double errorSum = Trainer.Train(stack, inputs, outputs, new MeanSquaredError(), false);
-                    stack.Update();
-                    Console.WriteLine(string.Format("Error: {0}", errorSum));
-                }
-            }
-
-            void TestModel()
-            {
-                Console.WriteLine($"Testing Model (All Possible States)");
-                int correct = 0;
-                int wrong = 0;
-                //var predictions = stack.Predict(new NdArray(inputs));
-
-                for (int i = 0; i < inputs.Length; i++)
-                {
-                    var prediction = stack.Forward(new NdArray(inputs[i]));
-                    double[] output = prediction[0].Data.Select(v => v.Value).ToArray();
-
-                    if (TicTacToeTrainingData.IsPredictionCorrect(expectedPredictions[i], output))
-                    {
-                        correct++;
-                    }
-                    else
-                    {
-                        wrong++;
-                    }
-                }
-
-                Console.WriteLine(string.Format("Correct: {0}", correct));
-                Console.WriteLine(string.Format("Wrong: {0}", wrong));
-            }
-
-            for (int i = 0; i < 10; i++)
-            {
-                TrainModel(10);
-                TestModel();
-            }
             //var input = new NdArray(new double[] { 1, 0, 1, 0, 1, 0, 0, 0, 0 });
             //var expectedOutput = new NdArray(new double[] { 0, 0, 1 });
             ////var output = stack.Forward(input);
@@ -118,14 +39,14 @@ namespace Demo
             //Examples.Example1(Console.Out);
             //string modelPath = @"C:\Users\pstepnowski\Source\Repos\fdafadf\basics\Workspace\TicTacToeKerasModel.bin";
             //string modelPath = @"C:\Deployment\model.onnx";
-            string kerasModelPath = @"C:\Deployment\model.tf";
+            //string kerasModelPath = @"C:\Deployment\model.tf";
             //
             //if (File.Exists(kerasModelPath) == false)
             //{
             //    TicTacToeKerasExamples.TrainValueNetworkFromScratchAndSaveModel(1, kerasModelPath);
             //}
 
-            TicTacToeKerasExamples.AllCases();
+            //TicTacToeKerasExamples.AllCases();
             //TicTacToeKerasExamples.PredictTimeTest();
             ///TensorFlowSharp.PredictTimeTest(kerasModelPath);
             ///Basics.MLNet.MLTest.LoadModel(@"C:\Deployment\saved_model.pb");
