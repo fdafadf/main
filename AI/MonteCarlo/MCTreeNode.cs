@@ -1,54 +1,43 @@
-﻿using Games.Utilities;
+﻿using Games;
+using Games.Utilities;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace AI.MonteCarlo
 {
-    public class MCTreeNode<TGameAction, TGameNode>
-        : IGameTreeNode<TGameNode, TGameAction, MCTreeNode<TGameAction, TGameNode>>
+    public class MCTreeNode<TNode, TState, TAction> : IGameTreeNode<TNode, TState, TAction>
+        where TNode : MCTreeNode<TNode, TState, TAction>
     {
-        public TGameNode GameState { get; }
-        public TGameAction LastAction { get; }
-        public Dictionary<TGameAction, MCTreeNode<TGameAction, TGameNode>> Children { get; set; }
-        public uint Simulations;
-        public uint Wins;
-        public MCTreeNode<TGameAction, TGameNode> Parent { get; }
+        public TState State { get; }
+        public TAction LastAction { get; }
+        public TNode Parent { get; }
+        public Dictionary<TAction, TNode> Children { get; set; }
+        public uint Visits;
+        public double Value;
+        public bool IsUnexpanded => Children == null;
+        public bool IsExpandedAndHasNoChildren => Children?.Count == 0;
 
-        public MCTreeNode(MCTreeNode<TGameAction, TGameNode> parent, TGameNode data, TGameAction lastAction)
+        public MCTreeNode(TNode parent, TState state, TAction lastAction)
         {
             Parent = parent;
-            GameState = data;
+            State = state;
             LastAction = lastAction;
         }
 
-        public bool IsUnexpanded => Children == null;
-
-        public bool IsExpandedAndHasNoChildren => Children?.Count == 0;
-
-        public int Depth => Parent == null ? 0 : Parent.Depth + 1;
-
-        public MCTreeMove<TGameAction, TGameNode> GetBestAction()
+        public TNode GetMostVisitedChild()
         {
             if (IsUnexpanded || IsExpandedAndHasNoChildren)
             {
-                return null;
+                return default(TNode);
             }
             else
             {
-                var entry = Children.MaxItem(c => c.Value.Simulations);
-                return new MCTreeMove<TGameAction, TGameNode>(entry.Key, entry.Value);
+                return Children.MaxItem(c => c.Value.Visits).Value;
             }
-        }
-        
-        public override string ToString()
-        {
-            string[] lines = GameState.ToString().Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
-            lines[0] += $"  S: {Simulations}";
-            lines[1] += $"  W: {Wins}";
-            return string.Join(Environment.NewLine, lines);
         }
     }
 }

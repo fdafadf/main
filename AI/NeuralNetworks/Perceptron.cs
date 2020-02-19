@@ -50,9 +50,9 @@ namespace AI.NeuralNetworks
             return input.Product(Weights) + Bias * BiasWeight;
         }
 
-        public void Train(IEnumerable<NeuralIO> testData, double alpha, int maxEpoches)
+        public void Train(IEnumerable<NeuralIO<double>> testData, double alpha, int maxEpoches)
         {
-            NeuralIO[] test = testData.ToArray();
+            NeuralIO<double>[] test = testData.ToArray();
             int testDataSize = test.Count();
             int epoch = 0;
             double meanSquaredError = double.MaxValue;
@@ -65,11 +65,11 @@ namespace AI.NeuralNetworks
                 {
                     double outputDerivative;
                     double output = Evaluate(test[i].Input, out outputDerivative);
-                    double outputError = test[i].Output[0] - output;
+                    double outputError = test[i].Output - output;
                     //double outputError = targetOutput - test[i].Output;
                     outputErrorSum += outputError * outputError;
 
-                    if (output != test[i].Output[0])
+                    if (output != test[i].Output)
                     {
                         Bias = Bias + alpha * outputError * BiasWeight / 2;
 

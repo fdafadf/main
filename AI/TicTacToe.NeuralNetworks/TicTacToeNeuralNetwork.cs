@@ -6,11 +6,11 @@ using Games.TicTacToe;
 
 namespace AI.TicTacToe.NeuralNetworks
 {
-    public class TicTacToeNeuralNetwork : NeuralNetwork
+    public class TicTacToeNeuralNetwork : NeuralNetwork<TicTacToeResultProbabilities>
     {
         public static Func<FieldState, double> DefaultInputFunction = TicTacToeNeuralIOLoader.InputFunctions.Unipolar;
 
-        public static GameAction GetBestAction(NeuralNetwork network, GameState gameState)
+        public static GameAction GetBestAction(NeuralNetwork<TicTacToeResultProbabilities> network, GameState gameState)
         {
             double[] input = new double[9];
             gameState.ToArray(TicTacToeNeuralIOLoader.InputFunctions.Unipolar, input);

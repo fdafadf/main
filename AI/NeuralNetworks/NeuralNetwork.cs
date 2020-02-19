@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace AI.NeuralNetworks
 {
-    public class NeuralNetwork
+    public class NeuralNetwork<TOutput>
     {
         NeuralNetworkLayer[] Layers;
 
@@ -30,7 +30,7 @@ namespace AI.NeuralNetworks
             Layers.ForEach(layer => layer.Evaluate());
         }
 
-        public double Train(IEnumerable<NeuralIO> trainData, int maxEpoches, double alpha)
+        public double Train(IEnumerable<NeuralIO<TOutput>> trainData, int maxEpoches, double alpha)
         {
             double meanSquaredError = double.MaxValue;
 
@@ -47,7 +47,7 @@ namespace AI.NeuralNetworks
             return meanSquaredError;
         }
 
-        public double Train(IEnumerable<NeuralIO> trainData, double alpha)
+        public double Train(IEnumerable<NeuralIO<TOutput>> trainData, double alpha)
         {
             double errorSum = 0;
 
@@ -59,43 +59,43 @@ namespace AI.NeuralNetworks
             return 1.0 / (2.0 * trainData.Count()) * errorSum;
         }
 
-        public double Train(NeuralIO trainData, double alpha)
+        public double Train(NeuralIO<TOutput> trainData, double alpha)
         {
             return Train(trainData.Input, trainData.Output, alpha);
         }
 
-        public double Train(double[] trainingInput, double[] trainingOutput, double alpha)
+        public double Train(double[] trainingInput, TOutput trainingOutput, double alpha)
         {
             double errorSum = 0;
 
-            Evaluate(trainingInput);
-
-            for (int i = 0; i < trainingOutput.Length; i++)
-            {
-                double outputError = trainingOutput[i] - Layers.Last().Output[i];
-                errorSum += outputError * outputError;
-            }
-
-            Layers.Last().CalculateError(trainingOutput);
-
-            for (int l = Layers.Length - 2; l >= 0; l--)
-            {
-                Layers[l].CalculateError(Layers[l + 1]);
-            }
-
-            for (int l = Layers.Length - 1; l >= 0; l--)
-            {
-                NeuralNetworkLayer layer = Layers[l];
-                Neuron[] neurons = layer.Neurons;
-
-                for (int n = 0; n < neurons.Length; n++)
-                {
-                    for (int w = 0; w < layer.Input.Length; w++)
-                    {
-                        neurons[n].Weights[w] -= alpha * neurons[n].Error * layer.Input[w];
-                    }
-                }
-            }
+            //Evaluate(trainingInput);
+            //
+            //for (int i = 0; i < trainingOutput.Length; i++)
+            //{
+            //    double outputError = trainingOutput[i] - Layers.Last().Output[i];
+            //    errorSum += outputError * outputError;
+            //}
+            //
+            //Layers.Last().CalculateError(trainingOutput);
+            //
+            //for (int l = Layers.Length - 2; l >= 0; l--)
+            //{
+            //    Layers[l].CalculateError(Layers[l + 1]);
+            //}
+            //
+            //for (int l = Layers.Length - 1; l >= 0; l--)
+            //{
+            //    NeuralNetworkLayer layer = Layers[l];
+            //    Neuron[] neurons = layer.Neurons;
+            //
+            //    for (int n = 0; n < neurons.Length; n++)
+            //    {
+            //        for (int w = 0; w < layer.Input.Length; w++)
+            //        {
+            //            neurons[n].Weights[w] -= alpha * neurons[n].Error * layer.Input[w];
+            //        }
+            //    }
+            //}
 
             return errorSum;
         }

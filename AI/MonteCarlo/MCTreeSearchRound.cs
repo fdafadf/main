@@ -1,30 +1,33 @@
-﻿using System;
+﻿using Games.Utilities;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace AI.MonteCarlo
 {
-    public class MCTreeSearchRound<TKey, TGameState>
-        where TKey : class
+    public class MCTreeSearchRound<TNode, TState, TAction>
+        where TNode : MCTreeNode<TNode, TState, TAction>
     {
-        public IEnumerable<MCTreeNode<TKey, TGameState>> Path { get; set; }
-        public IEnumerable<MCTreeNode<TKey, TGameState>> Selection { get; set; }
-        public MCTreeNode<TKey, TGameState> Expansion { get; set; }
-        public List<Tuple<TKey, TGameState>> Playout { get; set; }
+        public IEnumerable<TNode> Path { get; set; }
+        public IEnumerable<TNode> Selection { get; set; }
+        public TNode Expansion { get; set; }
+        public IEnumerable<Tuple<TAction, TState>> Playout { get; set; }
+        public double PlayoutValue { get; set; }
 
-        public TGameState GetLastGameState()
+        public TState GetLastGameState()
         {
-            if (Playout != null && Playout.Count > 0)
+            if (Playout != null && Playout.Any())
             {
                 return Playout.Last().Item2;
             }
 
             if (Expansion != null)
             {
-                return Expansion.GameState;
+                return Expansion.State;
             }
 
-            return Selection.Last().GameState;
+            return Selection.Last().State;
         }
     }
 }

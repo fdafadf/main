@@ -7,10 +7,10 @@ namespace AI.TicTacToe
 {
     public class TicTacToeGameActionPrediction
     {
-        public static List<KeyValuePair<GameAction, double[]>> Predict(GameState gameState, Func<FieldState, double> inputFunction, Func<double[], double[]> predictFunction)
+        public static IDictionary<GameAction, TOutput> Predict<TOutput>(GameState gameState, Func<FieldState, double> inputFunction, Func<double[], TOutput> predictFunction)
         {
             double[] input = new double[9];
-            Dictionary<GameAction, double[]> predictions = new Dictionary<GameAction, double[]>();
+            Dictionary<GameAction, TOutput> predictions = new Dictionary<GameAction, TOutput>();
 
             foreach (GameAction gameAction in TicTacToeGame.Instance.GetAllowedActions(gameState))
             {
@@ -19,7 +19,7 @@ namespace AI.TicTacToe
                 predictions.Add(gameAction, predictFunction(input));
             }
 
-            return predictions.ToList();
+            return predictions;
         }
 
         public readonly GameState GameState;

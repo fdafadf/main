@@ -5,6 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="MonteCarlo\MCTreeSearchAsGameTree.cs" />
+    <Compile Remove="MonteCarlo\MCTreeSearchSelector.cs" />
+    <Compile Remove="MonteCarlo\MCTreeSearchSettings.cs" />
     <Compile Remove="NeuralNetworks\NeuralNetworkExcluded.cs" />
     <Compile Remove="NeuralNetworks\NeuralNetworkLayerExcluded.cs" />
   </ItemGroup>

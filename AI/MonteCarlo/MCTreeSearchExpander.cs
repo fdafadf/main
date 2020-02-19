@@ -1,0 +1,29 @@
+﻿using Games;
+using Games.Utilities;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace AI.MonteCarlo
+{
+    public class MCTreeSearchExpander<TGame, TState, TAction, TPlayer> : MCTreeSearchExpanderBase<TGame, MCTreeSearchNode<TState, TAction>, TState, TAction, TPlayer>
+        where TGame : IGame<TState, TAction, TPlayer>
+        where TState : IGameState<TPlayer>
+        where TAction : IGameAction
+        where TPlayer : IPlayer
+    {
+        public MCTreeSearchExpander(TGame game, Random random) : base(game, random)
+        {
+        }
+
+        protected override MCTreeSearchNode<TState, TAction> CreateNode(MCTreeSearchNode<TState, TAction> parentNode, TState gameState, TAction action)
+        {
+            return new MCTreeSearchNode<TState, TAction>(parentNode, gameState, action);
+        }
+
+        protected override MCTreeSearchNode<TState, TAction> SelectExpanded(MCTreeSearchNode<TState, TAction> node)
+        {
+            return Random.Next(node.Children).Value;
+        }
+    }
+}
