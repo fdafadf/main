@@ -1,10 +1,10 @@
 ﻿using AI.NeuralNetworks.Games;
 using AI.TicTacToe;
 using Games.TicTacToe;
-using SimpleNeuralNetwork;
+using AI.NeuralNetwork;
 using System.Linq;
 
-namespace TicTacToe
+namespace Demos.TicTacToe
 {
     public class TicTacToeAI : IGameAI<GameState, Player, GameAction>
     {

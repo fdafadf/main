@@ -1,4 +1,4 @@
-﻿namespace TicTacToe
+﻿namespace Demos.TicTacToe
 {
     public class Accuracy
     {

@@ -1,6 +1,6 @@
 ﻿using AI.NeuralNetworks.Games;
 using Games.TicTacToe;
-using SimpleNeuralNetwork;
+using AI.NeuralNetwork;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -11,7 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace TicTacToe
+namespace Demos.TicTacToe
 {
     public partial class TicTacToeForm : Form
     {

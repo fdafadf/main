@@ -4,15 +4,14 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{233297C2-8DED-445D-9062-25D36FB7C4F9}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
-    <RootNamespace>Demos.TicTacToe</RootNamespace>
-    <AssemblyName>Demos.TicTacToe</AssemblyName>
+    <ProjectGuid>{C98D1225-1D8E-43F3-A0BC-724A5BEEA218}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>SimpleNeuralNetworkDemo</RootNamespace>
+    <AssemblyName>SimpleNeuralNetworkDemo</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -32,14 +31,14 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Demos.Forms">
-      <HintPath>..\assemblies\Demos.Forms.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Forms.DataVisualization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -51,21 +50,28 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Accuracy.cs" />
-    <Compile Include="AccuracyMonitor.cs" />
-    <Compile Include="TicTacToeAI.cs" />
-    <Compile Include="TicTacToeForm.cs">
+    <Compile Include="ChartForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="TicTacToeForm.Designer.cs">
-      <DependentUpon>TicTacToeForm.cs</DependentUpon>
+    <Compile Include="ChartForm.Designer.cs">
+      <DependentUpon>ChartForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Examples.cs" />
+    <Compile Include="PlaneForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PlaneForm.Designer.cs">
+      <DependentUpon>PlaneForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="DataLoader.cs" />
-    <Compile Include="TrainingSettings.cs" />
-    <EmbeddedResource Include="TicTacToeForm.resx">
-      <DependentUpon>TicTacToeForm.cs</DependentUpon>
+    <Compile Include="TicTacToeExamples.cs" />
+    <Compile Include="XorExamples.cs" />
+    <EmbeddedResource Include="ChartForm.resx">
+      <DependentUpon>ChartForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PlaneForm.resx">
+      <DependentUpon>PlaneForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -92,12 +98,16 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AI.NeuralNetwork\AI.NeuralNetwork.csproj">
-      <Project>{59EAE8C0-F7A7-4EDE-8131-90600B625B5A}</Project>
-      <Name>SimpleNeuralNetwork</Name>
+      <Project>{59eae8c0-f7a7-4ede-8131-90600b625b5a}</Project>
+      <Name>AI.NeuralNetwork</Name>
     </ProjectReference>
     <ProjectReference Include="..\AI\AI.csproj">
       <Project>{16367db7-692c-4484-ac86-06b476846175}</Project>
       <Name>AI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Demos.TicTacToe\Demos.TicTacToe.csproj">
+      <Project>{233297c2-8ded-445d-9062-25d36fb7c4f9}</Project>
+      <Name>Demos.TicTacToe</Name>
     </ProjectReference>
     <ProjectReference Include="..\Games\Games.csproj">
       <Project>{965829bb-0a45-44c9-b9b3-df83a38c9dfc}</Project>

@@ -5,7 +5,7 @@ using System;
 using System.Data;
 using System.Linq;
 
-namespace TicTacToe
+namespace Demos.TicTacToe
 {
     public class DataLoader
     {

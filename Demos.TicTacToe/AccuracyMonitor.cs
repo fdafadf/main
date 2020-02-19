@@ -1,8 +1,8 @@
 ﻿using AI.TicTacToe;
 using AI.TicTacToe.NeuralNetworks;
-using SimpleNeuralNetwork;
+using AI.NeuralNetwork;
 
-namespace TicTacToe
+namespace Demos.TicTacToe
 {
     public class AccuracyMonitor : TrainingMonitor
     {
