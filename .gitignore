@@ -51,3 +51,8 @@
 /Games/obj
 /Games/bin/Release/netstandard1.0
 /AI/bin/Release/netstandard1.0
+/AI.NeuralNetwork/.vs/SimpleNeuralNetwork/v15
+/AI.NeuralNetwork/bin
+/AI.NeuralNetwork/obj
+/Demos.TicTacToe/bin
+/Demos.TicTacToe/obj
