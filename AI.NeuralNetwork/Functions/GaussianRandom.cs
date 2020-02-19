@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SimpleNeuralNetwork
+namespace AI.NeuralNetwork
 {
     public class GaussianRandom : Random
     {

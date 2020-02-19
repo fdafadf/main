@@ -2,7 +2,7 @@
 
 using System.Collections.Generic;
 
-namespace SimpleNeuralNetwork
+namespace AI.NeuralNetwork
 {
     public abstract class TrainingMonitor
     {

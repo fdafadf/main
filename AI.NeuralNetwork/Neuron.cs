@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 
-namespace SimpleNeuralNetwork
+namespace AI.NeuralNetwork
 {
     public class Neuron
     {

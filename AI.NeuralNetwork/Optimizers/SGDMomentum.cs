@@ -3,7 +3,7 @@
 using System;
 using System.Linq;
 
-namespace SimpleNeuralNetwork
+namespace AI.NeuralNetwork
 {
     // Stochastic Gradient Descent with Momentum
     public class SGDMomentum : SGD

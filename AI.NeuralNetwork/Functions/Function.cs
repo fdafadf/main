@@ -1,4 +1,4 @@
-﻿namespace SimpleNeuralNetwork
+﻿namespace AI.NeuralNetwork
 {
     public static class Function
     {

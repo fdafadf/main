@@ -3,7 +3,7 @@
 using Games.Utilities;
 using System;
 
-namespace SimpleNeuralNetwork
+namespace AI.NeuralNetwork
 {
     public abstract class Optimizer
     {
