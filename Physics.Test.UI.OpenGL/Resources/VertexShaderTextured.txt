@@ -1,0 +1,20 @@
+#version 330 core
+
+layout(location = 0) in vec3 position;
+layout(location = 1) in vec2 textureCoordinate;
+
+out vec2 vs_textureCoordinate;
+
+uniform mat4 model;
+uniform mat4 view;
+uniform mat4 projection;
+
+void main(void)
+{
+	vs_textureCoordinate.x = textureCoordinate.x;
+	vs_textureCoordinate.y = textureCoordinate.y;
+	//vs_textureCoordinate.x = textureCoordinate.x - (255.0 * floor(textureCoordinate.x / 255));
+	//vs_textureCoordinate.y = textureCoordinate.y - (255.0 * floor(textureCoordinate.y / 255));
+	//gl_Position = projection * model * position;
+    gl_Position = vec4(position, 1.0) * model * view * projection;
+}

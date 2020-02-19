@@ -1,0 +1,132 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{FCF8054E-FD40-43A6-8FF9-E01C51B6D8A1}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Basics.Physics.Test.UI</RootNamespace>
+    <AssemblyName>Basics.Physics.Test.UI</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="OpenTK, Version=3.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
+      <HintPath>..\packages\OpenTK.3.1.0\lib\net20\OpenTK.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Camera.cs" />
+    <Compile Include="Class1.cs" />
+    <Compile Include="Extensions.cs" />
+    <Compile Include="ICamera.cs" />
+    <Compile Include="ILight.cs" />
+    <Compile Include="IModel.cs" />
+    <Compile Include="IRenderable.cs" />
+    <Compile Include="Light.cs" />
+    <Compile Include="MainWindow.cs" />
+    <Compile Include="Model.cs" />
+    <Compile Include="ModelFactory.cs" />
+    <Compile Include="ObjectGroup.cs" />
+    <Compile Include="ObjectGroupDefinition.cs" />
+    <Compile Include="Octahedron.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="SceneObject.cs" />
+    <Compile Include="SceneSphere.cs" />
+    <Compile Include="Shader.cs" />
+    <Compile Include="ShaderProgram.cs" />
+    <Compile Include="SphereModel.cs" />
+    <Compile Include="TestModelLoader.cs" />
+    <Compile Include="TexturedModel.cs" />
+    <Compile Include="TexturedObjectGroup.cs" />
+    <Compile Include="TexturedObjectGroupDefinition.cs" />
+    <Compile Include="TexturedVertex.cs" />
+    <Compile Include="Vertex.cs" />
+    <Compile Include="VertexObjectGroup.cs" />
+    <Compile Include="VertexObjectGroupDefinition.cs" />
+    <Compile Include="WavefrontModel.cs" />
+    <Compile Include="WavefrontModelLoader.cs" />
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="OpenTK.dll.config" />
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\VertexShader.txt" />
+    <None Include="Resources\FragmentShader.txt" />
+    <None Include="Resources\FragmentShaderTextured.txt" />
+    <None Include="Resources\VertexShaderTextured.txt" />
+    <Content Include="Shaders\5Frag_simplePipeFrag.c" />
+    <Content Include="Shaders\1Vert_simplePipeTexVert.c" />
+    <Content Include="Shaders\5Frag_simplePipeTexFrag.c" />
+    <Content Include="Shaders\1Vert_simplePipeVert.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Textures\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Physics.Test.UI.Forms\Physics.Test.UI.Forms.csproj">
+      <Project>{6c760c54-6934-48f1-b2a2-c1c2ca595750}</Project>
+      <Name>Physics.Test.UI.Forms</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
