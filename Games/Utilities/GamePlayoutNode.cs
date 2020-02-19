@@ -2,7 +2,7 @@
 
 namespace Games.Utilities
 {
-    public class GamePlayoutNode<TGameState, TGameAction> : GameTreeNode<TGameState, TGameAction, GamePlayoutNode<TGameState, TGameAction>>
+    public class GamePlayoutNode<TGameState, TGameAction> : GameTreeNode<GamePlayoutNode<TGameState, TGameAction>, TGameState, TGameAction>
     {
         public GamePlayoutNodeType Type;
 

@@ -27,10 +27,10 @@ namespace Games.Go
         }
 
         // Final State
-        private GameState(GameStateInternal internalState)
+        private GameState(Stone currentPlayer, GameStateInternal internalState)
         {
-            PreviousMove = FieldCoordinates.Pass;
-            CurrentPlayer = null;
+            PreviousMove = FieldCoordinates.Pass2;
+            CurrentPlayer = currentPlayer;
             InternalState = internalState;
         }
 
@@ -38,7 +38,7 @@ namespace Games.Go
         {
             get
             {
-                return CurrentPlayer == null;
+                return PreviousMove == FieldCoordinates.Pass2;
             }
         }
 
@@ -84,7 +84,7 @@ namespace Games.Go
 
                     if (PreviousMove == FieldCoordinates.Pass)
                     {
-                        allowedActions.Add(FieldCoordinates.Pass, new GameState(InternalState.Pass()));
+                        allowedActions.Add(FieldCoordinates.Pass, new GameState(CurrentPlayer.Opposite, InternalState.Pass()));
                     }
                     else
                     {
@@ -104,6 +104,11 @@ namespace Games.Go
             {
                 allowedActionsForRandomPlayout = new List<FieldCoordinates>();
                 allowedActionsForRandomPlayout.AddRange(GetAllowedActions().Where(move => PlayoutOptimized.IsTrueEye(InternalState, move.X, move.Y, CurrentPlayer) == false));
+
+                if (allowedActionsForRandomPlayout.Count > 1)
+                {
+                    allowedActionsForRandomPlayout.Remove(FieldCoordinates.Pass);
+                }
             }
 
             return allowedActionsForRandomPlayout;
@@ -180,7 +185,7 @@ namespace Games.Go
                 if (gameState.IsOutsideOrHasState(x - 1, y, stone.Color.State)) sum++;
                 if (gameState.IsOutsideOrHasState(x - 1, y + 1, stone.Color.State)) sum++;
 
-                return sum >= 7;
+                return sum >= 8;
             }
 
             private static int[] Ones = { -1, 1 };

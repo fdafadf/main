@@ -3,17 +3,24 @@ using System.Collections.Generic;
 
 namespace Games.Utilities
 {
-    public interface IGameTreeNavigator<TGameTree, TGameState, TGameAction, TNode>
-        where TGameTree : IGameTree<TGameState, TGameAction, TNode>
-        where TGameAction : IGameAction
-        where TNode : IGameTreeNode<TGameState, TGameAction, TNode>
+    public interface IGameTreeNavigator<TNode, TState, TAction>
+        where TAction : IGameAction
+        where TNode : IGameTreeNode<TNode, TState, TAction>
     {
-        TGameTree GameTree { get; }
         TNode CurrentNode { get; }
-        event EventHandler<TGameAction> Forwarded;
-        event EventHandler<GameTreePath<TGameAction>> Navigated;
-        void Navigate(object sender, GameTreePath<TGameAction> track);
-        void NavigateFromRoot(object sender, IEnumerable<TGameAction> forward);
-        bool Forward(object sender, TGameAction action);
+        bool Forward(TNode childNode);
+        bool Backward();
+    }
+
+    public interface IObservableGameTreeNavigator<TNode, TState, TAction>
+        where TAction : IGameAction
+        where TNode : IGameTreeNode<TNode, TState, TAction>
+    {
+        TNode CurrentNode { get; }
+        event EventHandler<TAction> Forwarded;
+        event EventHandler<GameTreePath<TAction>> Navigated;
+        void Navigate(object sender, GameTreePath<TAction> track);
+        void NavigateFromRoot(object sender, IEnumerable<TAction> forward);
+        bool Forward(object sender, TAction action);
     }
 }

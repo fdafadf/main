@@ -2,12 +2,12 @@
 
 namespace Games.Utilities
 {
-    public interface IGameTreeNode<TGameState, TGameAction, TNode>
-        where TNode : IGameTreeNode<TGameState, TGameAction, TNode>
+    public interface IGameTreeNode<TNode, TState, TAction>
+        where TNode : IGameTreeNode<TNode, TState, TAction>
     {
-        TGameState GameState { get; }
-        TGameAction LastAction { get; }
         TNode Parent { get; }
-        Dictionary<TGameAction, TNode> Children { get; set; }
+        TState State { get; }
+        TAction LastAction { get; }
+        Dictionary<TAction, TNode> Children { get; set; }
     }
 }

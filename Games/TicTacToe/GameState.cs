@@ -151,8 +151,31 @@ namespace Games.TicTacToe
 
         public T[] ToArray<T>(Func<FieldState, T> inputFunction)
         {
-            T[] result = new T[9];
+            T[] result = new T[BoardSize * BoardSize];
             ToArray(inputFunction, result);
+            return result;
+        }
+
+        public double[] ToArray()
+        {
+            double[] result = new double[BoardSize * BoardSize * 2];
+
+            for (int y = 0; y < BoardSize; y++)
+            {
+                for (int x = 0; x < BoardSize; x++)
+                {
+                    switch (this[x, y])
+                    {
+                        case FieldState.Cross:
+                            result[y * BoardSize + x] = 1.0;
+                            break;
+                        case FieldState.Nought:
+                            result[y * BoardSize + x + BoardSize] = 1.0;
+                            break;
+                    }
+                }
+            }
+
             return result;
         }
 
@@ -203,7 +226,7 @@ namespace Games.TicTacToe
 
         public override string ToString()
         {
-            return ToString('.', DefaultNoughtCharater, DefaultCrossCharater);
+            return ToString('·', DefaultNoughtCharater, DefaultCrossCharater);
         }
 
         public virtual string ToString(char empty, char nought, char cross)

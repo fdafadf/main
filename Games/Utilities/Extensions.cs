@@ -9,6 +9,32 @@ namespace Games.Utilities
 {
     public static class Extensions
     {
+        public static void Shuffle<T1, T2>(this Random random, T1[] array1, T2[] array2)
+        {
+            for (int t = 0; t < array1.Length; t++)
+            {
+                int r = random.Next(array1.Length - 1);
+                T1 tmp1 = array1[t];
+                array1[t] = array1[r];
+                array1[r] = tmp1;
+                T2 tmp2 = array2[t];
+                array2[t] = array2[r];
+                array2[r] = tmp2;
+            }
+        }
+        //public static IEnumerable<TAttribute> Flatten<TTree, TAttribute>(this TTree self, Func<TTree, IEnumerable<TTree>> children, Func<TTree, TAttribute> attribute)
+        //{
+        //    List<TAttribute> result = new List<TAttribute>();
+        //    self.Flatten(children, attribute, result);
+        //    return result;
+        //}
+        //
+        //private static IEnumerable<TAttribute> Flatten<TTree, TAttribute>(this TTree self, Func<TTree, IEnumerable<TTree>> children, Func<TTree, TAttribute> attribute, List<TAttribute> result)
+        //{
+        //    result.Add(attribute(self));
+        //    return children(self).SelectMany(child => child.Flatten(children, attribute, result));
+        //}
+
         public delegate void Translation2d(double ix, double iy, out double ox, out double oy);
 
         public static readonly Random Random = new Random();

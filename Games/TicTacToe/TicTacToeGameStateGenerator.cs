@@ -7,7 +7,7 @@ namespace Games.TicTacToe
     {
         public static TicTacToeGameStateGenerator Instance = new TicTacToeGameStateGenerator();
 
-        TreeNode<GameState> fullTree;
+        GameTreeNode<GameState, GameAction> fullTree;
         Dictionary<int, GameState> allUniqueStates;
 
         protected TicTacToeGameStateGenerator()
@@ -18,27 +18,28 @@ namespace Games.TicTacToe
         {
             if (allUniqueStates == null)
             {
-                allUniqueStates = GetFullTree().Flatten().Unique(s => s.GetHashCode());
+                //allUniqueStates = GetFullTree().FlattenData().Unique(s => s.GetHashCode());
             }
 
             return allUniqueStates.Values;
         }
 
-        public TreeNode<GameState> GetFullTree()
+        public GameTreeNode<GameState, GameAction> GetFullTree()
         {
-            return fullTree ?? (fullTree = GetFullTree(new GameState()));
+            return fullTree ?? (fullTree = GetFullTree(new GameState(), null, null));
         }
 
-        public TreeNode<GameState> GetFullTree(GameState gameState)
+        private GameTreeNode<GameState, GameAction> GetFullTree(GameState gameState, GameAction lastAction, GameTreeNode<GameState, GameAction> parentNode)
         {
-            TreeNode<GameState> result = new TreeNode<GameState>(gameState);
+            GameTreeNode<GameState, GameAction> result = new GameTreeNode<GameState, GameAction>(gameState, lastAction, parentNode);
+            result.Children = new Dictionary<GameAction, GameTreeNode<GameState, GameAction>>();
 
             if (gameState.IsFinal == false)
             {
                 foreach (GameAction action in TicTacToeGame.Instance.GetAllowedActions(gameState))
                 {
-                    TreeNode<GameState> child = GetFullTree(TicTacToeGame.Instance.Play(gameState, action));
-                    result.Children.Add(child);
+                    GameTreeNode<GameState, GameAction> child = GetFullTree(TicTacToeGame.Instance.Play(gameState, action), action, result);
+                    result.Children.Add(action, child);
                 }
             }
 

@@ -2,12 +2,12 @@
 
 namespace Games
 {
-    public interface IGame<TGameState, TGameAction, TPlayer>
-        where TGameState : IGameState<TPlayer>
+    public interface IGame<TState, TAction, TPlayer>
+        where TState : IGameState<TPlayer>
+        where TAction : IGameAction
         where TPlayer : IPlayer
-        where TGameAction : IGameAction
     {
-        TGameState Play(TGameState state, TGameAction action);
-        IEnumerable<TGameAction> GetAllowedActions(TGameState state);
+        TState Play(TState state, TAction action);
+        IEnumerable<TAction> GetAllowedActions(TState state);
     }
 }

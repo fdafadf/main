@@ -1,9 +1,8 @@
 ﻿namespace Games
 {
-    public interface IGameState<TPlayer> where TPlayer : IPlayer
+    public interface IGameState<TPlayer> : IPeriodState where TPlayer : IPlayer
     {
         TPlayer CurrentPlayer { get; }
-        bool IsFinal { get; }
         TPlayer GetWinner();
     }
 }

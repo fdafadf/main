@@ -7,6 +7,7 @@ namespace Games.Go
     public class FieldCoordinates : IGameAction
     {
         public static readonly FieldCoordinates Pass = new FieldCoordinates(uint.MaxValue, 1);
+        public static readonly FieldCoordinates Pass2 = new FieldCoordinates(uint.MaxValue, 2);
         private static readonly char[] GtpCharacters = "abcdefghjklmnopqrst".ToCharArray();
         private static readonly char[] SgfCharacters = "abcdefghijklmnopqrst".ToCharArray();
         private static readonly Regex GtpPattern = new Regex(@"^\s*([abcdefghjklmnopqrst])(\d+)\s*$");

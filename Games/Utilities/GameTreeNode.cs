@@ -2,27 +2,27 @@
 
 namespace Games.Utilities
 {
-    public class GameTreeNode<TGameState, TGameAction>
-        : GameTreeNode<TGameState, TGameAction, GameTreeNode<TGameState, TGameAction>>
+    public class GameTreeNode<TState, TAction>
+        : GameTreeNode<GameTreeNode<TState, TAction>, TState, TAction>
 
     {
-        public GameTreeNode(TGameState gameState, TGameAction lastAction, GameTreeNode<TGameState, TGameAction> parent) : base(gameState, lastAction, parent)
+        public GameTreeNode(TState gameState, TAction lastAction, GameTreeNode<TState, TAction> parent) : base(gameState, lastAction, parent)
         {
         }
     }
 
-    public abstract class GameTreeNode<TGameState, TGameAction, TNode> 
-        : IGameTreeNode<TGameState, TGameAction, TNode>
-        where TNode : class, IGameTreeNode<TGameState, TGameAction, TNode>
+    public abstract class GameTreeNode<TNode, TState, TAction> 
+        : IGameTreeNode<TNode, TState, TAction>
+        where TNode : class, IGameTreeNode<TNode, TState, TAction>
     {
-        public TGameState GameState { get; }
-        public TGameAction LastAction { get; }
+        public TState State { get; }
+        public TAction LastAction { get; }
         public TNode Parent { get; }
-        public Dictionary<TGameAction, TNode> Children { get; set; }
+        public Dictionary<TAction, TNode> Children { get; set; }
 
-        public GameTreeNode(TGameState gameState, TGameAction lastAction, TNode parent)
+        public GameTreeNode(TState gameState, TAction lastAction, TNode parent)
         {
-            GameState = gameState;
+            State = gameState;
             LastAction = lastAction;
             Parent = parent;
         }

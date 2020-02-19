@@ -5,6 +5,10 @@ namespace Games.TicTacToe
 {
     public class GameAction : IGameAction
     {
+        public static int ToIndex(uint boardSize, GameAction action)
+        {
+            return action.X + (int)(action.Y * boardSize);
+        }
         //private static Dictionary<ushort, GameAction>
         //
         //public static GameAction Create()

@@ -1,8 +1,8 @@
 ﻿namespace Games.Utilities
 {
-    public interface IGameStateOutput<TGameState>
+    public interface IGameStateOutput<TGameState, TOutput>
     {
         TGameState GameState { get; }
-        double[] Output { get; }
+        TOutput Output { get; }
     }
 }

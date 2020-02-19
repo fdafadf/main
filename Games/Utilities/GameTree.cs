@@ -2,10 +2,10 @@
 
 namespace Games.Utilities
 {
-    public abstract class GameTree<TGameState, TGameAction, TNode>
-        : IGameTree<TGameState, TGameAction, TNode>
-        where TGameAction : IGameAction
-        where TNode : IGameTreeNode<TGameState, TGameAction, TNode>
+    public abstract class GameTree<TNode, TState, TAction>
+        : IGameTree<TNode, TState, TAction>
+        where TAction : IGameAction
+        where TNode : IGameTreeNode<TNode, TState, TAction>
     {
         public TNode Root { get; }
 

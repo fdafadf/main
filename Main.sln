@@ -10,6 +10,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demos", "Demos\Demos.csproj", "{7BA0BE40-F229-4E68-8F99-799F8D3F7618}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Workspace", "Workspace", "{0610A2D2-F534-4084-870D-C77411C358C8}"
+	ProjectSection(SolutionItems) = preProject
+		Workspace\CreateModel.py = Workspace\CreateModel.py
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TicTacToe.Perceptron", "TicTacToe.Perceptron", "{70EEE669-B0B4-4577-A1FF-D47F95353F87}"
 EndProject
@@ -43,7 +46,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Games", "Games\Games.csproj
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AI", "AI\AI.csproj", "{16367DB7-692C-4484-AC86-06B476846175}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AI.Keras", "AI.Keras\AI.Keras.csproj", "{46173EB6-15DD-45BF-ACFA-F5AE7F79685B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AI.Keras", "AI.Keras\AI.Keras.csproj", "{46173EB6-15DD-45BF-ACFA-F5AE7F79685B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AI.TFSharp", "AI.TFSharp\AI.TFSharp.csproj", "{350104D5-FCB0-4892-90D3-9DF49A2A8CE0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KelpNet", "..\..\KelpNet\KelpNet\KelpNet.csproj", "{750BB541-BF90-471D-A93F-54230B6FB07D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AI.NeuralNetwork", "AI.NeuralNetwork\AI.NeuralNetwork.csproj", "{59EAE8C0-F7A7-4EDE-8131-90600B625B5A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demos.TicTacToe", "Demos.TicTacToe\Demos.TicTacToe.csproj", "{233297C2-8DED-445D-9062-25D36FB7C4F9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demos.AI.NeuralNetwork", "Demos.AI.NeuralNetwork\Demos.AI.NeuralNetwork.csproj", "{C98D1225-1D8E-43F3-A0BC-724A5BEEA218}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -83,6 +96,26 @@ Global
 		{46173EB6-15DD-45BF-ACFA-F5AE7F79685B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{46173EB6-15DD-45BF-ACFA-F5AE7F79685B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{46173EB6-15DD-45BF-ACFA-F5AE7F79685B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{350104D5-FCB0-4892-90D3-9DF49A2A8CE0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{350104D5-FCB0-4892-90D3-9DF49A2A8CE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{350104D5-FCB0-4892-90D3-9DF49A2A8CE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{350104D5-FCB0-4892-90D3-9DF49A2A8CE0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{750BB541-BF90-471D-A93F-54230B6FB07D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{750BB541-BF90-471D-A93F-54230B6FB07D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{750BB541-BF90-471D-A93F-54230B6FB07D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{750BB541-BF90-471D-A93F-54230B6FB07D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{59EAE8C0-F7A7-4EDE-8131-90600B625B5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{59EAE8C0-F7A7-4EDE-8131-90600B625B5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{59EAE8C0-F7A7-4EDE-8131-90600B625B5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{59EAE8C0-F7A7-4EDE-8131-90600B625B5A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{233297C2-8DED-445D-9062-25D36FB7C4F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{233297C2-8DED-445D-9062-25D36FB7C4F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{233297C2-8DED-445D-9062-25D36FB7C4F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{233297C2-8DED-445D-9062-25D36FB7C4F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C98D1225-1D8E-43F3-A0BC-724A5BEEA218}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C98D1225-1D8E-43F3-A0BC-724A5BEEA218}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C98D1225-1D8E-43F3-A0BC-724A5BEEA218}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C98D1225-1D8E-43F3-A0BC-724A5BEEA218}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -3,50 +3,51 @@ using System.Collections.Generic;
 
 namespace Games.Utilities
 {
-    public class GameTreeNavigator<TGameTree, TGameState, TGameAction, TPlayer, TNode>
-        : IGameTreeNavigator<TGameTree, TGameState, TGameAction, TNode>
-        where TGameTree : IGameTree<TGameState, TGameAction, TNode>
-        where TGameState : IGameState<TPlayer>
-        where TGameAction : IGameAction
+    public class ObservableGameTreeNavigator<TNavigator, TState, TAction, TPlayer, TNode>
+        : IObservableGameTreeNavigator<TNode, TState, TAction>
+        where TNavigator : IGameTreeNavigator<TNode, TState, TAction>
+        where TState : IGameState<TPlayer>
+        where TAction : IGameAction
         where TPlayer : IPlayer
-        where TNode : IGameTreeNode<TGameState, TGameAction, TNode>
+        where TNode : IGameTreeNode<TNode, TState, TAction>
     {
-        public event EventHandler<TGameAction> Forwarded;
-        public event EventHandler<GameTreePath<TGameAction>> Navigated;
-        public TGameTree GameTree { get; }
+        public event EventHandler<TAction> Forwarded;
+        public event EventHandler<GameTreePath<TAction>> Navigated;
+        //public TGameTree GameTree { get; }
 
-        TNode currentNode;
+        public TNavigator Navigator { get; }
 
-        public GameTreeNavigator(TGameTree gameTree)
+        public ObservableGameTreeNavigator(TNavigator navigator)
         {
-            GameTree = gameTree;
-            currentNode = gameTree.Root;
+            Navigator = navigator;
         }
 
         public virtual TNode CurrentNode
         {
             get
             {
-                return currentNode;
+                return Navigator.CurrentNode;
             }
         }
 
-        public bool Forward(object sender, TGameAction action)
+        public bool Forward(object sender, TAction action)
         {
             return Forward(sender, action, true);
         }
 
         protected virtual void DoBackward()
         {
-            currentNode = CurrentNode.Parent;
+            Navigator.Backward();
+            //currentNode = CurrentNode.Parent;
         }
 
         protected virtual void DoForward(TNode nextNode)
         {
-            currentNode = nextNode;
+            Navigator.Forward(nextNode);
+            //currentNode = nextNode;
         }
 
-        protected bool Forward(object sender, TGameAction action, bool raiseEvent)
+        protected bool Forward(object sender, TAction action, bool raiseEvent)
         {
             bool result = false;
 
@@ -68,17 +69,17 @@ namespace Games.Utilities
             return result;
         }
 
-        public void NavigateFromRoot(object sender, IEnumerable<TGameAction> forward)
+        public void NavigateFromRoot(object sender, IEnumerable<TAction> forward)
         {
             while (CurrentNode.Parent != null)
             {
                 DoBackward();
             }
 
-            Navigate(sender, new GameTreePath<TGameAction>(GameTreePath<TGameAction>.Empty, forward));
+            Navigate(sender, new GameTreePath<TAction>(GameTreePath<TAction>.Empty, forward));
         }
 
-        public void Navigate(object sender, GameTreePath<TGameAction> track)
+        public void Navigate(object sender, GameTreePath<TAction> track)
         {
             foreach (var item in track.Backward)
             {
