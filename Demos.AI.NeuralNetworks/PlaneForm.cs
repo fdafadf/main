@@ -85,7 +85,7 @@ namespace Demos.AI.NeuralNetwork
                 optimizer = new SGDMomentum(network, 0.1, 0.8);
             }
 
-            var trainer = new Trainer(optimizer);
+            var trainer = new Trainer(optimizer, new Random(0));
             var mseMonitor = new MeanSquareErrorMonitor();
             trainer.Monitors.Add(mseMonitor);
             int width;
@@ -121,7 +121,7 @@ namespace Demos.AI.NeuralNetwork
                     RefreshBitmap(network, width, height, imagePointList);
                 }
 
-                trainer.Train(features, labels, 1);
+                trainer.Train(features, labels, 1, 1);
                 Console.WriteLine(mseMonitor.CollectedData.Last());
             }
         }

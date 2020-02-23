@@ -13,12 +13,12 @@ namespace Demos.TicTacToe
             CollectedData.Add(CalculateAccuracy(Trainer.Optimizer).Value);
         }
 
-        public override void OnInit(Trainer trainer, int epoches)
+        public override void OnTrainingStarted(Trainer trainer, int epoches)
         {
             Trainer = trainer;
         }
 
-        public override void OnOptimized(double[] features, double[] labels, double[] evaluation)
+        public override void OnEvaluated(double[] features, double[] labels, double[] evaluation)
         {
         }
 

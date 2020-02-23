@@ -44,7 +44,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demos.AI.Forms", "Demos.AI.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Games", "Games\Games.csproj", "{965829BB-0A45-44C9-B9B3-DF83A38C9DFC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AI.NeuralNetworks", "AI.NeuralNetworks\AI.NeuralNetworks.csproj", "{16367DB7-692C-4484-AC86-06B476846175}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AI.NeuralNetworks", "AI.NeuralNetworks\AI.NeuralNetworks.csproj", "{16367DB7-692C-4484-AC86-06B476846175}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AI.NeuralNetworks.Keras", "AI.NeuralNetworks.Keras\AI.NeuralNetworks.Keras.csproj", "{46173EB6-15DD-45BF-ACFA-F5AE7F79685B}"
 EndProject

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using AI.NeuralNetworks;
 
 namespace Demos.AI.NeuralNetwork
 {
@@ -36,9 +37,14 @@ namespace Demos.AI.NeuralNetwork
             return new SGDMomentum(network, learningRate, momentum);
         }
 
-        public static TrainingMonitorCollection Train(Optimizer optimizer, double[][] features, double[][] labels, int epoches, params TrainingMonitor[] monitors)
+        public static AdaGrad AdaGrad(Network network, double learningRate)
         {
-            var trainer = new Trainer(optimizer);
+            return new AdaGrad(network, learningRate);
+        }
+
+        public static TrainingMonitorCollection Train(Optimizer optimizer, double[][] features, double[][] labels, int epoches, int batchSize = 1, params TrainingMonitor[] monitors)
+        {
+            var trainer = new Trainer(optimizer, new Random(0));
 
             foreach (var monitor in monitors)
             {
@@ -46,7 +52,7 @@ namespace Demos.AI.NeuralNetwork
             }
 
             //optimizer.Monitors.Add(new CosoleTitleProgressMonitor());
-            trainer.Train(features, labels, epoches);
+            trainer.Train(features, labels, epoches, batchSize);
             return trainer.Monitors;
         }
 

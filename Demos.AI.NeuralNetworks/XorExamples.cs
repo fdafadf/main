@@ -16,20 +16,20 @@ namespace Demos.AI.NeuralNetwork
 
         public static void Compare()
         {
-            int epoches = 1000;
+            int epoches = 6000;
             var optimizer1 = SGD(Network(SIGM, 2, 1, 4), 0.3);
             var optimizer2 = SGD(Network(SIGM, 2, 1, 4, 6), 0.3);
-            var optimizer3 = SGD(Network(SIGM, 2, 1, 40, 80, 60), 0.3);
-            var optimizer4 = SGD(Network(RELU, 2, 1, 4), 0.3);
-            var optimizer5 = SGD(Network(RELU, 2, 1, 4, 6), 0.3);
-            var optimizer6 = SGD(Network(RELU, 2, 1, 40, 80, 60), 0.3);
+            var optimizer3 = SGD(Network(SIGM, 2, 1, 40, 80, 60), 0.1);
+            var optimizer4 = SGD(Network(RELU, 2, 1, 4), 0.03);
+            //var optimizer5 = SGD(Network(RELU, 2, 1, 4, 6), 0.9); nie reaguje na LR
+            var optimizer6 = SGD(Network(RELU, 2, 1, 40, 80, 60), 0.003);
             ChartForm chartForm = new ChartForm("Xor");
-            chartForm.Add(optimizer1, Train(optimizer1, Inputs, Outputs, epoches, MSE));
-            chartForm.Add(optimizer2, Train(optimizer2, Inputs, Outputs, epoches, MSE));
-            chartForm.Add(optimizer3, Train(optimizer3, Inputs, Outputs, epoches, MSE));
-            chartForm.Add(optimizer4, Train(optimizer4, Inputs, Outputs, epoches, MSE));
-            chartForm.Add(optimizer5, Train(optimizer5, Inputs, Outputs, epoches, MSE));
-            ////chartForm.Add($"Xor - {optimizer6}", Train(optimizer6, Inputs, Outputs, epoches));
+            chartForm.Add(optimizer1, Train(optimizer1, Inputs, Outputs, epoches, 1, MSE));
+            chartForm.Add(optimizer2, Train(optimizer2, Inputs, Outputs, epoches, 1, MSE));
+            chartForm.Add(optimizer3, Train(optimizer3, Inputs, Outputs, epoches, 1, MSE));
+            chartForm.Add(optimizer4, Train(optimizer4, Inputs, Outputs, epoches, 1, MSE));
+            //chartForm.Add(optimizer5, Train(optimizer5, Inputs, Outputs, epoches, MSE));
+            chartForm.Add(optimizer6, Train(optimizer6, Inputs, Outputs, epoches, 1, MSE));
             chartForm.ShowDialog();
         }
 
@@ -59,7 +59,8 @@ namespace Demos.AI.NeuralNetwork
             {
                 for (int k = 0; k < inputs.Length; k++)
                 {
-                    optimizer.Optimize(inputs[k], outputs[k]);
+                    optimizer.Evaluate(inputs[k], outputs[k]);
+                    optimizer.Update(1);
                 }
             }
 

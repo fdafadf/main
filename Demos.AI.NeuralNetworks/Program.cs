@@ -10,24 +10,25 @@ namespace Demos.AI.NeuralNetwork
         {
             //// Influence of network size on required epoches
 
-            XorExamples.Train(2000, 0.3, 4);
-            XorExamples.Train(2000, 0.3, 4, 6);
-            XorExamples.Train(5000, 0.3, 4, 6);
+            XorExamples.Train(1500, 0.3, 4);
+            XorExamples.Train(1500, 0.3, 4, 6);
+            XorExamples.Train(3000, 0.3, 4, 6);
 
             //// MSE on chart
 
-            XorExamples.Compare();
+            //XorExamples.Compare();
 
             //// 2 categories visualisation
 
-            Application.Run(new PlaneForm(Function.Sigmoidal));
-            Application.Run(new PlaneForm(Function.ReLU));
+            //Application.Run(new PlaneForm(Function.Sigmoidal));
+            //Application.Run(new PlaneForm(Function.ReLU));
 
             // TicTacToe with different hyperparameters
 
-            TicTacToeExamples.Compare1();
-            TicTacToeExamples.Compare2();
-            TicTacToeExamples.Compare3();
+            //TicTacToeExamples.Compare1();
+            //TicTacToeExamples.Compare2();
+            //TicTacToeExamples.Compare3();
+            TicTacToeExamples.Compare4();
         }
     }
 }

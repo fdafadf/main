@@ -187,9 +187,9 @@ namespace Demos.TicTacToe
             int epoches = settings.Epoches;
             var network = new Network(Function.ReLU, 9, 3, settings.Layers);
             var optimizer = new SGDMomentum(network, settings.LearningRate, settings.Momentum);
-            var trainer = new Trainer(optimizer);
+            var trainer = new Trainer(optimizer, new Random(0));
             trainer.Monitors.Add(new TrainingMonitor(this));
-            trainer.Train(DataLoader.TrainingFeatures, DataLoader.TrainingLabels, epoches);
+            trainer.Train(DataLoader.TrainingFeatures, DataLoader.TrainingLabels, epoches, 16);
             TrainedNetwork = network;
 
             Invoke((MethodInvoker)delegate ()
