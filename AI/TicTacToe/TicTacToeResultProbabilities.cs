@@ -1,6 +1,7 @@
 ﻿using AI.NeuralNetworks.Games;
 using Games.TicTacToe;
 using Games.Utilities;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -34,6 +35,7 @@ namespace AI.TicTacToe
             }
         }
 
+        [JsonConstructor]
         public TicTacToeResultProbabilities(double[] probabilities)
         {
             Probabilities = probabilities;
