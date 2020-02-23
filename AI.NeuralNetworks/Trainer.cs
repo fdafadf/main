@@ -1,7 +1,6 @@
-﻿//#define MOMENTUM
-
-using Games.Utilities;
+﻿using Games.Utilities;
 using System;
+using System.Diagnostics;
 
 namespace AI.NeuralNetwork
 {
@@ -11,32 +10,44 @@ namespace AI.NeuralNetwork
         public TrainingMonitorCollection Monitors { get; }
         protected Random random;
 
-        public Trainer(Optimizer optimizer)
+        public Trainer(Optimizer optimizer, Random random)
         {
             Optimizer = optimizer;
             Monitors = new TrainingMonitorCollection();
-            random = new Random(0);
+            this.random = random;
         }
 
-        public void Train(double[][] features, double[][] labels, int epoches)
+        public void Train(double[][] features, double[][] labels, int epoches, int batchSize)
         {
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
             Monitors.OnTrainingStarted(this, epoches);
 
             for (int epoch = 0; epoch < epoches; epoch++)
             {
                 random.Shuffle(features, labels);
-                //double learningRate = CalculateLearningRate();
 
                 for (int k = 0; k < features.Length; k++)
                 {
-                    double[] evaluation = Optimizer.Optimize(features[k], labels[k]);
-                    Monitors.OnOptimized(features[k], labels[k], evaluation);
+                    double[] evaluation = Optimizer.Evaluate(features[k], labels[k]);
+                    Monitors.OnEvaluated(features[k], labels[k], evaluation);
+
+                    if (k > 0 && k % batchSize == 0)
+                    {
+                        Optimizer.Update(batchSize);
+                    }
+                }
+
+                if (features.Length % batchSize != 0)
+                {
+                    Optimizer.Update(batchSize);
                 }
 
                 Monitors.OnEpochFinished(features, labels);
             }
 
-            //monitors?.OnFinished(this, epoches);
+            stopwatch.Stop();
+            Monitors.OnTrainingFinished(stopwatch.ElapsedMilliseconds);
         }
     }
 }

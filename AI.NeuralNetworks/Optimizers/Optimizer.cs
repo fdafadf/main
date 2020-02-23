@@ -9,7 +9,6 @@ namespace AI.NeuralNetwork
     {
         public Network Network { get; }
         public double LearningRate { get; private set; }
-        protected double[][] gradient;
 
         public Optimizer(Network network, double learningRate)
         {
@@ -17,6 +16,7 @@ namespace AI.NeuralNetwork
             LearningRate = learningRate;
         }
 
-        public abstract double[] Optimize(double[] features, double[] labels);
+        public abstract double[] Evaluate(double[] features, double[] labels);
+        public abstract void Update(int batchSize);
     }
 }

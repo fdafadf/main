@@ -8,12 +8,12 @@ namespace AI.NeuralNetwork
     {
         double cumulatedEpochError;
 
-        public override void OnInit(Trainer optimizer, int epoches)
+        public override void OnTrainingStarted(Trainer optimizer, int epoches)
         {
             cumulatedEpochError = 0;
         }
 
-        public override void OnOptimized(double[] features, double[] labels, double[] evaluation)
+        public override void OnEvaluated(double[] features, double[] labels, double[] evaluation)
         {
             double error = 0;
 

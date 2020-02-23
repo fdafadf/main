@@ -8,29 +8,40 @@ namespace AI.NeuralNetwork
     {
         public List<TrainingMonitor> Items { get; private set; }
 
-        internal void OnTrainingStarted(Trainer optimizer, int epoches)
+        public void OnTrainingStarted(Trainer optimizer, int epoches)
         {
             if (Items != null)
             {
                 foreach (var monitor in Items)
                 {
-                    monitor.OnInit(optimizer, epoches);
+                    monitor.OnTrainingStarted(optimizer, epoches);
                 }
             }
         }
 
-        internal void OnOptimized(double[] features, double[] labels, double[] evaluation)
+        public void OnTrainingFinished(long milisecondsElapsed)
         {
             if (Items != null)
             {
                 foreach (var monitor in Items)
                 {
-                    monitor.OnOptimized(features, labels, evaluation);
+                    monitor.OnTrainingFinished(milisecondsElapsed);
                 }
             }
         }
 
-        internal void OnEpochFinished(double[][] features, double[][] labels)
+        public void OnEvaluated(double[] features, double[] labels, double[] evaluation)
+        {
+            if (Items != null)
+            {
+                foreach (var monitor in Items)
+                {
+                    monitor.OnEvaluated(features, labels, evaluation);
+                }
+            }
+        }
+
+        public void OnEpochFinished(double[][] features, double[][] labels)
         {
             if (Items != null)
             {
