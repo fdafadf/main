@@ -54,46 +54,48 @@ namespace Games.Go
             }
         }
 
-        Dictionary<FieldCoordinates, GameState> allowedActions;
+        //Dictionary<FieldCoordinates, GameState> allowedActions;
 
         public IEnumerable<FieldCoordinates> GetAllowedActions()
         {
-            if (allowedActions == null)
+            //if (allowedActions == null)
+            //{
+            //Dictionary<FieldCoordinates, GameState> allowedActions = new Dictionary<FieldCoordinates, GameState>();
+
+            if (IsFinal == false)
             {
-                allowedActions = new Dictionary<FieldCoordinates, GameState>();
-
-                if (IsFinal == false)
+                for (byte y = 0; y < InternalState.BoardSize; y++)
                 {
-                    for (byte y = 0; y < InternalState.BoardSize; y++)
+                    for (byte x = 0; x < InternalState.BoardSize; x++)
                     {
-                        for (byte x = 0; x < InternalState.BoardSize; x++)
+                        FieldCoordinates field = FieldCoordinates.Get(x, y);
+
+                        if (field != InternalState.Ko)
                         {
-                            FieldCoordinates field = FieldCoordinates.Get(x, y);
+                            GameStateInternal nextState = InternalState.Play(field.X, field.Y, CurrentPlayer);
 
-                            if (field != InternalState.Ko)
+                            if (nextState != null)
                             {
-                                GameStateInternal nextState = InternalState.Play(field.X, field.Y, CurrentPlayer);
-
-                                if (nextState != null)
-                                {
-                                    allowedActions.Add(field, new GameState(field, CurrentPlayer.Opposite, nextState));
-                                }
+                                yield return field;
+                                //allowedActions.Add(field, new GameState(field, CurrentPlayer.Opposite, nextState));
                             }
                         }
                     }
-
-                    if (PreviousMove == FieldCoordinates.Pass)
-                    {
-                        allowedActions.Add(FieldCoordinates.Pass, new GameState(CurrentPlayer.Opposite, InternalState.Pass()));
-                    }
-                    else
-                    {
-                        allowedActions.Add(FieldCoordinates.Pass, new GameState(FieldCoordinates.Pass, CurrentPlayer.Opposite, InternalState.Pass()));
-                    }
                 }
-            }
 
-            return allowedActions.Keys;
+                yield return FieldCoordinates.Pass;
+                //if (PreviousMove == FieldCoordinates.Pass)
+                //{
+                //    allowedActions.Add(FieldCoordinates.Pass, new GameState(CurrentPlayer.Opposite, InternalState.Pass()));
+                //}
+                //else
+                //{
+                //    allowedActions.Add(FieldCoordinates.Pass, new GameState(FieldCoordinates.Pass, CurrentPlayer.Opposite, InternalState.Pass()));
+                //}
+            }
+            //}
+
+            //return allowedActions.Keys;
         }
 
         List<FieldCoordinates> allowedActionsForRandomPlayout;
@@ -131,7 +133,14 @@ namespace Games.Go
                 }
                 else
                 {
-                    lastState = lastState.allowedActions[FieldCoordinates.Pass];
+                    if (lastState.PreviousMove == FieldCoordinates.Pass)
+                    {
+                        lastState = new GameState(CurrentPlayer.Opposite, InternalState.Pass());
+                    }
+                    else
+                    {
+                        lastState = new GameState(FieldCoordinates.Pass, CurrentPlayer.Opposite, InternalState.Pass());
+                    }
                 }
 
                 randomPlayout.Push(lastState);
@@ -154,8 +163,30 @@ namespace Games.Go
 
         public GameState Play(FieldCoordinates action)
         {
-            GetAllowedActions();
-            return allowedActions[action];
+            if (action == FieldCoordinates.Pass)
+            {
+                if (PreviousMove == FieldCoordinates.Pass)
+                {
+                    return new GameState(CurrentPlayer.Opposite, InternalState.Pass());
+                }
+                else
+                {
+                    return new GameState(FieldCoordinates.Pass, CurrentPlayer.Opposite, InternalState.Pass());
+                }
+            }
+            else
+            {
+                GameStateInternal nextState = InternalState.Play(action.X, action.Y, CurrentPlayer);
+
+                if (nextState == null)
+                {
+                    throw new Exception();
+                }
+                else
+                {
+                    return new GameState(action, CurrentPlayer.Opposite, nextState);
+                }
+            }
         }
 
         /// <summary>
@@ -312,9 +343,9 @@ namespace Games.Go
                 {
                     if (InternalState.BoardFields[x, y] == FieldState.Empty)
                     {
-                        GetAllowedActions();
+                        var allowedActions = GetAllowedActions();
 
-                        if (allowedActions.ContainsKey(FieldCoordinates.Get(x, y)))
+                        if (allowedActions.Contains(FieldCoordinates.Get(x, y)))
                         {
                             builder.Append(fieldToText(InternalState.BoardFields[x, y]));
                         }

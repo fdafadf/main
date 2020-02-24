@@ -3,7 +3,6 @@ using Games.TicTacToe;
 using System;
 using System.Windows.Forms;
 using AI.NeuralNetworks.Games;
-using Demos.Forms.Perceptron;
 using Demos.Forms.TicTacToe.NeuralNetwork;
 using Demos.Forms.Xor.NeuralNetwork;
 using Demos.Forms.TicTacToe.MonteCarlo;
@@ -21,7 +20,7 @@ namespace Demo
 
         private void newPerceptronDemoButton_Click(object sender, EventArgs e)
         {
-            ShowForm(new PerceptronDemoForm());
+            //ShowForm(new PerceptronDemoForm());
         }
 
         private void MainForm_Load(object sender, EventArgs e)
@@ -48,7 +47,7 @@ namespace Demo
 
         private void linearFunctionSolverMenuItem_Click(object sender, EventArgs e)
         {
-            ShowForm(new PerceptronDemoForm());
+            //ShowForm(new PerceptronDemoForm());
         }
 
         private void neuralXorMenuItem_Click(object sender, EventArgs e)

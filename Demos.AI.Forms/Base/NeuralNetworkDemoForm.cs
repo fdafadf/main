@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using AI.NeuralNetworks;
-using AI.TicTacToe.NeuralNetworks;
 
 namespace Demos.Forms.Base
 {
-    public class NeuralNetworkDemoForm<TOutput> : DemoForm<NeuralNetworkDemoFormProperties<TOutput>>
+    public class NeuralNetworkDemoForm : DemoForm<NeuralNetworkDemoFormProperties>
     {
-        public NeuralNetwork<TOutput> NeuralNetwork { get; private set; }
-        public IEnumerable<NeuralIO<TOutput>> LoadedTrainingSet { get; private set; }
+        public Network NeuralNetwork { get; private set; }
+        public IEnumerable<ConvertedInput> LoadedTrainingSet { get; private set; }
 
         private System.ComponentModel.IContainer components = null;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
@@ -109,15 +108,15 @@ namespace Demos.Forms.Base
             toolStrip.Items.Add<ToolStripSplitButton>(trainMenuStrip).ButtonClick += trainMenuStrip_Click;
         }
 
-        protected virtual NeuralNetwork<TOutput> CreateNeuralNetwork()
+        protected virtual Network CreateNeuralNetwork()
         {
             Random random = new Random(Properties.Seed);
-            return new NeuralNetwork<TOutput>(Properties.NetworkInputSize, Properties.NetworkLayersSize, ActivationFunctions.Sigmoid, random);
+            return new Network(Function.Sigmoidal, Properties.NetworkInputSize, 1, Properties.NetworkLayersSize);
         }
 
-        protected override NeuralNetworkDemoFormProperties<TOutput> InitializeProperties()
+        protected override NeuralNetworkDemoFormProperties InitializeProperties()
         {
-            NeuralNetworkDemoFormProperties<TOutput> properties = new NeuralNetworkDemoFormProperties<TOutput>();
+            NeuralNetworkDemoFormProperties properties = new NeuralNetworkDemoFormProperties();
             properties.NetworkInputSize = 2;
             properties.NetworkLayersSize = new [] { 2, 5, 1 };
             properties.TrainingAlpha = 0.3;
@@ -163,7 +162,9 @@ namespace Demos.Forms.Base
 
             if (LoadedTrainingSet != null)
             {
-                Properties.TrainingLastError = NeuralNetwork.Train(LoadedTrainingSet, Properties.TrainingEpoches, Properties.TrainingAlpha);
+                var features = LoadedTrainingSet.Select(s => s.Input).ToArray();
+                var labels = LoadedTrainingSet.Select(s => s.Output).ToArray();
+                new Trainer(new SGD(NeuralNetwork, Properties.TrainingAlpha), new Random()).Train(features, labels, Properties.TrainingEpoches, 1);
                 NetworkChanged();
             }
         }

@@ -1,17 +1,17 @@
-﻿using AI.NeuralNetworks;
+﻿using AI;
 using Games.TicTacToe;
 using Microsoft.ML;
 using Microsoft.ML.Data;
 using System;
 using Games.Utilities;
 using AI.TicTacToe;
-using AI.TicTacToe.NeuralNetworks;
 using AI.NeuralNetworks.Games;
 using System.Linq;
+using AI.NeuralNetworks.TicTacToe;
 
 namespace Basics.MLNet
 {
-    public class TicTacToeMLNet : IGameAI<GameState, Player, GameAction>
+    public class TicTacToeMLNet : IActionGenerator<GameState, Player, GameAction>
     {
         PredictionEngine<ModelInput, ModelOutput> predictionEngine;
 
@@ -45,9 +45,9 @@ namespace Basics.MLNet
             return new double[] { output };
         }
 
-        public GameAction GenerateMove(GameState gameState)
+        public GameAction GenerateAction(GameState gameState)
         {
-            var predictions = TicTacToeGameActionPrediction.Predict(gameState, TicTacToeNeuralIOLoader.InputFunctions.Bipolar, Predict).ToList();
+            var predictions = TicTacToeGameActionPrediction.Predict(gameState, TicTacToeNeuralIOLoader.InputTransforms.Bipolar, Predict).ToList();
             int index;
 
             if (gameState.CurrentPlayer.IsCross)

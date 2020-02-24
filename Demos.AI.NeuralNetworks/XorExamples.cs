@@ -1,17 +1,28 @@
-﻿using AI.NeuralNetwork;
+﻿using AI.NeuralNetworks;
 using System;
 using System.Diagnostics;
+using static Demos.AI.NeuralNetwork.NetworkUtilities;
 
 namespace Demos.AI.NeuralNetwork
 {
-    class XorExamples : Examples
+    class XorExamples
     {
-        public static void Train(int epoches, double learningRate, params int[] layers)
+        public static void Train1(int epoches, double learningRate, params int[] layers)
         {
             var optimizer = SGD(Network(SIGM, 2, 1, layers), learningRate);
-            Train("Xor", optimizer, Inputs, Outputs, epoches);
+            Train2("Xor", optimizer, Inputs, Outputs, epoches);
             WritePredictions(optimizer.Network, Inputs, Outputs);
             Console.WriteLine();
+        }
+
+        public static void WritePredictions(Network evaluator, double[][] inputs, double[][] outputs)
+        {
+            Console.WriteLine($"Test results:");
+
+            for (int k = 0; k < inputs.Length; k++)
+            {
+                Console.WriteLine($"{inputs[k][0]:f0} xor {inputs[k][1]:f0} = {evaluator.Evaluate(inputs[k])[0]:f2}");
+            }
         }
 
         public static void Compare()
@@ -48,13 +59,13 @@ namespace Demos.AI.NeuralNetwork
             chartForm.ShowDialog();
         }
 
-        public static void Train<TOptimizer>(string name, TOptimizer optimizer, double[][] inputs, double[][] outputs, int epoches)
+        public static void Train2<TOptimizer>(string name, TOptimizer optimizer, double[][] inputs, double[][] outputs, int epoches)
             where TOptimizer : SGD
         {
             Console.WriteLine($"[Demo: {name}] [Network: {optimizer.Network}] [Epoches: {epoches}]");
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
-
+        
             for (int epoch = 0; epoch < epoches; epoch++)
             {
                 for (int k = 0; k < inputs.Length; k++)
@@ -63,7 +74,7 @@ namespace Demos.AI.NeuralNetwork
                     optimizer.Update(1);
                 }
             }
-
+        
             stopwatch.Stop();
             Console.WriteLine($"Training time: {stopwatch.ElapsedMilliseconds}ms");
         }

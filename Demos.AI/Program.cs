@@ -1,6 +1,5 @@
 ﻿using AI.Keras;
 using AI.TicTacToe;
-using AI.TicTacToe.NeuralNetworks;
 using Demos.Forms;
 using Games;
 using Games.Go;
@@ -10,6 +9,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Windows.Forms;
 

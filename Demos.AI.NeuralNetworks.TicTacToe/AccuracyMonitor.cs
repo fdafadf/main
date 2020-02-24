@@ -1,6 +1,6 @@
 ﻿using AI.TicTacToe;
-using AI.TicTacToe.NeuralNetworks;
-using AI.NeuralNetwork;
+using AI.NeuralNetworks.TicTacToe;
+using AI.NeuralNetworks;
 
 namespace Demos.TicTacToe
 {

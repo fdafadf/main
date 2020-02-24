@@ -12,7 +12,7 @@ namespace Demos.Forms.Utilities
 
         public override StandardValuesCollection GetStandardValues(ITypeDescriptorContext context)
         {
-            var properties = context.Instance as NeuralNetworkDemoFormProperties<TOutput>;
+            var properties = context.Instance as NeuralNetworkDemoFormProperties;
             return new StandardValuesCollection(properties.TrainingSets);
         }
     }

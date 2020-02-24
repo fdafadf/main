@@ -1,13 +1,13 @@
 ﻿using System;
 using System.IO;
 
-namespace AI.NeuralNetwork
+namespace AI.NeuralNetworks
 {
     public class TrainingEpochMonitor : TrainingMonitor
     {
         int epoches;
         int currentEpoch;
-        Action<string> target;
+        readonly Action<string> target;
         TextWriter writer;
 
         public TrainingEpochMonitor(Action<string> target, TextWriter writer)

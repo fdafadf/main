@@ -1,17 +1,18 @@
-﻿using AI.TicTacToe;
-using AI.TicTacToe.NeuralNetworks;
+﻿using AI.NeuralNetworks.TicTacToe;
+using AI.TicTacToe;
 using Games.TicTacToe;
 using Newtonsoft.Json;
 using System;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Windows.Forms;
 
 namespace Demos.TicTacToe
 {
     public class DataLoader
     {
-        public static readonly Func<FieldState, double> InputTransform = TicTacToeNeuralIOLoader.InputFunctions.Bipolar;
+        public static readonly Func<GameState, double[]> InputTransform = TicTacToeNeuralIOLoader.InputTransforms.Bipolar;
 
         static double[][] trainingFeatures;
         static double[][] trainingLabels;
@@ -22,8 +23,8 @@ namespace Demos.TicTacToe
         {
             if (testingFeatures == null)
             {
-                FileInfo featuresCacheFile = new FileInfo(@"TicTacToe-DataLoader-Features.txt");
-                FileInfo labelsCacheFile = new FileInfo(@"TicTacToe-DataLoader-Labels.txt");
+                FileInfo featuresCacheFile = new FileInfo(Path.Combine(Application.UserAppDataPath, @"TicTacToe-DataLoader-Features.txt"));
+                FileInfo labelsCacheFile = new FileInfo(Path.Combine(Application.UserAppDataPath, @"TicTacToe-DataLoader-Labels.txt"));
 
                 if (featuresCacheFile.Exists && labelsCacheFile.Exists)
                 {

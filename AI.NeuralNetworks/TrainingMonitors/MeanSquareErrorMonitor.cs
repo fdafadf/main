@@ -1,8 +1,8 @@
-﻿using AI.NeuralNetwork;
+﻿using AI.NeuralNetworks;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace AI.NeuralNetwork
+namespace AI.NeuralNetworks
 {
     public class MeanSquareErrorMonitor : TrainingMonitor
     {

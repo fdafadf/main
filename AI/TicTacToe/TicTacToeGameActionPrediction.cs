@@ -7,7 +7,7 @@ namespace AI.TicTacToe
 {
     public class TicTacToeGameActionPrediction
     {
-        public static IDictionary<GameAction, TOutput> Predict<TOutput>(GameState gameState, Func<FieldState, double> inputFunction, Func<double[], TOutput> predictFunction)
+        public static IDictionary<GameAction, TOutput> Predict<TOutput>(GameState gameState, Func<GameState, double[]> inputTransform, Func<double[], TOutput> predictFunction)
         {
             double[] input = new double[9];
             Dictionary<GameAction, TOutput> predictions = new Dictionary<GameAction, TOutput>();
@@ -15,8 +15,7 @@ namespace AI.TicTacToe
             foreach (GameAction gameAction in TicTacToeGame.Instance.GetAllowedActions(gameState))
             {
                 GameState nextGameState = TicTacToeGame.Instance.Play(gameState, gameAction);
-                nextGameState.ToArray(inputFunction, input);
-                predictions.Add(gameAction, predictFunction(input));
+                predictions.Add(gameAction, predictFunction(inputTransform(nextGameState)));
             }
 
             return predictions;

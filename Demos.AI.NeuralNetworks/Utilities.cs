@@ -1,14 +1,10 @@
-﻿using Games.Utilities;
-using AI.NeuralNetwork;
+﻿using AI.NeuralNetworks;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using AI.NeuralNetworks;
 
 namespace Demos.AI.NeuralNetwork
 {
-    public class Examples
+    public static class NetworkUtilities
     {
         public static readonly IFunction RELU = Function.ReLU;
         public static readonly IFunction LEAKY = Function.LeakyReLU;
@@ -20,6 +16,11 @@ namespace Demos.AI.NeuralNetwork
             {
                 return new MeanSquareErrorMonitor();
             }
+        }
+
+        public static TrainingMonitor[] Monitors(params TrainingMonitor[] monitors)
+        {
+            return monitors.Union(new TrainingMonitor[] { new TrainingEpochMonitor(t => { Console.Title = t; }, Console.Out) }).ToArray();
         }
 
         public static Network Network(IFunction activationFunction, int inputSize, int outputSize, params int[] hiddenLayersSizes)
@@ -51,24 +52,13 @@ namespace Demos.AI.NeuralNetwork
                 trainer.Monitors.Add(monitor);
             }
 
-            //optimizer.Monitors.Add(new CosoleTitleProgressMonitor());
             trainer.Train(features, labels, epoches, batchSize);
             return trainer.Monitors;
         }
 
-        public static double MaxWeight(Network network)
-        {
-            return network.Layers.Max(layer => layer.Neurons.Max(neuron => neuron.Weights.Max(w => Math.Abs(w))));
-        }
-
-        public static void WritePredictions(Network evaluator, double[][] inputs, double[][] outputs)
-        {
-            Console.WriteLine($"Test results:");
-
-            for (int k = 0; k < inputs.Length; k++)
-            {
-                Console.WriteLine($"{inputs[k][0]:f0} xor {inputs[k][1]:f0} = {evaluator.Evaluate(inputs[k])[0]:f2}");
-            }
-        }
+        //public static double MaxWeight(Network network)
+        //{
+        //    return network.Layers.Max(layer => layer.Neurons.Max(neuron => neuron.Weights.Max(w => Math.Abs(w))));
+        //}
     }
 }

@@ -28,28 +28,28 @@ namespace AI.MonteCarlo
 
             foreach (TNode selectedNode in selectedNodes)
             {
-                double value;
-                expandResults.MoveNext();
-                navigs.MoveNext();
-                var mcts = navigs.Current.Mcts;
-
-                if (selectedNode.State.IsFinal)
-                {
-                    value = 0; // mcts.FinalValue(selectedNode);
-                }
-                else
-                {
-                    if (expandResults.Current != null)
-                    {
-                        value = 0; // mcts.Playout(expandResults.Current);
-                    }
-                    else
-                    {
-                        value = 0; // mcts.Playout(selectedNode);
-                    }
-                }
-
-                //mcts.Propagate(value, selectedNode);
+                //double value;
+                //expandResults.MoveNext();
+                //navigs.MoveNext();
+                //var mcts = navigs.Current.Mcts;
+                //
+                //if (selectedNode.State.IsFinal)
+                //{
+                //    value = 0; // mcts.FinalValue(selectedNode);
+                //}
+                //else
+                //{
+                //    if (expandResults.Current != null)
+                //    {
+                //        value = 0; // mcts.Playout(expandResults.Current);
+                //    }
+                //    else
+                //    {
+                //        value = 0; // mcts.Playout(selectedNode);
+                //    }
+                //}
+                //
+                ////mcts.Propagate(value, selectedNode);
             }
         }
 

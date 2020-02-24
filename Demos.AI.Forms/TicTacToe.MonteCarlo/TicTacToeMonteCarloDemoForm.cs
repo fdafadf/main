@@ -82,7 +82,8 @@ namespace Demos.Forms.TicTacToe.MonteCarlo
             var expander = new MCTreeSearchExpander<TicTacToeGame, GameState, GameAction, Player>(TicTacToeGame.Instance, random);
             var playoutGenerator = new GamePlayoutRandomGenerator<GameState, Player, GameAction>(TicTacToeGame.Instance, random);
             var mcts = new TicTacToeMcts(expander, playoutGenerator);
-            mctsNavigator = new MCTreeSearchNavigator<TicTacToeMcts, TicTacToeGame, TicTacToeMctsNode, GameState, GameAction, Player>(mcts, TicTacToeGame.Instance, null);
+            var rootNode = new TicTacToeMctsNode(null, gameState, null);
+            mctsNavigator = new MCTreeSearchNavigator<TicTacToeMcts, TicTacToeGame, TicTacToeMctsNode, GameState, GameAction, Player>(mcts, TicTacToeGame.Instance, rootNode);
             //mcts = new PVNetworkBasedMCTreeSearch<TicTacToeGame, GameState, GameAction, Player>(TicTacToeGame.Instance, new GameState(), new PVNetworkMock<GameState, GameAction>(10), new Random());
         }
 

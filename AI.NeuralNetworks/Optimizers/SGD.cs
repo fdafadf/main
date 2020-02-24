@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Games.Utilities;
 
-namespace AI.NeuralNetwork
+namespace AI.NeuralNetworks
 {
     // Stochastic Gradient Descent
     public class SGD : Optimizer

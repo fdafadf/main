@@ -25,20 +25,20 @@ namespace AI.MonteCarlo
         {
             TState playoutFinalState = PlayoutGenerator.Generate(leafNode.State);
             TPlayer winner = playoutFinalState.GetWinner();
-            return winner == null ? 0.5 : playoutFinalState.CurrentPlayer.Equals(winner) ? 1 : 0;
+            return winner == null ? 0.5 : leafNode.State.CurrentPlayer.Equals(winner) ? 0 : 1;
         }
 
         protected override double Playout(MCTreeSearchNode<TState, TAction> leafNode, out IEnumerable<Tuple<TAction, TState>> path)
         {
             path = PlayoutGenerator.GeneratePath(leafNode.State);
-            TState playoutFinalState = path.Last().Item2;
+            TState playoutFinalState = path.Any() ? path.Last().Item2 : leafNode.State;
             TPlayer winner = playoutFinalState.GetWinner();
-            return winner == null ? 0.5 : playoutFinalState.CurrentPlayer.Equals(winner) ? 1 : 0;
+            return winner == null ? 0.5 : leafNode.State.CurrentPlayer.Equals(winner) ? 0 : 1;
         }
 
         protected override MCTreeSearchNode<TState, TAction> SelectChildren(MCTreeSearchNode<TState, TAction> node)
         {
-            double logT = Math.Log(node.Visits);
+            double logT = Math.Log(node.Children.Sum(child => child.Value.Visits));
             return node.Children.Values.MaxItem(child => CalculateUTC(child, logT));
         }
 

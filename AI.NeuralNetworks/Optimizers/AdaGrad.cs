@@ -1,4 +1,4 @@
-﻿using AI.NeuralNetwork;
+﻿using AI.NeuralNetworks;
 using System;
 using System.Linq;
 
@@ -18,6 +18,7 @@ namespace AI.NeuralNetworks
         public override double[] Evaluate(double[] features, double[] labels)
         {
             double[] output = Network.Evaluate(features);
+            gradient.Accumulate(features, output, labels);
             Accumulate();
             return output;
         }
@@ -57,9 +58,8 @@ namespace AI.NeuralNetworks
             {
                 double[] layerGradient = gradient.Accumulation[layerIndex][n];
                 double[] weights = layerNeurons[n].Weights;
-                double r = Math.Sqrt(layerAccumulation[n]);
 
-                if (r == 0)
+                if (layerAccumulation[n] == 0)
                 {
                     for (int i = 0; i < weights.Length; i++)
                     {
@@ -68,9 +68,11 @@ namespace AI.NeuralNetworks
                 }
                 else
                 {
+                    double r = Math.Sqrt(layerAccumulation[n]);
+
                     for (int i = 0; i < weights.Length; i++)
                     {
-                        weights[i] -= (LearningRate / r) * layerGradient[n];
+                        weights[i] -= (LearningRate / r) * layerGradient[i];
                     }
                 }
             }

@@ -16,18 +16,18 @@ namespace Demos.Forms
     {
         public static Random Random = new Random();
 
-        public static void LoadWeights<TOutput>(this NeuralNetwork<TOutput> self, string filePath)
-        {
-            string fileContent = File.ReadAllText(filePath);
-            double[][][] weights = JsonConvert.DeserializeObject<double[][][]>(fileContent);
-            self.SetWeights(weights);
-        }
-
-        public static void SaveWeights<TOutput>(this NeuralNetwork<TOutput> self, string filePath)
-        {
-            string fileContent = JsonConvert.SerializeObject(self.GetWeights());
-            File.WriteAllText(filePath, fileContent);
-        }
+        //public static void LoadWeights<TOutput>(this NeuralNetwork<TOutput> self, string filePath)
+        //{
+        //    string fileContent = File.ReadAllText(filePath);
+        //    double[][][] weights = JsonConvert.DeserializeObject<double[][][]>(fileContent);
+        //    self.SetWeights(weights);
+        //}
+        //
+        //public static void SaveWeights<TOutput>(this NeuralNetwork<TOutput> self, string filePath)
+        //{
+        //    string fileContent = JsonConvert.SerializeObject(self.GetWeights());
+        //    File.WriteAllText(filePath, fileContent);
+        //}
 
         public static T Add<T>(this ToolStripItemCollection self, ContextMenuStrip contextMenu) where T : ToolStripDropDownItem
         {
@@ -53,13 +53,13 @@ namespace Demos.Forms
             self.DrawEllipse(pen, (float)x1, (float)y1, (float)x2, (float)y2);
         }
 
-        public static void DrawTestData<TOutput>(this Bitmap self, IEnumerable<NeuralIO<TOutput>> testData, Func<TOutput, Pen> classifier, Translation2d translation)
+        public static void DrawTestData(this Bitmap self, IEnumerable<ConvertedInput> testData, Func<double[], Pen> classifier, Translation2d translation)
         {
             if (testData != null)
             {
                 using (Graphics graphics = Graphics.FromImage(self))
                 {
-                    foreach (NeuralIO<TOutput> testItem in testData)
+                    foreach (ConvertedInput testItem in testData)
                     {
                         translation(testItem.Input[0], testItem.Input[1], out double px, out double py);
                         Pen pen = classifier(testItem.Output);//[0] < 0 ? Pens.Blue : Pens.Red;

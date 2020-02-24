@@ -1,13 +1,24 @@
 ﻿using System;
 using System.Linq;
+using System.Numerics;
 
-namespace AI.NeuralNetwork
+namespace AI.NeuralNetworks
 {
+    //public static class Extensions
+    //{
+    //    public static Vector<T> Clone<T>(this Vector<T> self) where T : struct
+    //    {
+    //        T[] array = new T[Vector<T>.Count];
+    //        self.CopyTo()
+    //        Vector<T> result = new Vector<T>();
+    //    }
+    //}
+
     // Stochastic Gradient Descent with Momentum
     public class SGDMomentum : SGD
     {
         public double Momentum { get; }
-        double[][][] previousWeights;
+        readonly double[][][] previousWeights;
 
         public SGDMomentum(Network network, double learningRate, double momentum) : base(network, learningRate)
         {

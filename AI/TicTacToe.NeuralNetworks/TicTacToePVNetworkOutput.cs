@@ -3,7 +3,7 @@ using AI.TicTacToe;
 using Games.TicTacToe;
 using Games.Utilities;
 
-namespace AI.TicTacToe.NeuralNetworks
+namespace AI.NeuralNetworks.TicTacToe
 {
     public class TicTacToePVNetworkOutput : PVNetworkOutput<GameAction>
     {

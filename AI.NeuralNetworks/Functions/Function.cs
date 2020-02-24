@@ -1,4 +1,4 @@
-﻿namespace AI.NeuralNetwork
+﻿namespace AI.NeuralNetworks
 {
     public static class Function
     {

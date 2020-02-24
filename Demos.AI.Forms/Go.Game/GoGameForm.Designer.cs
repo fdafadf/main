@@ -121,6 +121,11 @@
             // numberOfPlayoutsControl
             // 
             this.numberOfPlayoutsControl.Location = new System.Drawing.Point(6, 19);
+            this.numberOfPlayoutsControl.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
             this.numberOfPlayoutsControl.Name = "numberOfPlayoutsControl";
             this.numberOfPlayoutsControl.Size = new System.Drawing.Size(61, 20);
             this.numberOfPlayoutsControl.TabIndex = 8;

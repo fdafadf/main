@@ -1,16 +1,17 @@
 ﻿using AI.NeuralNetworks;
 using AI.TicTacToe;
-using AI.TicTacToe.NeuralNetworks;
+using AI.NeuralNetworks.TicTacToe;
 using Demos.Forms.Base;
 using Games.TicTacToe;
 using System;
 using System.Configuration;
 using System.IO;
 using System.Windows.Forms;
+using System.Linq;
 
 namespace Demos.Forms.TicTacToe.NeuralNetwork
 {
-    public partial class TicTacToeNeuralNetworkDemoForm : NeuralNetworkDemoForm<TicTacToeResultProbabilities>
+    public partial class TicTacToeNeuralNetworkDemoForm : NeuralNetworkDemoForm
     {
         TicTacToeNeuralBoardControl boardControl;
 
@@ -19,10 +20,11 @@ namespace Demos.Forms.TicTacToe.NeuralNetwork
             InitializeComponent();
         }
 
-        protected override AI.NeuralNetworks.NeuralNetwork<TicTacToeResultProbabilities> CreateNeuralNetwork()
+        protected override Network CreateNeuralNetwork()
         {
             Random random = new Random(Properties.Seed);
-            return new TicTacToeNeuralNetwork(Properties.NetworkInputSize, Properties.NetworkLayersSize, ActivationFunctions.Sigmoid, random);
+            var network = new TicTacToeResultProbabilitiesNeuralNetwork(Properties.NetworkInputSize, Properties.NetworkLayersSize, Function.Sigmoidal, random);
+            return network.Network;
         }
 
         protected override Control InitializeMainControl()
@@ -32,7 +34,7 @@ namespace Demos.Forms.TicTacToe.NeuralNetwork
             return boardControl;
         }
 
-        protected override NeuralNetworkDemoFormProperties<TicTacToeResultProbabilities> InitializeProperties()
+        protected override NeuralNetworkDemoFormProperties InitializeProperties()
         {
             var properties = base.InitializeProperties();
 
@@ -42,7 +44,7 @@ namespace Demos.Forms.TicTacToe.NeuralNetwork
             foreach (string trainDataFilePath in Directory.EnumerateFiles(Settings.TicTacToeNeuralNetworkTrainDataDirectoryPath, "*.txt"))
             {
                 FileInfo trainDataFile = new FileInfo(trainDataFilePath);
-                properties.AddTrainingSet(trainDataFile.Name, () => TicTacToeNeuralIOLoader.LoadPositions(trainDataFile.OpenText(), (NeuralNetwork as TicTacToeNeuralNetwork).InputFunction));
+                //properties.AddTrainingSet(trainDataFile.Name, () => TicTacToeNeuralIOLoader.LoadPositions(trainDataFile.OpenText(), TicTacToeResultProbabilitiesNeuralNetwork.DefaultInputFunction));
             }
 
             properties.AddTrainingSet("All States", () =>
@@ -56,7 +58,7 @@ namespace Demos.Forms.TicTacToe.NeuralNetwork
         protected override void NetworkChanged()
         {
             base.NetworkChanged();
-            boardControl.NeuralNetwork = NeuralNetwork as TicTacToeNeuralNetwork;
+            boardControl.NeuralNetwork = NeuralNetwork;
             boardControl.BoardState = boardControl.GameState;
         }
 

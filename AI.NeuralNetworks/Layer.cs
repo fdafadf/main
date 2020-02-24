@@ -1,6 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 
-namespace AI.NeuralNetwork
+namespace AI.NeuralNetworks
 {
     public class Layer
     {

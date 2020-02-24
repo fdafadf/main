@@ -1,6 +1,6 @@
-﻿using AI.NeuralNetworks.Games;
+﻿using AI;
+using AI.NeuralNetworks;
 using Games.TicTacToe;
-using AI.NeuralNetwork;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -55,8 +55,8 @@ namespace Demos.TicTacToe
         #region Playing
 
         GameState currentState;
-        IGameAI<GameState, Player, GameAction> circleAI;
-        IGameAI<GameState, Player, GameAction> crossAI;
+        IActionGenerator<GameState, Player, GameAction> circleAI;
+        IActionGenerator<GameState, Player, GameAction> crossAI;
 
         private void Play()
         {
@@ -66,7 +66,7 @@ namespace Demos.TicTacToe
             TryToPlayAsAI();
         }
 
-        private IGameAI<GameState, Player, GameAction> CurrentAI
+        private IActionGenerator<GameState, Player, GameAction> CurrentAI
         {
             get
             {
@@ -136,13 +136,13 @@ namespace Demos.TicTacToe
 
         private void TryToPlayAsAI()
         {
-            IGameAI<GameState, Player, GameAction> currentAI = CurrentAI;
+            IActionGenerator<GameState, Player, GameAction> currentAI = CurrentAI;
 
             if (currentAI != null)
             {
                 if (currentState.IsFinal == false)
                 {
-                    GameAction gameAction = currentAI.GenerateMove(currentState);
+                    GameAction gameAction = currentAI.GenerateAction(currentState);
                     GameState nextState = TicTacToeGame.Instance.Play(currentState, gameAction);
 
                     if (nextState == null)

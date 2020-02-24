@@ -2,7 +2,7 @@
 using System;
 using System.Diagnostics;
 
-namespace AI.NeuralNetwork
+namespace AI.NeuralNetworks
 {
     public class Trainer
     {

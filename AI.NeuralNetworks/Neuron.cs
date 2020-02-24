@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 
-namespace AI.NeuralNetwork
+namespace AI.NeuralNetworks
 {
     public class Neuron
     {
@@ -23,7 +23,7 @@ namespace AI.NeuralNetwork
                 sum += Weights[i] * input[i];
             }
 
-            return sum; 
+            return sum;
         }
     }
 }

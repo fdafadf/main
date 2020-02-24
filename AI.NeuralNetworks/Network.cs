@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace AI.NeuralNetwork
+namespace AI.NeuralNetworks
 {
     public class Network
     {
@@ -48,6 +48,16 @@ namespace AI.NeuralNetwork
             }
 
             return layerInput;
+        }
+
+        public void LoadWeights(string path)
+        {
+
+        }
+
+        public void SaveWeights(string path)
+        {
+
         }
 
         public override string ToString()

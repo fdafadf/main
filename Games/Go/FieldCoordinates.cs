@@ -21,7 +21,7 @@ namespace Games.Go
             {
                 uint x = (uint)Array.IndexOf(GtpCharacters, match.Groups[1].Value[0]);
                 uint y = uint.Parse(match.Groups[2].Value) - 1;
-                return new FieldCoordinates(x, y);
+                return Get(x, y);
             }
             else
             {
@@ -43,7 +43,7 @@ namespace Games.Go
                 {
                     uint x = (uint)(match.Groups[1].Value[0] - 'a');
                     uint y = (uint)(match.Groups[2].Value[0] - 'a');
-                    return new FieldCoordinates(x, y);
+                    return Get(x, y);
                 }
                 else
                 {
@@ -57,12 +57,12 @@ namespace Games.Go
         public static FieldCoordinates Get(uint x, uint y)
         {
             FieldCoordinates result;
-            uint key = x + y * 100;
+            uint hashCode = x * 397 + y;
 
-            if (Cache.TryGetValue(key, out result) == false)
+            if (Cache.TryGetValue(hashCode, out result) == false)
             {
                 result = new FieldCoordinates(x, y);
-                Cache.Add(key, result);
+                Cache.Add(hashCode, result);
             }
 
             return result;
@@ -102,10 +102,11 @@ namespace Games.Go
 
         public override int GetHashCode()
         {
-            unchecked
-            {
-                return ((int)X * 397) ^ (int)Y;
-            }
+            return ((int)X * 397) + (int)Y;
+            //unchecked
+            //{
+            //    return ((int)X * 397) ^ (int)Y;
+            //}
         }
 
         public override string ToString()

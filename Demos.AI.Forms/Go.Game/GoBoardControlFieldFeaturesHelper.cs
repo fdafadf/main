@@ -23,6 +23,7 @@ namespace Demos.Forms.Go.Game
                     FieldState fieldState = currentState.InternalState.BoardFields[x, y];
                     boardControl.Fields[x, y].State = fieldState;
                     boardControl.Fields[x, y].Labels.Clear();
+                    // Illegal
                     boardControl.Fields[x, y].Borders[0] = fieldState == FieldState.Empty ? allowedActions.Contains(field) == false : false;
                     boardControl.Fields[x, y].Borders[1] = false;
                     boardControl.Fields[x, y].Borders[2] = false;
@@ -40,8 +41,8 @@ namespace Demos.Forms.Go.Game
                     {
                         if (childNode.Value.Visits > 0)
                         {
-                            boardControl.Fields[childNode.Key.X, childNode.Key.Y].AddLabel(Brushes.Magenta, $"{childNode.Value.Visits / 10}");
-                            boardControl.Fields[childNode.Key.X, childNode.Key.Y].AddLabel(Brushes.Green, $"{childNode.Value.Value / 10}");
+                            boardControl.Fields[childNode.Key.X, childNode.Key.Y].AddLabel(Brushes.Magenta, $"{childNode.Value.Visits}");
+                            boardControl.Fields[childNode.Key.X, childNode.Key.Y].AddLabel(Brushes.Green, $"{childNode.Value.Value}");
                         }
                     }
                 }

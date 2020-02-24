@@ -1,5 +1,5 @@
-﻿using AI.TicTacToe;
-using AI.TicTacToe.NeuralNetworks;
+﻿using AI.NeuralNetworks.TicTacToe;
+using AI.TicTacToe;
 using Games.TicTacToe;
 using Games.Utilities;
 using Keras.Models;
@@ -24,7 +24,7 @@ namespace AI.Keras
             //ConsoleUtility.WriteLine(ConsoleColor.Cyan, "[TicTacToe] Train Policy Network And Test");
             //TrainPolicyNetworkFromScratchAndTestOnAllStates(100);
             ConsoleUtility.WriteLine(ConsoleColor.Cyan, "[TicTacToe] Train Unsupervised Policy-Value Network");
-            TrainModelFromScratchWithMonteCarloAndTest();
+            //TrainModelFromScratchWithMonteCarloAndTest();
         }
 
         public static void PredictTimeTest()
@@ -69,7 +69,7 @@ namespace AI.Keras
         {
             string modelPath = @"C:\Users\pstepnowski\Source\Repos\fdafadf\basics\Workspace\TicTacToeKerasModel.bin";
             Console.WriteLine($"Loading Testing Data");
-            TicTacToeTrainingData.Load(TicTacToeNeuralIOLoader.InputFunctions.Bipolar, out double[][] inputs, out TicTacToeResultProbabilities[] outputs);
+            TicTacToeTrainingData.Load(TicTacToeNeuralIOLoader.InputTransforms.Bipolar, out double[][] inputs, out TicTacToeResultProbabilities[] outputs);
             Console.WriteLine($"Loading Model");
             var model = new KerasModel(() => BaseModel.LoadModel(modelPath));
             Console.WriteLine($"Testing Model (All Possible States)");
@@ -81,7 +81,7 @@ namespace AI.Keras
         public static void TrainValueNetworkFromScratchAndTestOnAllStates(int epoches)
         {
             Console.WriteLine($"Loading Training And Testing Data");
-            TicTacToeTrainingData.Load(TicTacToeNeuralIOLoader.InputFunctions.Bipolar, out double[][] inputs, out TicTacToeResultProbabilities[] outputs);
+            TicTacToeTrainingData.Load(TicTacToeNeuralIOLoader.InputTransforms.Bipolar, out double[][] inputs, out TicTacToeResultProbabilities[] outputs);
             Console.WriteLine($"Building Model");
             var model = new KerasModel(KerasModel.Loss_CrossEntropy, 3);
             Console.WriteLine($"Training Model (All Possible States, {epoches} Epoches)");
@@ -95,7 +95,7 @@ namespace AI.Keras
         public static void TrainValueNetworkFromScratchAndSaveModel(int epoches, string modelPath)
         {
             Console.WriteLine($"Loading Training Data");
-            TicTacToeTrainingData.Load(TicTacToeNeuralIOLoader.InputFunctions.Bipolar, out double[][] inputs, out TicTacToeResultProbabilities[] outputs);
+            TicTacToeTrainingData.Load(TicTacToeNeuralIOLoader.InputTransforms.Bipolar, out double[][] inputs, out TicTacToeResultProbabilities[] outputs);
             Console.WriteLine($"Building Model");
             var model = new KerasModel(KerasModel.Loss_CrossEntropy, 3);
             Console.WriteLine($"Training Model (All Possible States, {epoches} Epoches)");
@@ -120,46 +120,46 @@ namespace AI.Keras
             //model.Model.Save()
         }
 
-        public static void TrainPolicyNetworkFromScratchAndTestOnAllStates(int epoches)
-        {
-            Console.WriteLine($"Loading Training And Testing Data");
-            TicTacToeTrainingData.Load(TicTacToeNeuralIOLoader.InputFunctions.Bipolar, out double[][] inputs, out TicTacToeActionProbabilities[] outputs);
-            Console.WriteLine($"Building Model");
-            var model = new KerasModel(KerasModel.Loss_MeanSquared, 9);
-            Console.WriteLine($"Training Model (All Possible States, {epoches} Epoches)");
-            model.Train(inputs, outputs.Select(o => o.Probabilities).ToArray(), epoches);
-            Console.WriteLine($"Testing Model (All Possible States)");
-            TestModel(model, inputs, outputs, CompareOutputs, out int correct, out int wrong);
-            Console.WriteLine(string.Format("Correct: {0}", correct));
-            Console.WriteLine(string.Format("Wrong: {0}", wrong));
-        }
+        //public static void TrainPolicyNetworkFromScratchAndTestOnAllStates(int epoches)
+        //{
+        //    Console.WriteLine($"Loading Training And Testing Data");
+        //    TicTacToeTrainingData.Load(TicTacToeNeuralIOLoader.InputTransforms.Bipolar, out double[][] inputs, out TicTacToeActionProbabilities[] outputs);
+        //    Console.WriteLine($"Building Model");
+        //    var model = new KerasModel(KerasModel.Loss_MeanSquared, 9);
+        //    Console.WriteLine($"Training Model (All Possible States, {epoches} Epoches)");
+        //    model.Train(inputs, outputs.Select(o => o.Probabilities).ToArray(), epoches);
+        //    Console.WriteLine($"Testing Model (All Possible States)");
+        //    TestModel(model, inputs, outputs, CompareOutputs, out int correct, out int wrong);
+        //    Console.WriteLine(string.Format("Correct: {0}", correct));
+        //    Console.WriteLine(string.Format("Wrong: {0}", wrong));
+        //}
 
-        public static void TrainModelFromScratchWithMonteCarloAndTest()
-        {
-            Console.WriteLine("Loading Testing Data");
-            TicTacToeTrainingData.Load(TicTacToeNeuralIOLoader.InputFunctions.Bipolar, out double[][] inputs, out TicTacToePVNetworkOutput[] outputs);
-            Console.WriteLine("Building Model");
-            var mctsNetwork = new TicTacToeKerasPVNetwork();
-
-            void TestCurrentModel()
-            {
-                Console.WriteLine("Testing Model  (All Possible States)");
-                TestModel(mctsNetwork.Model, inputs, outputs, CompareOutputs, out int correct, out int wrong);
-                Console.WriteLine(string.Format("Good: {0}", correct));
-                Console.WriteLine(string.Format("Bad: {0}", wrong));
-            }
-
-            //PythonEngine.BeginAllowThreads();
-            TestCurrentModel();
-            PVNetworkTrainer<TicTacToeGame, GameState, GameAction, Player> trainer = new PVNetworkTrainer<TicTacToeGame, GameState, GameAction, Player>(TicTacToeGame.Instance, new GameState(), mctsNetwork);
-
-            for (int i = 0; i < 10; i++)
-            {
-                Console.WriteLine("Training Model");
-                trainer.Epoch();
-                TestCurrentModel();
-            }
-        }
+        //public static void TrainModelFromScratchWithMonteCarloAndTest()
+        //{
+        //    Console.WriteLine("Loading Testing Data");
+        //    TicTacToeTrainingData.Load(TicTacToeNeuralIOLoader.InputFunctions.Bipolar, out double[][] inputs, out TicTacToePVNetworkOutput[] outputs);
+        //    Console.WriteLine("Building Model");
+        //    var mctsNetwork = new TicTacToeKerasPVNetwork();
+        //
+        //    void TestCurrentModel()
+        //    {
+        //        Console.WriteLine("Testing Model  (All Possible States)");
+        //        TestModel(mctsNetwork.Model, inputs, outputs, CompareOutputs, out int correct, out int wrong);
+        //        Console.WriteLine(string.Format("Good: {0}", correct));
+        //        Console.WriteLine(string.Format("Bad: {0}", wrong));
+        //    }
+        //
+        //    //PythonEngine.BeginAllowThreads();
+        //    TestCurrentModel();
+        //    PVNetworkTrainer<TicTacToeGame, GameState, GameAction, Player> trainer = new PVNetworkTrainer<TicTacToeGame, GameState, GameAction, Player>(TicTacToeGame.Instance, new GameState(), mctsNetwork);
+        //
+        //    for (int i = 0; i < 10; i++)
+        //    {
+        //        Console.WriteLine("Training Model");
+        //        trainer.Epoch();
+        //        TestCurrentModel();
+        //    }
+        //}
 
         public static bool CompareOutputs(TicTacToePVNetworkOutput expectedOutput, float[] networkOutputs, int numberOfSample)
         {

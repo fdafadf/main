@@ -8,7 +8,7 @@ namespace Games.TicTacToe
         public static TicTacToeGameStateGenerator Instance = new TicTacToeGameStateGenerator();
 
         GameTreeNode<GameState, GameAction> fullTree;
-        Dictionary<int, GameState> allUniqueStates;
+        //Dictionary<int, GameState> allUniqueStates;
 
         protected TicTacToeGameStateGenerator()
         {
@@ -16,12 +16,13 @@ namespace Games.TicTacToe
 
         public IEnumerable<GameState> GetAllUniqueStates()
         {
-            if (allUniqueStates == null)
-            {
-                //allUniqueStates = GetFullTree().FlattenData().Unique(s => s.GetHashCode());
-            }
-
-            return allUniqueStates.Values;
+            //if (allUniqueStates == null)
+            //{
+            //    //allUniqueStates = GetFullTree().FlattenData().Unique(s => s.GetHashCode());
+            //}
+            //
+            //return allUniqueStates.Values;
+            return null;
         }
 
         public GameTreeNode<GameState, GameAction> GetFullTree()
@@ -31,8 +32,10 @@ namespace Games.TicTacToe
 
         private GameTreeNode<GameState, GameAction> GetFullTree(GameState gameState, GameAction lastAction, GameTreeNode<GameState, GameAction> parentNode)
         {
-            GameTreeNode<GameState, GameAction> result = new GameTreeNode<GameState, GameAction>(gameState, lastAction, parentNode);
-            result.Children = new Dictionary<GameAction, GameTreeNode<GameState, GameAction>>();
+            GameTreeNode<GameState, GameAction> result = new GameTreeNode<GameState, GameAction>(gameState, lastAction, parentNode)
+            {
+                Children = new Dictionary<GameAction, GameTreeNode<GameState, GameAction>>()
+            };
 
             if (gameState.IsFinal == false)
             {

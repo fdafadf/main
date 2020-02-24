@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace AI.NeuralNetwork
+namespace AI.NeuralNetworks
 {
     public class Xavier : ILayerInitializer
     {

@@ -16,7 +16,7 @@ using System.Windows.Forms;
 
 namespace Demos.Forms.Xor.NeuralNetwork
 {
-    public partial class XorDemoForm : NeuralNetworkDemoForm<double>
+    public partial class XorDemoForm : NeuralNetworkDemoForm
     {
         Bitmap Bitmap = new Bitmap(100 * 2, 100 * 2);
 
@@ -31,7 +31,7 @@ namespace Demos.Forms.Xor.NeuralNetwork
             return outputControl;
         }
 
-        protected override NeuralNetworkDemoFormProperties<double> InitializeProperties()
+        protected override NeuralNetworkDemoFormProperties InitializeProperties()
         {
             var properties = base.InitializeProperties();
             properties.TrainingSetSize = 20;
@@ -56,17 +56,17 @@ namespace Demos.Forms.Xor.NeuralNetwork
             DrawOutputOnBitmap();
         }
 
-        private IEnumerable<NeuralIO<double>> LoadTrainingSet()
+        private IEnumerable<ConvertedInput> LoadTrainingSet()
         {
-            double classifier(double[] input)
+            double[] classifier(double[] input)
             {
                 if (input[0] < 0.5)
                 {
-                    return input[1] < 0.5 ? 0 : 1;
+                    return new double[] { input[1] < 0.5 ? 0 : 1 };
                 }
                 else
                 {
-                    return input[1] < 0.5 ? 1 : 0;
+                    return new double[] { input[1] < 0.5 ? 1 : 0 };
                 }
             };
         
@@ -89,12 +89,11 @@ namespace Demos.Forms.Xor.NeuralNetwork
         
             Func<double, double, double> networkEvaluation = (x, y) =>
             {
-                NeuralNetwork.Evaluate(new[] { x, y });
-                return NeuralNetwork.Output[0];
+                return NeuralNetwork.Evaluate(new[] { x, y })[0];
             };
             
             Bitmap.DrawFunctionOutput(networkEvaluation, PixelToFunctionDomain);
-            Bitmap.DrawTestData(LoadedTrainingSet, o => o < 0.5 ? Pens.Blue : Pens.Red, FunctionDomainToPixel);
+            Bitmap.DrawTestData(LoadedTrainingSet, o => o[0] < 0.5 ? Pens.Blue : Pens.Red, FunctionDomainToPixel);
         }
 
         private void InitializeComponent()

@@ -7,7 +7,7 @@ using Games.Utilities;
 using AI.NeuralNetworks;
 using AI.NeuralNetworks.Games;
 
-namespace AI.TicTacToe.NeuralNetworks
+namespace AI.NeuralNetworks.TicTacToe
 {
     public class TicTacToeNeuralIOGenerator<TOutput>
     {
@@ -17,53 +17,37 @@ namespace AI.TicTacToe.NeuralNetworks
         {
         }
 
-        public IEnumerable<GameStateNeuralIO<GameState, TOutput>> GetAllUniqueStates(Func<FieldState, double> inputFunction, ITreeValueEvaluator<GameState, TOutput> outputFunction)
+        public IEnumerable<LabeledState<GameState, TOutput>> GetAllUniqueStates(ITreeValueEvaluator<GameState, LabeledState<GameState, TOutput>> outputFunction)
         {
-            return GetFullTree(inputFunction, outputFunction).FlattenData().Unique(s => s.GameState.GetHashCode()).Values;
+            return GetFullTree(outputFunction).FlattenData().Unique(n => n.State.GetHashCode()).Values;
         }
 
-        public IEnumerable<GameStateNeuralIO<GameState, TOutput>> GetAllUniqueStates(Func<GameState, double[]> inputFunction, ITreeValueEvaluator<GameState, TOutput> outputFunction)
+        public TreeNode<LabeledState<GameState, TOutput>> GetFullTree(ITreeValueEvaluator<GameState, LabeledState<GameState, TOutput>> outputFunction)
         {
-            return GetFullTree(inputFunction, outputFunction).FlattenData().Unique(s => s.GameState.GetHashCode()).Values;
+            return GetFullTree(TicTacToeGameStateGenerator.Instance.GetFullTree(), outputFunction);
         }
 
-        public TreeNode<GameStateNeuralIO<GameState, TOutput>> GetFullTree(Func<FieldState, double> inputFunction, ITreeValueEvaluator<GameState, TOutput> outputFunction)
+        private TreeNode<LabeledState<GameState, TOutput>> GetFullTree(GameTreeNode<GameState, GameAction> gameNode, ITreeValueEvaluator<GameState, LabeledState<GameState, TOutput>> outputFunction)
         {
-            return GetFullTree(TicTacToeGameStateGenerator.Instance.GetFullTree(), inputFunction, outputFunction);
-        }
-
-        public TreeNode<GameStateNeuralIO<GameState, TOutput>> GetFullTree(Func<GameState, double[]> inputFunction, ITreeValueEvaluator<GameState, TOutput> outputFunction)
-        {
-            return GetFullTree(TicTacToeGameStateGenerator.Instance.GetFullTree(), inputFunction, outputFunction);
-        }
-
-        private TreeNode<GameStateNeuralIO<GameState, TOutput>> GetFullTree(GameTreeNode<GameState, GameAction> gameNode, Func<FieldState, double> inputFunction, ITreeValueEvaluator<GameState, TOutput> outputFunction)
-        {
-            return GetFullTree(gameNode, gameState => gameState.ToArray(inputFunction), outputFunction);
-        }
-
-        private TreeNode<GameStateNeuralIO<GameState, TOutput>> GetFullTree(GameTreeNode<GameState, GameAction> gameNode, Func<GameState, double[]> inputFunction, ITreeValueEvaluator<GameState, TOutput> outputFunction)
-        {
-            TreeNode<GameStateNeuralIO<GameState, TOutput>> result;
+            TreeNode<LabeledState<GameState, TOutput>> result;
         
             if (gameNode.Children.Count == 0)
             {
-                TOutput output = outputFunction.EvaluateLeaf(gameNode.State);
-                GameStateNeuralIO<GameState, TOutput> testData = new GameStateNeuralIO<GameState, TOutput>(gameNode.State, inputFunction(gameNode.State), output);
-                result = new TreeNode<GameStateNeuralIO<GameState, TOutput>>(testData);
+                var output = outputFunction.EvaluateLeaf(gameNode.State);
+                result = new TreeNode<LabeledState<GameState, TOutput>>(output);
             }
             else
             {
-                result = new TreeNode<GameStateNeuralIO<GameState, TOutput>>();
+                result = new TreeNode<LabeledState<GameState, TOutput>>();
         
                 foreach (var childState in gameNode.Children)
                 {
-                    TreeNode<GameStateNeuralIO<GameState, TOutput>> child = GetFullTree(childState.Value, inputFunction, outputFunction);
+                    TreeNode<LabeledState<GameState, TOutput>> child = GetFullTree(childState.Value, outputFunction);
                     result.Children.Add(child);
                 }
 
-                TOutput output = outputFunction.EvaluateNode(gameNode.State, result.Children.Select(c => c.Data.Output));
-                result.Data = new GameStateNeuralIO<GameState, TOutput>(gameNode.State, inputFunction(gameNode.State), output);
+                IEnumerable<LabeledState<GameState, TOutput>> childrenStates = result.Children.Select(c => c.Data);
+                result.Data = outputFunction.EvaluateNode(gameNode.State, childrenStates);
             }
 
             return result;

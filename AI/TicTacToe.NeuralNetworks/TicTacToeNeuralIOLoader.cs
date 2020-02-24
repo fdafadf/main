@@ -1,12 +1,13 @@
 ﻿using AI.NeuralNetworks;
 using AI.NeuralNetworks.Games;
+using AI.TicTacToe;
 using Games.TicTacToe;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace AI.TicTacToe.NeuralNetworks
+namespace AI.NeuralNetworks.TicTacToe
 {
     public abstract class TicTacToeNeuralIOLoader
     {
@@ -22,13 +23,18 @@ namespace AI.TicTacToe.NeuralNetworks
                 return gameState.ToArray(InputFunctions.Bipolar);
             }
 
+            public static double[] Unipolar(GameState gameState)
+            {
+                return gameState.ToArray(InputFunctions.Unipolar);
+            }
+
             public static double[] Relu(GameState gameState)
             {
                 return gameState.ToArray();
             }
         }
 
-        public static class InputFunctions
+        private static class InputFunctions
         {
             /// <summary>
             /// Maps field states to 0 for cross, to 1 for nought, to 0.5 for empty;
@@ -40,14 +46,14 @@ namespace AI.TicTacToe.NeuralNetworks
             public static Func<FieldState, double> Bipolar = FieldStateExtensions.Map(0.0, 1, -1);
         }
 
-        public static IEnumerable<GameStateNeuralIO<GameState, TicTacToeResultProbabilities>> LoadPositions(StreamReader fileInfo, Func<FieldState, double> inputFunction)
+        public static IEnumerable<LabeledState<GameState, TicTacToeResultProbabilities>> LoadPositions(StreamReader fileInfo, Func<GameState, double[]> inputTransform)
         {
             string fileContent = fileInfo.ReadToEnd();
-            Func<string, GameStateNeuralIO<GameState, TicTacToeResultProbabilities>> positionParser = position => ParsePosition(position, inputFunction);
+            Func<string, LabeledState<GameState, TicTacToeResultProbabilities>> positionParser = position => ParsePosition(position, inputTransform);
             return ParsePositions(fileContent, positionParser);
         }
 
-        public static GameStateNeuralIO<GameState, TicTacToeResultProbabilities> ParsePosition(string position, Func<FieldState, double> inputFunction)
+        public static LabeledState<GameState, TicTacToeResultProbabilities> ParsePosition(string position, Func<GameState, double[]> inputTransform)
         {
             string[] components = position.Split(new string[] { "\r\n", " " }, StringSplitOptions.RemoveEmptyEntries);
             GameState gameState = GameState.Parse(components[0], components[3], components[6]);
@@ -56,12 +62,12 @@ namespace AI.TicTacToe.NeuralNetworks
             output[1] = double.Parse(components[1 * 3 + 2]);
             output[2] = double.Parse(components[2 * 3 + 2]);
             var probabilities = new TicTacToeResultProbabilities(output);
-            return new GameStateNeuralIO<GameState, TicTacToeResultProbabilities>(gameState, gameState.ToArray(inputFunction), probabilities);
+            return new LabeledState<GameState, TicTacToeResultProbabilities>(gameState, inputTransform(gameState), output, probabilities);
         }
 
-        public static IEnumerable<GameStateNeuralIO<GameState, TOutput>> ParsePositions<TOutput>(string text, Func<string, GameStateNeuralIO<GameState, TOutput>> positionParser)
+        public static IEnumerable<LabeledState<GameState, TOutput>> ParsePositions<TOutput>(string text, Func<string, LabeledState<GameState, TOutput>> positionParser)
         {
-            List<GameStateNeuralIO<GameState, TOutput>> result = new List<GameStateNeuralIO<GameState, TOutput>>();
+            List<LabeledState<GameState, TOutput>> result = new List<LabeledState<GameState, TOutput>>();
             string[] items = text.Split(new string[] { "\r\n\r\n" }, StringSplitOptions.RemoveEmptyEntries);
 
             foreach (var item in items)
@@ -90,9 +96,9 @@ namespace AI.TicTacToe.NeuralNetworks
         //    }
         //}
 
-        public static IEnumerable<GameStateNeuralIO<GameState, TOutput>> Parse<TOutput>(string text, Func<FieldState, double> inputFunction, Func<GameState, TOutput> outputFunction)
+        public static IEnumerable<LabeledState<GameState, TOutput>> Parse<TOutput>(string text, Func<FieldState, double> inputFunction, Func<TOutput, double[]> outputFunction, Func<GameState, TOutput> typedOutputFunction)
         {
-            List<GameStateNeuralIO<GameState, TOutput>> result = new List<GameStateNeuralIO<GameState, TOutput>>();
+            List<LabeledState<GameState, TOutput>> result = new List<LabeledState<GameState, TOutput>>();
             string[] testDataItemsAsText = text.Split(new string[] { "\r\n\r\n" }, StringSplitOptions.RemoveEmptyEntries);
 
             foreach (string testDataItemAsText in testDataItemsAsText)
@@ -109,16 +115,19 @@ namespace AI.TicTacToe.NeuralNetworks
                 //    }
                 //}
 
-                result.Add(new GameStateNeuralIO<GameState, TOutput>(gameState, gameState.ToArray(inputFunction), outputFunction(gameState)));
+                var input = gameState.ToArray(inputFunction);
+                var typedOutput = typedOutputFunction(gameState);
+                var output = outputFunction(typedOutput);
+                result.Add(new LabeledState<GameState, TOutput>(gameState, input, output, typedOutput));
             }
 
             return result;
         }
 
-        public static IEnumerable<GameStateNeuralIO<GameState, TOutput>> Load<TOutput>(StreamReader fileInfo, Func<FieldState, double> inputFunction, Func<GameState, TOutput> outputFunction)
+        public static IEnumerable<LabeledState<GameState, TOutput>> Load<TOutput>(StreamReader fileInfo, Func<FieldState, double> inputFunction, Func<TOutput, double[]> outputFunction, Func<GameState, TOutput> typedOutputFunction)
         {
             string fileContent = fileInfo.ReadToEnd();
-            return Parse(fileContent, inputFunction, outputFunction);
+            return Parse(fileContent, inputFunction, outputFunction, typedOutputFunction);
         }
 
         //public override string ToString()

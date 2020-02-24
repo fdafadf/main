@@ -3,11 +3,11 @@ using System.Text;
 
 namespace Games.Utilities
 {
-    public interface ITreeValueEvaluator<TGameState, TValue>
+    public interface ITreeValueEvaluator<TState, TValue>
     {
         //GameTreeEvaluationNode<TGameState, TGameAction, TEvaluation> Evaluate(TGameState gameState);
-        TValue EvaluateLeaf(TGameState finalState);
-        TValue EvaluateNode(TGameState nodeState, IEnumerable<TValue> evaluatedChildren);
+        TValue EvaluateLeaf(TState finalState);
+        TValue EvaluateNode(TState nodeState, IEnumerable<TValue> evaluatedChildren);
     }
 
     public class GameTreeEvaluationNode<TGameState, TGameAction, TEvaluation> : TreeNode<GameTreeEvaluationNode<TGameState, TGameAction, TEvaluation>, TGameAction>

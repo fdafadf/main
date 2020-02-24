@@ -1,11 +1,12 @@
-﻿using AI.NeuralNetwork;
+﻿using AI.NeuralNetworks;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using static Demos.AI.NeuralNetwork.NetworkUtilities;
 
 namespace Demos.AI.NeuralNetwork
 {
-    public class TicTacToeExamples : Examples
+    public class TicTacToeExamples
     {
         public static void Compare1()
         {
@@ -68,26 +69,21 @@ namespace Demos.AI.NeuralNetwork
 
         public static void Compare4()
         {
-            int epoches = 20;
+            int epoches = 600;
             var @in = TicTacToe.DataLoader.TrainingFeatures.Take(100).ToArray();
             var @out = TicTacToe.DataLoader.TrainingLabels.Take(100).ToArray();
             //List<Optimizer> optimizers = new List<Optimizer>();
             var optimizer1 = SGDMomentum(Network(RELU, 9, 3, 72, 72, 72, 36, 36, 36, 18, 18), 0.001, 0.04);
             var optimizer2 = SGDMomentum(Network(RELU, 9, 3, 72, 72, 72, 36, 36, 36, 18, 18), 0.001, 0.04);
             var optimizer3 = SGDMomentum(Network(RELU, 9, 3, 72, 72, 72, 36, 36, 36, 18, 18), 0.001, 0.04);
-            var optimizer4 = AdaGrad(Network(RELU, 9, 3, 72, 72, 72, 36, 36, 36, 18, 18), 0.001);
+            var optimizer4 = AdaGrad(Network(RELU, 9, 3, 72, 72, 72, 36, 36, 36, 18, 18), 0.01);
             //optimizers.Add(AdaGrad(Network(RELU, 9, 3, 72, 72, 72, 36, 36, 36, 18, 18), 0.001));
             ChartForm chartForm = new ChartForm("TicTacToe");
-            chartForm.Add(optimizer1, Train(optimizer1, @in, @out, epoches, 1, Monitors(MSE)));
-            chartForm.Add(optimizer2, Train(optimizer2, @in, @out, epoches, 8, Monitors(MSE)));
+            //chartForm.Add(optimizer1, Train(optimizer1, @in, @out, epoches, 1, Monitors(MSE)));
+            //chartForm.Add(optimizer2, Train(optimizer2, @in, @out, epoches, 8, Monitors(MSE)));
             chartForm.Add(optimizer3, Train(optimizer3, @in, @out, epoches, 32, Monitors(MSE)));
             chartForm.Add(optimizer4, Train(optimizer4, @in, @out, epoches, 32, Monitors(MSE)));
             chartForm.ShowDialog();
-        }
-
-        public static TrainingMonitor[] Monitors(params TrainingMonitor[] monitors)
-        {
-            return monitors.Union(new TrainingMonitor[] { new TrainingEpochMonitor(t => { Console.Title = t; }, Console.Out) }).ToArray();
         }
 
         //public static OptimizerMonitor Accuracy

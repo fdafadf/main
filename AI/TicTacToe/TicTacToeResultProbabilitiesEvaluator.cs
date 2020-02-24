@@ -2,7 +2,9 @@
 using Games;
 using Games.TicTacToe;
 using Games.Utilities;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace AI.TicTacToe
 {
@@ -10,13 +12,60 @@ namespace AI.TicTacToe
     /// Evaluates probabilities of nought win, cross win and draw in specified position.
     /// It uses Min-Max alghoritm.
     /// </summary>
-    public class TicTacToeResultProbabilitiesEvaluator : GameTreeEvaluator<TicTacToeResultProbabilities>
+    public class TicTacToeResultProbabilitiesEvaluator : ITreeValueEvaluator<GameState, LabeledState<GameState, TicTacToeResultProbabilities>>
     {
-        //private GameStateNeuralIO<GameState, TicTacToeResultProbabilities> d;
+        Func<GameState, double[]> InputTransform { get; }
 
-        public override TicTacToeResultProbabilities EvaluateLeaf(GameState finalState)
+        public TicTacToeResultProbabilitiesEvaluator(Func<GameState, double[]> inputTransform)
         {
-            return new TicTacToeResultProbabilities(finalState.GetWinner());
+            InputTransform = inputTransform;
+        }
+
+        public GameTreeEvaluationNode<GameState, GameAction, LabeledState<GameState, TicTacToeResultProbabilities>> Evaluate(GameTreeNode<GameState, GameAction> node)
+        {
+            uint outputSize = node.State.BoardSize * node.State.BoardSize;
+            var result = new GameTreeEvaluationNode<GameState, GameAction, LabeledState<GameState, TicTacToeResultProbabilities>>(node.State);
+
+            if (node.State.IsFinal)
+            {
+                result.Evaluation = EvaluateLeaf(node.State);
+            }
+            else
+            {
+                result.Children = new Dictionary<GameAction, GameTreeEvaluationNode<GameState, GameAction, LabeledState<GameState, TicTacToeResultProbabilities>>>();
+
+                foreach (var child in node.Children)
+                {
+                    result.Children.Add(child.Key, Evaluate(child.Value));
+                }
+
+                result.Evaluation = EvaluateNode(node.State, result.Children.Select(c => c.Value.Evaluation));
+
+                //var allowedActions = Game.GetAllowedActions(node.GameState);
+                //int playerIndex = node.GameState.CurrentPlayer.IsCross ? 1 : 0;
+                //
+                //if (allowedActions.Any())
+                //{
+                //    result.Children = new Dictionary<GameAction, GameTreeEvaluationNode<GameState, GameAction, TEvaluation>>();
+                //
+                //    foreach (var allowedAction in allowedActions)
+                //    {
+                //        var nextGameState = node.GameState.Play(allowedAction.X, allowedAction.Y);
+                //        result.Children.Add(allowedAction, Evaluate(nextGameState));
+                //    }
+                //
+                //    //result.Evaluation = EvaluateNode(gameState, result.Children);
+                //
+                //}
+            }
+
+            return result;
+        }
+
+        public LabeledState<GameState, TicTacToeResultProbabilities> EvaluateLeaf(GameState finalState)
+        {
+            var typedOutput = new TicTacToeResultProbabilities(finalState.GetWinner());
+            return new LabeledState<GameState, TicTacToeResultProbabilities>(finalState, InputTransform(finalState), typedOutput.Probabilities, typedOutput);
         }
 
         //public double[] EvaluateNode(GameState nodeState, IEnumerable<TicTacToeResultProbabilities> childrenProbabilities)
@@ -30,7 +79,7 @@ namespace AI.TicTacToe
         /// <param name="nodeState"></param>
         /// <param name="children"></param>
         /// <returns></returns>
-        public override TicTacToeResultProbabilities EvaluateNode(GameState nodeState, IEnumerable<TicTacToeResultProbabilities> evaluatedChildren)
+        public LabeledState<GameState, TicTacToeResultProbabilities> EvaluateNode(GameState nodeState, IEnumerable<LabeledState<GameState, TicTacToeResultProbabilities>> evaluatedChildren)
         {
             int currentPlayerIndex = nodeState.CurrentPlayer.IsCross ? 1 : 2;
             int currentOpponentIndex = nodeState.CurrentPlayer.IsCross ? 2 : 1;
@@ -39,7 +88,7 @@ namespace AI.TicTacToe
 
             foreach (var childOutputs in evaluatedChildren)
             {
-                p[childOutputs.Probabilities.IndexOfMax()] = true;
+                p[childOutputs.Label.Probabilities.IndexOfMax()] = true;
             }
 
             if (p[currentPlayerIndex])
@@ -55,7 +104,7 @@ namespace AI.TicTacToe
                 result[currentOpponentIndex] = 1;
             }
 
-            return new TicTacToeResultProbabilities(result);
+            return new LabeledState<GameState, TicTacToeResultProbabilities>(nodeState, InputTransform(nodeState), result, new TicTacToeResultProbabilities(result));
         }
 
         public static GameAction BestFor(Player currentPlayer, List<KeyValuePair<GameAction, TicTacToeResultProbabilities>> predictions)

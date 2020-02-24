@@ -1,7 +1,7 @@
 ﻿using AI.NeuralNetworks;
 using AI.NeuralNetworks.Games;
+using AI.NeuralNetworks.TicTacToe;
 using AI.TicTacToe;
-using AI.TicTacToe.NeuralNetworks;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -12,7 +12,7 @@ namespace Demo
     {
         public double[][][] GetAllUniqueStates()
         {
-            var trainingData = TicTacToeNeuralIOGenerator<TicTacToeResultProbabilities>.Instance.GetAllUniqueStates(TicTacToeNeuralIOLoader.InputFunctions.Bipolar, new TicTacToeResultProbabilitiesEvaluator());
+            var trainingData = TicTacToeNeuralIOGenerator<TicTacToeResultProbabilities>.Instance.GetAllUniqueStates(new TicTacToeResultProbabilitiesEvaluator(TicTacToeNeuralIOLoader.InputTransforms.Bipolar));
             return ConvertToPython(trainingData);
         }
 
@@ -20,14 +20,14 @@ namespace Demo
         {
             var trainingDataFilePath = @"C:\Users\pstepnowski\Source\Repos\fdafadf\basics\Workspace\TicTacToe.NeuralNetwork\TrainData\BipolarInputThreeOutputs.txt";
             var trainingDataFile = new FileInfo(trainingDataFilePath);
-            var trainingData = TicTacToeNeuralIOLoader.LoadPositions(trainingDataFile.OpenText(), TicTacToeNeuralIOLoader.InputFunctions.Bipolar);
+            var trainingData = TicTacToeNeuralIOLoader.LoadPositions(trainingDataFile.OpenText(), TicTacToeNeuralIOLoader.InputTransforms.Bipolar);
             return ConvertToPython(trainingData);
         }
 
-        public static double[][][] ConvertToPython<TGameState>(IEnumerable<GameStateNeuralIO<TGameState, TicTacToeResultProbabilities>> trainingData)
+        public static double[][][] ConvertToPython<TGameState>(IEnumerable<LabeledState<TGameState, TicTacToeResultProbabilities>> trainingData)
         {
             double[][] inputs = trainingData.Select(d => d.Input).ToArray();
-            double[][] outputs = trainingData.Select(d => d.Output.Probabilities).ToArray();
+            double[][] outputs = trainingData.Select(d => d.Label.Probabilities).ToArray();
 
             return new double[][][] {
                 inputs,

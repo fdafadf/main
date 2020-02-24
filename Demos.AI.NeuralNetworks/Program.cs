@@ -1,4 +1,5 @@
-﻿using AI.NeuralNetwork;
+﻿using AI.NeuralNetworks;
+using System.Numerics;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -10,9 +11,9 @@ namespace Demos.AI.NeuralNetwork
         {
             //// Influence of network size on required epoches
 
-            XorExamples.Train(1500, 0.3, 4);
-            XorExamples.Train(1500, 0.3, 4, 6);
-            XorExamples.Train(3000, 0.3, 4, 6);
+            XorExamples.Train1(1500, 0.3, 4);
+            XorExamples.Train1(1500, 0.3, 4, 6);
+            XorExamples.Train1(3000, 0.3, 4, 6);
 
             //// MSE on chart
 

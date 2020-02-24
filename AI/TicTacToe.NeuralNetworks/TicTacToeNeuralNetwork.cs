@@ -4,51 +4,52 @@ using System.IO;
 using AI.NeuralNetworks;
 using Games.TicTacToe;
 
-namespace AI.TicTacToe.NeuralNetworks
+namespace AI.NeuralNetworks.TicTacToe
 {
-    public class TicTacToeNeuralNetwork : NeuralNetwork<TicTacToeResultProbabilities>
+    public class TicTacToeResultProbabilitiesNeuralNetwork
     {
-        public static Func<FieldState, double> DefaultInputFunction = TicTacToeNeuralIOLoader.InputFunctions.Unipolar;
+        public static Func<GameState, double[]> DefaultInputFunction = TicTacToeNeuralIOLoader.InputTransforms.Unipolar;
 
-        public static GameAction GetBestAction(NeuralNetwork<TicTacToeResultProbabilities> network, GameState gameState)
-        {
-            double[] input = new double[9];
-            gameState.ToArray(TicTacToeNeuralIOLoader.InputFunctions.Unipolar, input);
-            network.Evaluate(input);
-            GameAction bestAction = null;
-            double bestActionValue = double.MinValue;
-
-            foreach (GameAction action in TicTacToeGame.Instance.GetAllowedActions(gameState))
-            {
-                double actionOutput = network.Output[action.Y * 3 + action.X];
-
-                if (actionOutput > bestActionValue)
-                {
-                    bestAction = action;
-                    bestActionValue = actionOutput;
-                }
-            }
-
-            return bestAction;
-        }
+        //public static GameAction GetBestAction(TicTacToeResultProbabilitiesNeuralNetwork network, GameState gameState)
+        //{
+        //    //double[] input = new double[9];
+        //    //gameState.ToArray(TicTacToeNeuralIOLoader.InputFunctions.Unipolar, input);
+        //    double[] prediction = network.Evaluate(gameState);
+        //    GameAction bestAction = null;
+        //    double bestActionValue = double.MinValue;
+        //
+        //    foreach (GameAction action in TicTacToeGame.Instance.GetAllowedActions(gameState))
+        //    {
+        //        double actionOutput = network.Output[action.Y * 3 + action.X];
+        //
+        //        if (actionOutput > bestActionValue)
+        //        {
+        //            bestAction = action;
+        //            bestActionValue = actionOutput;
+        //        }
+        //    }
+        //
+        //    return bestAction;
+        //}
 
         public Func<FieldState, double> InputFunction;
+        public Network Network { get; }
 
-        public TicTacToeNeuralNetwork(int inputSize, int[] layersSize, IActivationFunction activationFunction, Random random) : base(inputSize, layersSize, activationFunction, random)
+        public TicTacToeResultProbabilitiesNeuralNetwork(int inputSize, int[] layersSize, IFunction activationFunction, Random random) 
         {
-            InputFunction = DefaultInputFunction;
+            Network = new Network(activationFunction, inputSize, 9, layersSize);
+        }
+        
+        public TicTacToeResultProbabilitiesNeuralNetwork()
+        {
+            Network = new Network(Function.Sigmoidal, 9, 9, new int[] { 9, 9 });
         }
 
-        public TicTacToeNeuralNetwork() : base(9, new int[] { 9, 9 }, ActivationFunctions.Sigmoid, new Random())
-        {
-            InputFunction = DefaultInputFunction;
-        }
-
-        public void Evaluate(GameState gameState)
+        public double[] Evaluate(GameState gameState)
         {
             double[] input = new double[9];
             gameState.ToArray(InputFunction, input);
-            Evaluate(input);
+            return Network.Evaluate(input);
         }
     }
 }

@@ -1,15 +1,15 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard1.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="GameTreeEvaluator.cs" />
+    <Compile Remove="IPolicy.cs" />
     <Compile Remove="MonteCarlo\MCTreeSearchAsGameTree.cs" />
     <Compile Remove="MonteCarlo\MCTreeSearchSelector.cs" />
     <Compile Remove="MonteCarlo\MCTreeSearchSettings.cs" />
-    <Compile Remove="NeuralNetworks\NeuralNetworkExcluded.cs" />
-    <Compile Remove="NeuralNetworks\NeuralNetworkLayerExcluded.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\AI.NeuralNetworks\AI.NeuralNetworks.csproj" />
     <ProjectReference Include="..\Games\Games.csproj" />
   </ItemGroup>
 

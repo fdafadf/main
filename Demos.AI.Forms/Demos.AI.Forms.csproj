@@ -88,12 +88,6 @@
     <Compile Include="TicTacToe.MonteCarlo\TicTacToeMonteCarloDemoForm.Designer.cs">
       <DependentUpon>TicTacToeMonteCarloDemoForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Perceptron\PerceptronDemoForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Perceptron\PerceptronDemoForm.Designer.cs">
-      <DependentUpon>PerceptronDemoForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="Utilities\ClassifiedNeuralIOGenerator.cs" />
     <Compile Include="Utilities\SquareGridGeometry.cs" />
     <Compile Include="Utilities\SquaresGridLayoutPanel.cs">
@@ -155,9 +149,6 @@
     <EmbeddedResource Include="TicTacToe.MonteCarlo\TicTacToeMonteCarloDemoForm.resx">
       <DependentUpon>TicTacToeMonteCarloDemoForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Perceptron\PerceptronDemoForm.resx">
-      <DependentUpon>PerceptronDemoForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="TicTacToe\TicTacToeBoardFieldControl.resx">
       <DependentUpon>TicTacToeBoardFieldControl.cs</DependentUpon>
     </EmbeddedResource>
@@ -178,6 +169,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\AI.NeuralNetworks\AI.NeuralNetworks.csproj">
+      <Project>{16367DB7-692C-4484-AC86-06B476846175}</Project>
+      <Name>AI.NeuralNetworks</Name>
+    </ProjectReference>
     <ProjectReference Include="..\AI\AI.csproj">
       <Project>{c0549974-49fa-4548-b8c6-7a9061240f76}</Project>
       <Name>AI</Name>

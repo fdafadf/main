@@ -169,7 +169,7 @@ namespace Demos.Forms.Go.Game
                 }
             
                 string result = round.GetLastGameState().GetWinner().Color.State == FieldState.Black ? "B" : "W";
-                playoutListControl.Items.Add(new NamedObject<GoMctsRound>($"{result}{trigger} Playout {playoutNumber}", round));
+                playoutListControl.Items.Add(new NamedObject<GoMctsRound>($"{playoutNumber:000} {result}{trigger}", round));
                 playoutNumber++;
             }
 

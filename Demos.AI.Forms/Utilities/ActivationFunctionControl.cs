@@ -7,9 +7,9 @@ namespace Demos.Forms.Utilities
     {
         public ActivationFunctionControl()
         {
-            Items.Add(ActivationFunctions.BinaryStep);
-            Items.Add(ActivationFunctions.HiperbolicTangens);
-            Items.Add(ActivationFunctions.Sigmoid);
+            //Items.Add(ActivationFunctions.BinaryStep);
+            //Items.Add(ActivationFunctions.HiperbolicTangens);
+            //Items.Add(ActivationFunctions.Sigmoid);
             DropDownStyle = ComboBoxStyle.DropDownList;
         }
     }

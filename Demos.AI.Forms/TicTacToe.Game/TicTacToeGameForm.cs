@@ -1,4 +1,4 @@
-﻿using AI.NeuralNetworks;
+﻿using AI;
 using Games.TicTacToe;
 using System;
 using System.Configuration;
@@ -12,10 +12,10 @@ namespace Demos.Forms.TicTacToe.Game
     public partial class TicTacToeGameForm : Form
     {
         GameState currentState = new GameState();
-        readonly IGameAI<GameState, Player, GameAction> NoughtAI;
-        readonly IGameAI<GameState, Player, GameAction> CrossAI;
+        readonly IActionGenerator<GameState, Player, GameAction> NoughtAI;
+        readonly IActionGenerator<GameState, Player, GameAction> CrossAI;
 
-        public TicTacToeGameForm(IGameAI<GameState, Player, GameAction> noughtAI, IGameAI<GameState, Player, GameAction> crossAI) : this()
+        public TicTacToeGameForm(IActionGenerator<GameState, Player, GameAction> noughtAI, IActionGenerator<GameState, Player, GameAction> crossAI) : this()
         {
             NoughtAI = noughtAI;
             CrossAI = crossAI;
@@ -82,7 +82,7 @@ namespace Demos.Forms.TicTacToe.Game
             }
         }
 
-        private IGameAI<GameState, Player, GameAction> CurrentAI
+        private IActionGenerator<GameState, Player, GameAction> CurrentAI
         {
             get
             {
@@ -99,7 +99,7 @@ namespace Demos.Forms.TicTacToe.Game
 
         private void TryToPlayAsAI()
         {
-            IGameAI<GameState, Player, GameAction> currentAI = CurrentAI;
+            IActionGenerator<GameState, Player, GameAction> currentAI = CurrentAI;
 
             if (currentAI != null)
             {
@@ -107,7 +107,7 @@ namespace Demos.Forms.TicTacToe.Game
                 {
                     //Task.Delay(1000).ContinueWith(t =>
                     //{
-                        GameAction gameAction = currentAI.GenerateMove(currentState);
+                        GameAction gameAction = currentAI.GenerateAction(currentState);
                         GameState nextState = TicTacToeGame.Instance.Play(currentState, gameAction);
 
                         //Invoke((MethodInvoker)delegate

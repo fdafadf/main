@@ -1,5 +1,4 @@
 ﻿using AI.TicTacToe;
-using AI.TicTacToe.NeuralNetworks;
 using Microsoft.ML;
 using Microsoft.ML.Transforms;
 using System;

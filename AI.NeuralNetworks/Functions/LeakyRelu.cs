@@ -1,4 +1,4 @@
-﻿namespace AI.NeuralNetwork.Functions
+﻿namespace AI.NeuralNetworks.Functions
 {
     public class LeakyRelu : IFunction
     {

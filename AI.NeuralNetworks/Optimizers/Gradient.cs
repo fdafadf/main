@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 
-namespace AI.NeuralNetwork
+namespace AI.NeuralNetworks
 {
     public class Gradient
     {

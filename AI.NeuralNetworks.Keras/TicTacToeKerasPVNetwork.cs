@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using AI.MonteCarlo;
-using AI.TicTacToe.NeuralNetworks;
+using AI.NeuralNetworks.TicTacToe;
 using Games.TicTacToe;
 
 namespace AI.Keras

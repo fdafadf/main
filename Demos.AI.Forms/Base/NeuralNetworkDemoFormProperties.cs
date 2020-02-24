@@ -7,7 +7,7 @@ using System.ComponentModel;
 
 namespace Demos.Forms.Base
 {
-    public class NeuralNetworkDemoFormProperties<TOutput>
+    public class NeuralNetworkDemoFormProperties
     {
         [Category("Architecture")]
         public int NetworkInputSize { get; set; }
@@ -21,7 +21,7 @@ namespace Demos.Forms.Base
         [Category("Randomizer")]
         public int TrainingSetSize { get; set; }
         [Browsable(false)]
-        public List<NamedObject<Func<IEnumerable<NeuralIO<TOutput>>>>> TrainingSets = new List<NamedObject<Func<IEnumerable<NeuralIO<TOutput>>>>>();
+        public List<NamedObject<Func<IEnumerable<ConvertedInput>>>> TrainingSets = new List<NamedObject<Func<IEnumerable<ConvertedInput>>>>();
         [Category("Training")]
         public int TrainingEpoches { get; set; }
         [Category("Training")]
@@ -29,9 +29,9 @@ namespace Demos.Forms.Base
         [Category("Training")]
         public double TrainingLastError { get; set; }
 
-        public void AddTrainingSet(string name, Func<IEnumerable<NeuralIO<TOutput>>> loader)
+        public void AddTrainingSet(string name, Func<IEnumerable<ConvertedInput>> loader)
         {
-            TrainingSets.Add(new NamedObject<Func<IEnumerable<NeuralIO<TOutput>>>>(name, loader));
+            TrainingSets.Add(new NamedObject<Func<IEnumerable<ConvertedInput>>>(name, loader));
 
             if (TrainingSet == null)
             {

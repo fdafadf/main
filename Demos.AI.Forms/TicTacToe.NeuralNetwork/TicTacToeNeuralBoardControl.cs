@@ -3,20 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using AI.NeuralNetworks;
 using AI.TicTacToe;
-using AI.TicTacToe.NeuralNetworks;
 using AI.NeuralNetworks.Games;
 using Demos.Forms.TicTacToe.Perceptron;
+using AI.NeuralNetworks.TicTacToe;
 
 namespace Demos.Forms.TicTacToe.NeuralNetwork
 {
     public class TicTacToeNeuralBoardControl : TicTacToeBoardControl1<PerceptronTicTacToeBoardFieldControl>
     {
-        public TicTacToeNeuralNetwork NeuralNetwork { get; set; }
+        public Network NeuralNetwork { get; set; }
         public GameState GameState { get; private set; }
 
         public TicTacToeNeuralBoardControl()
         {
-            NeuralNetwork = new TicTacToeNeuralNetwork();
+            //NeuralNetwork = new NeuralNetwork();
             GameState = new GameState();
             BoardState = GameState;
         }
@@ -34,23 +34,23 @@ namespace Demos.Forms.TicTacToe.NeuralNetwork
                         GameAction gameAction = new GameAction(fieldControl.Coordinates);
                         GameState nextGameState = TicTacToeGame.Instance.Play(value, gameAction);
 
-                        if (NeuralNetwork.Output.Length == 9)
-                        {
-                            NeuralNetwork.Evaluate(GameState);
-                            fieldControl.Output = NeuralNetwork.Output[fieldControl.Coordinates.Y * 3 + fieldControl.Coordinates.X];
-                        }
-                        else if (NeuralNetwork.Output.Length == 1)
-                        {
-                            NeuralNetwork.Evaluate(nextGameState);
-                            fieldControl.Output = NeuralNetwork.Output[0];
-                        }
-                        else
-                        {
-                            fieldControl.Output = 0;
-                        }
+                        //if (NeuralNetwork.Output.Length == 9)
+                        //{
+                        //    NeuralNetwork.Evaluate(GameState);
+                        //    fieldControl.Output = NeuralNetwork.Output[fieldControl.Coordinates.Y * 3 + fieldControl.Coordinates.X];
+                        //}
+                        //else if (NeuralNetwork.Output.Length == 1)
+                        //{
+                        //    NeuralNetwork.Evaluate(nextGameState);
+                        //    fieldControl.Output = NeuralNetwork.Output[0];
+                        //}
+                        //else
+                        //{
+                        //    fieldControl.Output = 0;
+                        //}
 
                         var prediction = Find(nextGameState);
-                        fieldControl.Output2 = string.Format("o {0}, x {1}, d {2}", prediction.Output.Probabilities[0], prediction.Output.Probabilities[1], prediction.Output.Probabilities[2]);
+                        fieldControl.Output2 = string.Format("o {0}, x {1}, d {2}", prediction.Output[0], prediction.Output[1], prediction.Output[2]);
                     }
 
                     fieldControl.FieldState = value[fieldControl.Coordinates.X, fieldControl.Coordinates.Y];
@@ -66,18 +66,18 @@ namespace Demos.Forms.TicTacToe.NeuralNetwork
             }
         }
 
-        private static Dictionary<int, GameStateNeuralIO<GameState, TicTacToeResultProbabilities>> allStatesByHash;
+        private static Dictionary<int, LabeledState<GameState, TicTacToeResultProbabilities>> allStatesByHash;
         
-        public static GameStateNeuralIO<GameState, TicTacToeResultProbabilities> Find(GameState gameState)
+        public static LabeledState<GameState, TicTacToeResultProbabilities> Find(GameState gameState)
         {
             if (allStatesByHash == null)
             {
-                allStatesByHash = new Dictionary<int, GameStateNeuralIO<GameState, TicTacToeResultProbabilities>>();
-                var uniqueGameStates = TicTacToeNeuralIOGenerator<TicTacToeResultProbabilities>.Instance.GetAllUniqueStates(TicTacToeNeuralNetwork.DefaultInputFunction, new TicTacToeResultProbabilitiesEvaluator());
+                allStatesByHash = new Dictionary<int, LabeledState<GameState, TicTacToeResultProbabilities>>();
+                var uniqueGameStates = TicTacToeNeuralIOGenerator<TicTacToeResultProbabilities>.Instance.GetAllUniqueStates(new TicTacToeResultProbabilitiesEvaluator(TicTacToeResultProbabilitiesNeuralNetwork.DefaultInputFunction));
 
                 foreach (var item in uniqueGameStates)
                 {
-                    int hashCode = item.GameState.GetHashCode();
+                    int hashCode = item.State.GetHashCode();
         
                     if (allStatesByHash.ContainsKey(hashCode) == false)
                     {

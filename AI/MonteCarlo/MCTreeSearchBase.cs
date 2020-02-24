@@ -117,6 +117,9 @@ namespace AI.MonteCarlo
                 value = 1 - value;
             }
             while (node != currentNode);
+
+            node.Visits++;
+            node.Value += value;
         }
     }
 }

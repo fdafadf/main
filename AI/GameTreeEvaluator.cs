@@ -4,13 +4,13 @@ using Games.Utilities;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace AI.TicTacToe
+namespace AI
 {
     public abstract class GameTreeEvaluator<TEvaluation> : ITreeValueEvaluator<GameState, TEvaluation>
     {
         //TicTacToeMinMaxResultProbabilitiesEvaluator e = new TicTacToeMinMaxResultProbabilitiesEvaluator();
         //Func<TicTacToeActionProbabilities> factory;
-        IGame<GameState, GameAction, Player> Game;
+        //IGame<GameState, GameAction, Player> Game;
 
         public GameTreeEvaluator()
         {
