@@ -11,7 +11,7 @@ using AI.NeuralNetworks.TicTacToe;
 
 namespace Basics.MLNet
 {
-    public class TicTacToeMLNet : IActionGenerator<GameState, Player, GameAction>
+    public class TicTacToeMLNet : IActionGenerator<GameState, GameAction, Player>
     {
         PredictionEngine<ModelInput, ModelOutput> predictionEngine;
 
@@ -47,7 +47,7 @@ namespace Basics.MLNet
 
         public GameAction GenerateAction(GameState gameState)
         {
-            var predictions = TicTacToeGameActionPrediction.Predict(gameState, TicTacToeNeuralIOLoader.InputTransforms.Bipolar, Predict).ToList();
+            var predictions = TicTacToeActionPrediction.Predict(gameState, TicTacToeLabeledStateLoader.InputTransforms.Bipolar, Predict).ToList();
             int index;
 
             if (gameState.CurrentPlayer.IsCross)

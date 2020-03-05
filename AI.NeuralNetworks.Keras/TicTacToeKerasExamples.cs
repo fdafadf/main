@@ -1,4 +1,6 @@
-﻿using AI.NeuralNetworks.TicTacToe;
+﻿using AI.NeuralNetworks;
+using AI.NeuralNetworks.Games;
+using AI.NeuralNetworks.TicTacToe;
 using AI.TicTacToe;
 using Games.TicTacToe;
 using Games.Utilities;
@@ -69,56 +71,57 @@ namespace AI.Keras
         {
             string modelPath = @"C:\Users\pstepnowski\Source\Repos\fdafadf\basics\Workspace\TicTacToeKerasModel.bin";
             Console.WriteLine($"Loading Testing Data");
-            TicTacToeTrainingData.Load(TicTacToeNeuralIOLoader.InputTransforms.Bipolar, out double[][] inputs, out TicTacToeResultProbabilities[] outputs);
+            var testingData = TicTacToeValueLoader.LoadAllUniqueStates(null);
+            //TicTacToeTrainingData.Load(TicTacToeNeuralIOLoader.InputTransforms.Bipolar, out double[][] inputs, out TicTacToeResultProbabilities[] outputs);
             Console.WriteLine($"Loading Model");
             var model = new KerasModel(() => BaseModel.LoadModel(modelPath));
             Console.WriteLine($"Testing Model (All Possible States)");
-            TestModel(model, inputs, outputs, TicTacToeTrainingData.IsPredictionCorrect, out int correct, out int wrong);
+            TestModel(model, testingData, (l, p, i) => false, out int correct, out int wrong); ;
             Console.WriteLine(string.Format("Correct: {0}", correct));
             Console.WriteLine(string.Format("Wrong: {0}", wrong));
         }
 
-        public static void TrainValueNetworkFromScratchAndTestOnAllStates(int epoches)
-        {
-            Console.WriteLine($"Loading Training And Testing Data");
-            TicTacToeTrainingData.Load(TicTacToeNeuralIOLoader.InputTransforms.Bipolar, out double[][] inputs, out TicTacToeResultProbabilities[] outputs);
-            Console.WriteLine($"Building Model");
-            var model = new KerasModel(KerasModel.Loss_CrossEntropy, 3);
-            Console.WriteLine($"Training Model (All Possible States, {epoches} Epoches)");
-            model.Train(inputs, outputs.Select(o => o.Probabilities).ToArray(), epoches);
-            Console.WriteLine($"Testing Model (All Possible States)");
-            TestModel(model, inputs, outputs, TicTacToeTrainingData.IsPredictionCorrect, out int correct, out int wrong);
-            Console.WriteLine(string.Format("Correct: {0}", correct));
-            Console.WriteLine(string.Format("Wrong: {0}", wrong));
-        }
+        //public static void TrainValueNetworkFromScratchAndTestOnAllStates(int epoches)
+        //{
+        //    Console.WriteLine($"Loading Training And Testing Data");
+        //    var testingData = TicTacToeResultProbabilitiesLoader.LoadAllUniqueStates(null);
+        //    Console.WriteLine($"Building Model");
+        //    var model = new KerasModel(KerasModel.Loss_CrossEntropy, 3);
+        //    Console.WriteLine($"Training Model (All Possible States, {epoches} Epoches)");
+        //    model.Train(inputs, outputs.Select(o => o.Probabilities).ToArray(), epoches);
+        //    Console.WriteLine($"Testing Model (All Possible States)");
+        //    TestModel(model, testingData, (l, p, i) => false, out int correct, out int wrong);
+        //    Console.WriteLine(string.Format("Correct: {0}", correct));
+        //    Console.WriteLine(string.Format("Wrong: {0}", wrong));
+        //}
 
-        public static void TrainValueNetworkFromScratchAndSaveModel(int epoches, string modelPath)
-        {
-            Console.WriteLine($"Loading Training Data");
-            TicTacToeTrainingData.Load(TicTacToeNeuralIOLoader.InputTransforms.Bipolar, out double[][] inputs, out TicTacToeResultProbabilities[] outputs);
-            Console.WriteLine($"Building Model");
-            var model = new KerasModel(KerasModel.Loss_CrossEntropy, 3);
-            Console.WriteLine($"Training Model (All Possible States, {epoches} Epoches)");
-            model.Train(inputs, outputs.Select(o => o.Probabilities).ToArray(), epoches);
-            Console.WriteLine($"Saving Model Graph");
-
-            switch (Path.GetExtension(modelPath))
-            {
-                case ".keras":
-                    model.Model.Save(modelPath);
-                    break;
-                case ".tf":
-                    model.Model.SaveTensorflowJSFormat(modelPath);
-                    break;
-                default:
-                    Console.WriteLine($"Unknown file extension");
-                    break;
-            }
-
-            // modelPath.Replace(".keras", "")
-            System.Diagnostics.Process.Start(@"C:\Users\pstepnowski\AppData\Local\Programs\Python\Python36\python.exe ""C:\Deployment\Convert.py""");
-            //model.Model.Save()
-        }
+        //public static void TrainValueNetworkFromScratchAndSaveModel(int epoches, string modelPath)
+        //{
+        //    Console.WriteLine($"Loading Training Data");
+        //    TicTacToeTrainingData.Load(TicTacToeNeuralIOLoader.InputTransforms.Bipolar, out double[][] inputs, out TicTacToeResultProbabilities[] outputs);
+        //    Console.WriteLine($"Building Model");
+        //    var model = new KerasModel(KerasModel.Loss_CrossEntropy, 3);
+        //    Console.WriteLine($"Training Model (All Possible States, {epoches} Epoches)");
+        //    model.Train(inputs, outputs.Select(o => o.Probabilities).ToArray(), epoches);
+        //    Console.WriteLine($"Saving Model Graph");
+        //
+        //    switch (Path.GetExtension(modelPath))
+        //    {
+        //        case ".keras":
+        //            model.Model.Save(modelPath);
+        //            break;
+        //        case ".tf":
+        //            model.Model.SaveTensorflowJSFormat(modelPath);
+        //            break;
+        //        default:
+        //            Console.WriteLine($"Unknown file extension");
+        //            break;
+        //    }
+        //
+        //    // modelPath.Replace(".keras", "")
+        //    System.Diagnostics.Process.Start(@"C:\Users\pstepnowski\AppData\Local\Programs\Python\Python36\python.exe ""C:\Deployment\Convert.py""");
+        //    //model.Model.Save()
+        //}
 
         //public static void TrainPolicyNetworkFromScratchAndTestOnAllStates(int epoches)
         //{
@@ -193,7 +196,7 @@ namespace AI.Keras
             }
         }
 
-        private static void TestModel<T>(KerasModel model, double[][] inputs, T[] expectedOutputs, Func<T, float[], int, bool> outputComparer, out int correct, out int wrong)
+        private static void TestModel<TState, TLabel>(KerasModel model, LabeledState<TState, TLabel>[] testingData, Func<TLabel, float[], int, bool> outputComparer, out int correct, out int wrong)
         {
             correct = 0;
             wrong = 0;
@@ -211,12 +214,12 @@ namespace AI.Keras
                 return result;
             }
 
-            float[] outputs = model.Predict(inputs);
+            float[] outputs = model.Predict(testingData.Select(item => item.Input).ToArray());
 
-            for (int i = 0; i < inputs.Length; i++)
+            for (int i = 0; i < testingData.Length; i++)
             {
-                double[] input = inputs[i];
-                T expectedOutput = expectedOutputs[i];
+                double[] input = testingData[i].Input;
+                TLabel expectedOutput = testingData[i].Label;
 
                 if (outputComparer(expectedOutput, outputs, i))
                 {

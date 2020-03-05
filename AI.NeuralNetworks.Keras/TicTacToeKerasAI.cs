@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace AI.Keras
 {
-    public class TicTacToeKerasAI : IActionGenerator<GameState, Player, GameAction>
+    public class TicTacToeKerasAI : IActionGenerator<GameState, GameAction, Player>
     {
         KerasModel model;
 
@@ -21,9 +21,9 @@ namespace AI.Keras
 
         public GameAction GenerateAction(GameState gameState)
         {
-            Func<double[], TicTacToeResultProbabilities> predictFunction = input => new TicTacToeResultProbabilities(model.Predict(input).Select(i => (double)i).ToArray());
-            var predictions = TicTacToeGameActionPrediction.Predict(gameState, TicTacToeNeuralIOLoader.InputTransforms.Bipolar, predictFunction);
-            return TicTacToeResultProbabilitiesEvaluator.BestFor(gameState.CurrentPlayer, predictions.ToList());
+            Func<double[], TicTacToeValue> predictFunction = input => new TicTacToeValue(model.Predict(input).Select(i => (double)i).ToArray());
+            var predictions = TicTacToeActionPrediction.Predict(gameState, TicTacToeLabeledStateLoader.InputTransforms.Bipolar, predictFunction);
+            return TicTacToeValueEvaluator.BestFor(gameState.CurrentPlayer, predictions.ToList());
         }
     }
 }

@@ -26,7 +26,7 @@ namespace AI.Keras
         {
             RootState = rootState;
             Network = network;
-            Expander = new PVNetworkBasedMCTreeSearchExpander<TGame, TState, TAction, TPlayer>(game, new Random(0), Network);
+            Expander = new PVNetworkBasedMCTreeSearchExpander<TGame, TState, TAction, TPlayer>(game, Network);
         }
 
         public void Epoch()

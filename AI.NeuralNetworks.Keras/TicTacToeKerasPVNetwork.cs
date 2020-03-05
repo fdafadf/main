@@ -33,7 +33,7 @@ namespace AI.Keras
 
         protected override double[] TransformInput(GameState state)
         {
-            return TicTacToeNeuralIOLoader.InputTransforms.Bipolar(state);
+            return TicTacToeLabeledStateLoader.InputTransforms.Bipolar(state);
         }
 
         protected override double[] GetTrainingOutput(PVNetworkBasedMCTreeSearchNode<GameState, GameAction> node, PVNetworkBasedMCTreeSearchNode<GameState, GameAction> finalNode)

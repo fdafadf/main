@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AI\AI.csproj" />
+    <ProjectReference Include="..\Core.NetStandard\Core.NetStandard.csproj" />
   </ItemGroup>
 
   <PropertyGroup>
