@@ -3,6 +3,7 @@ using Games;
 using Games.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace AI.MonteCarlo
 {
@@ -99,7 +100,11 @@ namespace AI.MonteCarlo
             }
         }
         
-        protected abstract TNode SelectChildren(TNode node);
+        protected virtual TNode SelectChildren(TNode node)
+        {
+            double logT = Math.Log(node.Children.Sum(child => child.Value.Visits));
+            return node.Children.Values.MaxItem(child => CalculateUTC(child, logT));
+        }
 
         protected abstract double Playout(TNode leafNode);
 
@@ -117,9 +122,22 @@ namespace AI.MonteCarlo
                 value = 1 - value;
             }
             while (node != currentNode);
+        }
 
-            node.Visits++;
-            node.Value += value;
+        private static readonly double UCT_C = Math.Sqrt(2);
+
+        private static double CalculateUTC(TNode node, double logT)
+        {
+            if (node.Visits == 0)
+            {
+                return double.PositiveInfinity;
+            }
+            else
+            {
+                double s1 = node.Value / node.Visits;
+                double s2 = UCT_C * Math.Sqrt(logT / node.Visits);
+                return s1 + s2;
+            }
         }
     }
 }

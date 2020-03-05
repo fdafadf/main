@@ -6,15 +6,15 @@ using System.Linq;
 
 namespace AI.TicTacToe
 {
-    public class TicTacToeWinnerEvaluator : ITreeValueEvaluator<GameState, TicTacToeWinnerPrediction>
+    public class TicTacToeWinnerEvaluator : ITreeValueEvaluator<GameState, TicTacToeWinner>
     {
-        public TicTacToeWinnerPrediction EvaluateLeaf(GameState finalState)
+        public TicTacToeWinner EvaluateLeaf(GameState finalState)
         {
             Player winner = finalState.GetWinner();
             return Result(winner?.FieldState ?? FieldState.Empty);
         }
 
-        public TicTacToeWinnerPrediction EvaluateNode(GameState nodeState, IEnumerable<TicTacToeWinnerPrediction> children)
+        public TicTacToeWinner EvaluateNode(GameState nodeState, IEnumerable<TicTacToeWinner> children)
         {
             int index;
 
@@ -30,11 +30,11 @@ namespace AI.TicTacToe
             return children.ElementAt(index);
         }
 
-        private static TicTacToeWinnerPrediction CrossWon = new TicTacToeWinnerPrediction(-1);
-        private static TicTacToeWinnerPrediction NoughtWon = new TicTacToeWinnerPrediction(1);
-        private static TicTacToeWinnerPrediction Draw = new TicTacToeWinnerPrediction(0);
+        private static TicTacToeWinner CrossWon = new TicTacToeWinner(-1);
+        private static TicTacToeWinner NoughtWon = new TicTacToeWinner(1);
+        private static TicTacToeWinner Draw = new TicTacToeWinner(0);
 
-        private static TicTacToeWinnerPrediction Result(FieldState winner)
+        private static TicTacToeWinner Result(FieldState winner)
         {
             switch (winner)
             {

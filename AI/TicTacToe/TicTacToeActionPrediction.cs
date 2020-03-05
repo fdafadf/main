@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace AI.TicTacToe
 {
-    public class TicTacToeGameActionPrediction
+    public class TicTacToeActionPrediction
     {
         public static IDictionary<GameAction, TOutput> Predict<TOutput>(GameState gameState, Func<GameState, double[]> inputTransform, Func<double[], TOutput> predictFunction)
         {
@@ -25,7 +25,7 @@ namespace AI.TicTacToe
         public readonly List<KeyValuePair<GameAction, double[]>> Predictions;
         public readonly GameAction BestAction;
 
-        public TicTacToeGameActionPrediction(GameState gameState, List<KeyValuePair<GameAction, double[]>> predictions, GameAction bestAction)
+        public TicTacToeActionPrediction(GameState gameState, List<KeyValuePair<GameAction, double[]>> predictions, GameAction bestAction)
         {
             GameState = gameState;
             Predictions = predictions;

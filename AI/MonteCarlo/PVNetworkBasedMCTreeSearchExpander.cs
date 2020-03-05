@@ -14,7 +14,7 @@ namespace AI.MonteCarlo
     {
         IPVNetwork<TState, TAction> Network;
 
-        public PVNetworkBasedMCTreeSearchExpander(TGame game, Random random, IPVNetwork<TState, TAction> network) : base(game, random)
+        public PVNetworkBasedMCTreeSearchExpander(TGame game, IPVNetwork<TState, TAction> network) : base(game)
         {
             Network = network;
         }

@@ -9,11 +9,11 @@ using AI.NeuralNetworks.Games;
 
 namespace AI.NeuralNetworks.TicTacToe
 {
-    public class TicTacToeNeuralIOGenerator<TOutput>
+    public class TicTacToeLabeledStateGenerator<TOutput>
     {
-        public static TicTacToeNeuralIOGenerator<TOutput> Instance = new TicTacToeNeuralIOGenerator<TOutput>();
+        public static TicTacToeLabeledStateGenerator<TOutput> Instance = new TicTacToeLabeledStateGenerator<TOutput>();
 
-        protected TicTacToeNeuralIOGenerator()
+        protected TicTacToeLabeledStateGenerator()
         {
         }
 

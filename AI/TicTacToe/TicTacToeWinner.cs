@@ -1,12 +1,12 @@
 ﻿namespace AI.TicTacToe
 {
-    public class TicTacToeWinnerPrediction
+    public class TicTacToeWinner
     {
         // Nought 1
         // Cross -1
         public double Value;
 
-        public TicTacToeWinnerPrediction(double value)
+        public TicTacToeWinner(double value)
         {
             Value = value;
         }

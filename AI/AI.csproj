@@ -7,9 +7,13 @@
   <ItemGroup>
     <Compile Remove="GameTreeEvaluator.cs" />
     <Compile Remove="IPolicy.cs" />
+    <Compile Remove="IStorage.cs" />
     <Compile Remove="MonteCarlo\MCTreeSearchAsGameTree.cs" />
     <Compile Remove="MonteCarlo\MCTreeSearchSelector.cs" />
     <Compile Remove="MonteCarlo\MCTreeSearchSettings.cs" />
+    <Compile Remove="TicTacToe.NeuralNetworks\TicTacToeTrainingData.cs" />
+    <Compile Remove="TicTacToe\TicTacToeMinMaxEvaluation.cs" />
+    <Compile Remove="TicTacToe\TicTacToeMinMaxEvaluationNode.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -18,6 +22,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AI.NeuralNetworks\AI.NeuralNetworks.csproj" />
+    <ProjectReference Include="..\Core.NetStandard\Core.NetStandard.csproj" />
     <ProjectReference Include="..\Games\Games.csproj" />
   </ItemGroup>
 

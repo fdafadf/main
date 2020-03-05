@@ -2,13 +2,15 @@
 using System.Collections.Generic;
 using System.IO;
 using AI.NeuralNetworks;
+using AI.NeuralNetworks.Games;
+using AI.TicTacToe;
 using Games.TicTacToe;
 
 namespace AI.NeuralNetworks.TicTacToe
 {
-    public class TicTacToeResultProbabilitiesNeuralNetwork
+    public class TicTacToeValueNetwork
     {
-        public static Func<GameState, double[]> DefaultInputFunction = TicTacToeNeuralIOLoader.InputTransforms.Unipolar;
+        public static Func<GameState, double[]> DefaultInputTransform = TicTacToeLabeledStateLoader.InputTransforms.Unipolar;
 
         //public static GameAction GetBestAction(TicTacToeResultProbabilitiesNeuralNetwork network, GameState gameState)
         //{
@@ -32,24 +34,27 @@ namespace AI.NeuralNetworks.TicTacToe
         //    return bestAction;
         //}
 
-        public Func<FieldState, double> InputFunction;
         public Network Network { get; }
+        public Func<GameState, double[]> InputTransform;
+        public Func<double[], TicTacToeValue> OutputTransform;
 
-        public TicTacToeResultProbabilitiesNeuralNetwork(int inputSize, int[] layersSize, IFunction activationFunction, Random random) 
+        public TicTacToeValueNetwork(int[] hiddenLayerSizes, IFunction activationFunction, Random random) 
         {
-            Network = new Network(activationFunction, inputSize, 9, layersSize);
+            Network = new Network(activationFunction, 9, 3, hiddenLayerSizes);
+            InputTransform = DefaultInputTransform;
+            OutputTransform = TicTacToeLabeledStateLoader.OutputTransforms.ResultProbabilities;
         }
         
-        public TicTacToeResultProbabilitiesNeuralNetwork()
+        public TicTacToeValueNetwork()
         {
             Network = new Network(Function.Sigmoidal, 9, 9, new int[] { 9, 9 });
         }
 
-        public double[] Evaluate(GameState gameState)
+        public TicTacToeValue Evaluate(GameState gameState)
         {
-            double[] input = new double[9];
-            gameState.ToArray(InputFunction, input);
-            return Network.Evaluate(input);
+            double[] input = InputTransform(gameState);
+            double[] output = Network.Evaluate(input);
+            return OutputTransform(output);
         }
     }
 }

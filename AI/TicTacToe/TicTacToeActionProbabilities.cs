@@ -7,7 +7,7 @@ namespace AI.TicTacToe
 {
     public class TicTacToeActionProbabilities
     {
-        public static void CalculateProbabilities(double[] probabilities, GameTreeEvaluationNode<GameState, GameAction, TicTacToeResultProbabilities> node)
+        public static void CalculateProbabilities(double[] probabilities, GameTreeEvaluationNode<GameState, GameAction, TicTacToeValue> node)
         {
             for (int i = 0; i < probabilities.Length; i++)
             {
@@ -46,7 +46,7 @@ namespace AI.TicTacToe
             }
         }
 
-        public static double CalculateProbability(GameTreeEvaluationNode<GameState, GameAction, TicTacToeResultProbabilities> node)
+        public static double CalculateProbability(GameTreeEvaluationNode<GameState, GameAction, TicTacToeValue> node)
         {
             double crossResult;
             double noughtResult;
@@ -88,7 +88,7 @@ namespace AI.TicTacToe
             Probabilities = probabilities;
         }
 
-        public TicTacToeActionProbabilities(GameTreeEvaluationNode<GameState, GameAction, TicTacToeResultProbabilities> evaluation)
+        public TicTacToeActionProbabilities(GameTreeEvaluationNode<GameState, GameAction, TicTacToeValue> evaluation)
         {
             Probabilities = new double[] { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
             CalculateProbabilities(Probabilities, evaluation);

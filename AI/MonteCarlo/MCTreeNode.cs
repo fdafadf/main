@@ -21,6 +21,11 @@ namespace AI.MonteCarlo
         public bool IsUnexpanded => Children == null;
         public bool IsExpandedAndHasNoChildren => Children?.Count == 0;
 
+        public MCTreeNode(TState state)
+        {
+            State = state;
+        }
+
         public MCTreeNode(TNode parent, TState state, TAction lastAction)
         {
             Parent = parent;

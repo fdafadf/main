@@ -12,8 +12,6 @@ namespace AI.MonteCarlo
         where TAction : IGameAction
         where TPlayer : IPlayer
     {
-        public static readonly double UCT_C = Math.Sqrt(2);
-
         IGamePlayoutGenerator<TState, TPlayer, TAction> PlayoutGenerator;
 
         public MCTreeSearch(IMCTreeSearchExpander<MCTreeSearchNode<TState, TAction>> expander, IGamePlayoutGenerator<TState, TPlayer, TAction> playoutGenerator) : base(expander)
@@ -36,29 +34,16 @@ namespace AI.MonteCarlo
             return winner == null ? 0.5 : leafNode.State.CurrentPlayer.Equals(winner) ? 0 : 1;
         }
 
-        protected override MCTreeSearchNode<TState, TAction> SelectChildren(MCTreeSearchNode<TState, TAction> node)
-        {
-            double logT = Math.Log(node.Children.Sum(child => child.Value.Visits));
-            return node.Children.Values.MaxItem(child => CalculateUTC(child, logT));
-        }
+        //protected override MCTreeSearchNode<TState, TAction> SelectChildren(MCTreeSearchNode<TState, TAction> node)
+        //{
+        //    double logT = Math.Log(node.Children.Sum(child => child.Value.Visits));
+        //    return node.Children.Values.MaxItem(child => CalculateUTC(child, logT));
+        //}
 
         //protected override MCTreeSearchNode<TState, TAction> SelectExpanded(MCTreeSearchNode<TState, TAction> node)
         //{
         //    return Random.Next(node.Children).Value;
         //}
-
-        private static double CalculateUTC(MCTreeSearchNode<TState, TAction> node, double logT)
-        {
-            if (node.Visits == 0)
-            {
-                return double.PositiveInfinity;
-            }
-            else
-            {
-                double s1 = node.Value / node.Visits;
-                double s2 = UCT_C * Math.Sqrt(logT / node.Visits);
-                return s1 + s2;
-            }
-        }
+         
     }
 }

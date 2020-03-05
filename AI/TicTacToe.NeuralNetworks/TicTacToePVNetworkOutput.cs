@@ -7,7 +7,7 @@ namespace AI.NeuralNetworks.TicTacToe
 {
     public class TicTacToePVNetworkOutput : PVNetworkOutput<GameAction>
     {
-        public static TicTacToePVNetworkOutput Create(GameTreeEvaluationNode<GameState, GameAction, TicTacToeResultProbabilities> evaluation)
+        public static TicTacToePVNetworkOutput Create(GameTreeEvaluationNode<GameState, GameAction, TicTacToeValue> evaluation)
         {
             double[] values = new double[OutputSize];
             TicTacToeActionProbabilities.CalculateProbabilities(values, evaluation);
@@ -25,14 +25,6 @@ namespace AI.NeuralNetworks.TicTacToe
         public override double GetProbability(GameAction action)
         {
             return Raw[action.X + action.Y * 3];
-        }
-    }
-
-    public class TicTacToePVNetworkOutputCollection
-    {
-        public TicTacToePVNetworkOutputCollection(float[] raw)
-        {
-
         }
     }
 }

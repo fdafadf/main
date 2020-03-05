@@ -1,5 +1,4 @@
-﻿using AI.NeuralNetworks.Games;
-using Games.TicTacToe;
+﻿using Games.TicTacToe;
 using Games.Utilities;
 using Newtonsoft.Json;
 using System.Collections.Generic;
@@ -7,7 +6,7 @@ using System.Linq;
 
 namespace AI.TicTacToe
 {
-    public class TicTacToeResultProbabilities
+    public class TicTacToeValue
     {
         readonly double[] UnitTie = new double[] { 1, 0, 0 };
         readonly double[] UnitCross = new double[] { 0, 1, 0 };
@@ -19,7 +18,7 @@ namespace AI.TicTacToe
         public double Cross => Probabilities[1];
         public double Nought => Probabilities[2];
 
-        public TicTacToeResultProbabilities(Player winner)
+        public TicTacToeValue(Player winner)
         {
             switch (winner?.FieldState ?? FieldState.Empty)
             {
@@ -36,7 +35,7 @@ namespace AI.TicTacToe
         }
 
         [JsonConstructor]
-        public TicTacToeResultProbabilities(double[] probabilities)
+        public TicTacToeValue(double[] probabilities)
         {
             Probabilities = probabilities;
         }
@@ -80,6 +79,26 @@ namespace AI.TicTacToe
         public static double[] Merge(IEnumerable<double[]> probabilities, Player player)
         {
             return probabilities.ElementAt(FindBest(probabilities, player));
+        }
+
+        /// <summary>
+        /// Current object is expected prediction.
+        /// </summary>
+        public bool IsPredictionCorrect(double[] prediction)
+        {
+            return Probabilities.IndexOfMax() == prediction.IndexOfMax();
+        }
+
+        /// <summary>
+        /// Current object is expected prediction.
+        /// </summary>
+        public bool IsPredictionCorrect(float[] predictions, int predictionIndex)
+        {
+            float[] output = new float[3];
+            output[0] = predictions[predictionIndex * 3 + 0];
+            output[1] = predictions[predictionIndex * 3 + 1];
+            output[2] = predictions[predictionIndex * 3 + 2];
+            return Probabilities.IndexOfMax() == output.IndexOfMax();
         }
 
         private static int[] GetPossibilities(IEnumerable<double[]> probabilities, Player player)

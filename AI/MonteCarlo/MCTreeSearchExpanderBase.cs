@@ -13,12 +13,10 @@ namespace AI.MonteCarlo
         where TPlayer : IPlayer
     {
         public TGame Game { get; }
-        public Random Random { get; }
 
-        public MCTreeSearchExpanderBase(TGame game, Random random)
+        public MCTreeSearchExpanderBase(TGame game)
         {
             Game = game;
-            Random = random;
         }
 
         public TNode Expand(TNode node)

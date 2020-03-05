@@ -4,7 +4,7 @@ using System;
 
 namespace AI.NeuralNetworks.Games
 {
-    public class LabeledState<TState, TLabel> : ConvertedInput
+    public class LabeledState<TState, TLabel> : Projection
     {
         public TState State { get; }
         public TLabel Label { get; }

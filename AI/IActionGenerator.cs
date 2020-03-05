@@ -2,7 +2,7 @@
 
 namespace AI
 {
-    public interface IActionGenerator<TState, TPlayer, TAction> 
+    public interface IActionGenerator<TState, TAction, TPlayer> 
         where TState : IGameState<TPlayer> 
         where TPlayer : IPlayer 
         where TAction : IGameAction

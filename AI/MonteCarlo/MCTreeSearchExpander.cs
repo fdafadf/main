@@ -12,8 +12,11 @@ namespace AI.MonteCarlo
         where TAction : IGameAction
         where TPlayer : IPlayer
     {
-        public MCTreeSearchExpander(TGame game, Random random) : base(game, random)
+        Random Random;
+
+        public MCTreeSearchExpander(TGame game, Random random) : base(game)
         {
+            Random = random;
         }
 
         protected override MCTreeSearchNode<TState, TAction> CreateNode(MCTreeSearchNode<TState, TAction> parentNode, TState gameState, TAction action)
