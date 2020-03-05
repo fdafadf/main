@@ -6,6 +6,28 @@ namespace AI.NeuralNetworks
 {
     public class MeanSquareErrorMonitor : TrainingMonitor
     {
+        public static double CalculateError(Network network, Projection[] projections)
+        {
+            double cumulatedEpochError = 0;
+
+            foreach (Projection projection in projections)
+            {
+                double[] prediction = network.Evaluate(projection.Input);
+                double error = 0;
+
+                for (int i = 0; i < projection.Output.Length; i++)
+                {
+                    double difference = projection.Output[i] - prediction[i];
+                    error += difference * difference;
+                }
+
+                cumulatedEpochError += error / projection.Output.Length;
+            }
+
+            return cumulatedEpochError / projections.Length;
+        }
+
+
         double cumulatedEpochError;
 
         public override void OnTrainingStarted(Trainer optimizer, int epoches)
@@ -26,9 +48,9 @@ namespace AI.NeuralNetworks
             cumulatedEpochError += error / labels.Length;
         }
 
-        public override void OnEpoch(double[][] features, double[][] labels)
+        public override void OnEpochFinished(Projection[] data)
         {
-            double epochError = cumulatedEpochError / features.Length;
+            double epochError = cumulatedEpochError / data.Length;
             CollectedData.Add(epochError);
             cumulatedEpochError = 0;
             OnEpoch(epochError);

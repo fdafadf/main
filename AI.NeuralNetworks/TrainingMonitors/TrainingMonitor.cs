@@ -19,6 +19,6 @@ namespace AI.NeuralNetworks
         }
 
         public abstract void OnEvaluated(double[] features, double[] labels, double[] evaluation);
-        public abstract void OnEpoch(double[][] features, double[][] labels);
+        public abstract void OnEpochFinished(Projection[] data);
     }
 }

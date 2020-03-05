@@ -41,13 +41,13 @@ namespace AI.NeuralNetworks
             }
         }
 
-        public void OnEpochFinished(double[][] features, double[][] labels)
+        public void OnEpochFinished(Projection[] data)
         {
             if (Items != null)
             {
                 foreach (var monitor in Items)
                 {
-                    monitor.OnEpoch(features, labels);
+                    monitor.OnEpochFinished(data);
                 }
             }
         }
@@ -60,6 +60,14 @@ namespace AI.NeuralNetworks
             }
 
             Items.Add(monitor);
+        }
+
+        public void AddRange(params TrainingMonitor[] monitors)
+        {
+            foreach (var monitor in monitors)
+            {
+                Add(monitor);
+            }
         }
     }
 }

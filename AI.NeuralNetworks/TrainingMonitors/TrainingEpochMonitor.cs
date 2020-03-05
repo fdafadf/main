@@ -16,7 +16,7 @@ namespace AI.NeuralNetworks
             this.writer = writer;
         }
 
-        public override void OnEpoch(double[][] features, double[][] labels)
+        public override void OnEpochFinished(Projection[] data)
         {
             currentEpoch++;
             target($"{currentEpoch}/{epoches}");

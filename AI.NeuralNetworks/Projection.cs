@@ -1,11 +1,11 @@
 ﻿namespace AI.NeuralNetworks
 {
-    public class ConvertedInput
+    public class Projection
     {
         public double[] Input { get; }
         public double[] Output { get; }
 
-        public ConvertedInput(double[] input, double[] output)
+        public Projection(double[] input, double[] output)
         {
             Input = input;
             Output = output;
