@@ -1,4 +1,5 @@
 ﻿using AI.Keras;
+using AI.NeuralNetworks;
 using AI.TicTacToe;
 using Demos.Forms;
 using Games;
@@ -15,6 +16,30 @@ using System.Windows.Forms;
 
 namespace Demo
 {
+    class Segment
+    {
+        public double Y;
+        public double Left = 0;
+        public double Right = 1;
+        public double Middle = 0.5;
+
+        public Segment(double y) => Y = y;
+
+        public void Update()
+        {
+            if (Math.Sqrt(Middle * Middle + Y * Y) < 1.0)
+            {
+                Left = Middle;
+            }
+            else
+            {
+                Right = Middle;
+            }
+
+            Middle = (Left + Right) / 2.0;
+        }
+    }
+
     static class Program
     {
         /// <summary>
@@ -23,6 +48,23 @@ namespace Demo
         [STAThread]
         static void Main()
         {
+            //int n = 1;
+            //
+            //for (int i = 0; i < 8; i++)
+            //{
+            //    IEnumerable<Segment> segments = Enumerable.Range(0, n + 1).Select(k => new Segment(k / (double)n)).ToArray();
+            //
+            //    for (int j = 0; j < 43; j++)
+            //    {
+            //        segments.ForEach(segment => segment.Update());
+            //    }
+            //
+            //    Console.WriteLine(4 * segments.Sum(segment => segment.Middle) / segments.Count());
+            //    n = n * 10;
+            //}
+            //
+            //return;
+            new PVNetworkTest().Test();
             //var input = new NdArray(new double[] { 1, 0, 1, 0, 1, 0, 0, 0, 0 });
             //var expectedOutput = new NdArray(new double[] { 0, 0, 1 });
             ////var output = stack.Forward(input);
@@ -106,6 +148,7 @@ namespace Demo
             }
         }
     }
+
 
     /*
             Random random = new Random(0);

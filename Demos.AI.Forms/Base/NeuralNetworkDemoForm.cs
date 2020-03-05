@@ -9,7 +9,7 @@ namespace Demos.Forms.Base
     public class NeuralNetworkDemoForm : DemoForm<NeuralNetworkDemoFormProperties>
     {
         public Network NeuralNetwork { get; private set; }
-        public IEnumerable<ConvertedInput> LoadedTrainingSet { get; private set; }
+        public Projection[] LoadedTrainingSet { get; private set; }
 
         private System.ComponentModel.IContainer components = null;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
@@ -148,7 +148,7 @@ namespace Demos.Forms.Base
         {
             if (Properties.TrainingSet != null)
             {
-                LoadedTrainingSet = Properties.TrainingSets.First(s => s.Name == Properties.TrainingSet).Value();
+                LoadedTrainingSet = Properties.TrainingSets.First(s => s.Name == Properties.TrainingSet).Value().ToArray();
                 NetworkChanged();
             }
         }
@@ -157,14 +157,14 @@ namespace Demos.Forms.Base
         {
             if (LoadedTrainingSet == null)
             {
-                LoadedTrainingSet = Properties.TrainingSets.First(s => s.Name == Properties.TrainingSet).Value();
+                LoadedTrainingSet = Properties.TrainingSets.First(s => s.Name == Properties.TrainingSet).Value().ToArray();
             }
 
             if (LoadedTrainingSet != null)
             {
                 var features = LoadedTrainingSet.Select(s => s.Input).ToArray();
                 var labels = LoadedTrainingSet.Select(s => s.Output).ToArray();
-                new Trainer(new SGD(NeuralNetwork, Properties.TrainingAlpha), new Random()).Train(features, labels, Properties.TrainingEpoches, 1);
+                new Trainer(new SGD(NeuralNetwork, Properties.TrainingAlpha), new Random()).Train(LoadedTrainingSet, Properties.TrainingEpoches, 1);
                 NetworkChanged();
             }
         }

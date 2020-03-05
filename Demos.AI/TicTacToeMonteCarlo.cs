@@ -7,7 +7,7 @@ using AI.MonteCarlo;
 
 namespace Demo
 {
-    class TicTacToeMonteCarlo : IActionGenerator<GameState, Player, GameAction>
+    class TicTacToeMonteCarlo : IActionGenerator<GameState, GameAction, Player>
     {
         public TicTacToeMonteCarlo()
         {

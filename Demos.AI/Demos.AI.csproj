@@ -85,6 +85,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions.cs" />
+    <Compile Include="PVNetworkTest.cs" />
     <Compile Include="PythonInterop.cs" />
     <Compile Include="DemoMainForm.cs">
       <SubType>Form</SubType>
@@ -138,8 +139,16 @@
       <Name>AI.NeuralNetworks</Name>
     </ProjectReference>
     <ProjectReference Include="..\AI\AI.csproj">
-      <Project>{c0549974-49fa-4548-b8c6-7a9061240f76}</Project>
+      <Project>{C0549974-49FA-4548-B8C6-7A9061240F76}</Project>
       <Name>AI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Core.NetFramework\Core.NetFramework.csproj">
+      <Project>{8FD54D64-AFD7-4F61-9D33-CC5F39985EEA}</Project>
+      <Name>Core.NetFramework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Core.NetStandard\Core.NetStandard.csproj">
+      <Project>{3ABFC3CC-58FC-46E6-A7E9-CFC695B9F647}</Project>
+      <Name>Core.NetStandard</Name>
     </ProjectReference>
     <ProjectReference Include="..\Demos.AI.Forms\Demos.AI.Forms.csproj">
       <Project>{3ec473c3-a711-409e-bb44-92187ddb1239}</Project>

@@ -43,7 +43,7 @@ namespace Demos.AI.NeuralNetwork
             return new AdaGrad(network, learningRate);
         }
 
-        public static TrainingMonitorCollection Train(Optimizer optimizer, double[][] features, double[][] labels, int epoches, int batchSize = 1, params TrainingMonitor[] monitors)
+        public static TrainingMonitorCollection Train(Optimizer optimizer, Projection[] data, int epoches, int batchSize = 1, params TrainingMonitor[] monitors)
         {
             var trainer = new Trainer(optimizer, new Random(0));
 
@@ -52,7 +52,7 @@ namespace Demos.AI.NeuralNetwork
                 trainer.Monitors.Add(monitor);
             }
 
-            trainer.Train(features, labels, epoches, batchSize);
+            trainer.Train(data, epoches, batchSize);
             return trainer.Monitors;
         }
 

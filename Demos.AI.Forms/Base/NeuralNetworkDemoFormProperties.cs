@@ -21,7 +21,7 @@ namespace Demos.Forms.Base
         [Category("Randomizer")]
         public int TrainingSetSize { get; set; }
         [Browsable(false)]
-        public List<NamedObject<Func<IEnumerable<ConvertedInput>>>> TrainingSets = new List<NamedObject<Func<IEnumerable<ConvertedInput>>>>();
+        public List<NamedObject<Func<IEnumerable<Projection>>>> TrainingSets = new List<NamedObject<Func<IEnumerable<Projection>>>>();
         [Category("Training")]
         public int TrainingEpoches { get; set; }
         [Category("Training")]
@@ -29,9 +29,9 @@ namespace Demos.Forms.Base
         [Category("Training")]
         public double TrainingLastError { get; set; }
 
-        public void AddTrainingSet(string name, Func<IEnumerable<ConvertedInput>> loader)
+        public void AddTrainingSet(string name, Func<IEnumerable<Projection>> loader)
         {
-            TrainingSets.Add(new NamedObject<Func<IEnumerable<ConvertedInput>>>(name, loader));
+            TrainingSets.Add(new NamedObject<Func<IEnumerable<Projection>>>(name, loader));
 
             if (TrainingSet == null)
             {

@@ -23,7 +23,7 @@ namespace Demos.Forms.TicTacToe.NeuralNetwork
         protected override Network CreateNeuralNetwork()
         {
             Random random = new Random(Properties.Seed);
-            var network = new TicTacToeResultProbabilitiesNeuralNetwork(Properties.NetworkInputSize, Properties.NetworkLayersSize, Function.Sigmoidal, random);
+            var network = new TicTacToeValueNetwork(Properties.NetworkLayersSize, Function.Sigmoidal, random);
             return network.Network;
         }
 

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using AI.TicTacToe;
+using Core.NetFramework;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,7 +16,7 @@ namespace Demos.TicTacToe
         [STAThread]
         static void Main()
         {
-            DataLoader.LoadData();
+            TicTacToeValueLoader.LoadAllUniqueStates(Storage.Instance);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new TicTacToeForm());

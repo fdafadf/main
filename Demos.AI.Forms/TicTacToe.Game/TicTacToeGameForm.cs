@@ -12,10 +12,10 @@ namespace Demos.Forms.TicTacToe.Game
     public partial class TicTacToeGameForm : Form
     {
         GameState currentState = new GameState();
-        readonly IActionGenerator<GameState, Player, GameAction> NoughtAI;
-        readonly IActionGenerator<GameState, Player, GameAction> CrossAI;
+        readonly IActionGenerator<GameState, GameAction, Player> NoughtAI;
+        readonly IActionGenerator<GameState, GameAction, Player> CrossAI;
 
-        public TicTacToeGameForm(IActionGenerator<GameState, Player, GameAction> noughtAI, IActionGenerator<GameState, Player, GameAction> crossAI) : this()
+        public TicTacToeGameForm(IActionGenerator<GameState, GameAction, Player> noughtAI, IActionGenerator<GameState, GameAction, Player> crossAI) : this()
         {
             NoughtAI = noughtAI;
             CrossAI = crossAI;
@@ -82,7 +82,7 @@ namespace Demos.Forms.TicTacToe.Game
             }
         }
 
-        private IActionGenerator<GameState, Player, GameAction> CurrentAI
+        private IActionGenerator<GameState, GameAction, Player> CurrentAI
         {
             get
             {
@@ -99,7 +99,7 @@ namespace Demos.Forms.TicTacToe.Game
 
         private void TryToPlayAsAI()
         {
-            IActionGenerator<GameState, Player, GameAction> currentAI = CurrentAI;
+            IActionGenerator<GameState, GameAction, Player> currentAI = CurrentAI;
 
             if (currentAI != null)
             {

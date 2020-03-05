@@ -53,13 +53,13 @@ namespace Demos.Forms
             self.DrawEllipse(pen, (float)x1, (float)y1, (float)x2, (float)y2);
         }
 
-        public static void DrawTestData(this Bitmap self, IEnumerable<ConvertedInput> testData, Func<double[], Pen> classifier, Translation2d translation)
+        public static void DrawTestData(this Bitmap self, IEnumerable<Projection> testData, Func<double[], Pen> classifier, Translation2d translation)
         {
             if (testData != null)
             {
                 using (Graphics graphics = Graphics.FromImage(self))
                 {
-                    foreach (ConvertedInput testItem in testData)
+                    foreach (Projection testItem in testData)
                     {
                         translation(testItem.Input[0], testItem.Input[1], out double px, out double py);
                         Pen pen = classifier(testItem.Output);//[0] < 0 ? Pens.Blue : Pens.Red;

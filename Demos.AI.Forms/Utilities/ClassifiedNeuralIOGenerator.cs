@@ -22,13 +22,13 @@ namespace Demos.Forms.Utilities
             Max = max;
         }
 
-        public ConvertedInput Generate()
+        public Projection Generate()
         {
             double[] input = new double[InputSize].FillWithRandomValues(Min, Max);
-            return new ConvertedInput(input, Classifier(input));
+            return new Projection(input, Classifier(input));
         }
 
-        public IEnumerable<ConvertedInput> Generate(int size)
+        public IEnumerable<Projection> Generate(int size)
         {
             return Enumerable.Range(0, size).Select(k => Generate());
         }

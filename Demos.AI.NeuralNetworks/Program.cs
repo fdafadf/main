@@ -1,4 +1,5 @@
 ﻿using AI.NeuralNetworks;
+using Core.NetStandard;
 using System.Numerics;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -30,6 +31,21 @@ namespace Demos.AI.NeuralNetwork
             //TicTacToeExamples.Compare2();
             //TicTacToeExamples.Compare3();
             TicTacToeExamples.Compare4();
+        }
+    }
+
+    public class Storage : IStorage
+    {
+        public static readonly Storage Instance = new Storage();
+
+        public T Read<T>(string resourceName)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void Write<T>(string resourceName, T resource)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

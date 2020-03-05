@@ -1,14 +1,14 @@
 ﻿using AI;
 using AI.NeuralNetworks;
+using AI.NeuralNetworks.TicTacToe;
+using AI.TicTacToe;
+using Core.NetFramework;
 using Games.TicTacToe;
+using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
+using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Demos.TicTacToe
@@ -39,14 +39,14 @@ namespace Demos.TicTacToe
 
         private void buttonCircle_Click(object sender, EventArgs e)
         {
-            circleAI = null;
+            noughtAI = null;
             crossAI = new TicTacToeAI(TrainedNetwork);
             Play();
         }
 
         private void buttonCross_Click(object sender, EventArgs e)
         {
-            circleAI = new TicTacToeAI(TrainedNetwork);
+            noughtAI = new TicTacToeAI(TrainedNetwork);
             crossAI = null;
             Play();
         }
@@ -55,8 +55,8 @@ namespace Demos.TicTacToe
         #region Playing
 
         GameState currentState;
-        IActionGenerator<GameState, Player, GameAction> circleAI;
-        IActionGenerator<GameState, Player, GameAction> crossAI;
+        IActionGenerator<GameState, GameAction, Player> noughtAI;
+        IActionGenerator<GameState, GameAction, Player> crossAI;
 
         private void Play()
         {
@@ -66,7 +66,7 @@ namespace Demos.TicTacToe
             TryToPlayAsAI();
         }
 
-        private IActionGenerator<GameState, Player, GameAction> CurrentAI
+        private IActionGenerator<GameState, GameAction, Player> CurrentAI
         {
             get
             {
@@ -76,7 +76,7 @@ namespace Demos.TicTacToe
                 }
                 else
                 {
-                    return circleAI;
+                    return noughtAI;
                 }
             }
         }
@@ -136,7 +136,7 @@ namespace Demos.TicTacToe
 
         private void TryToPlayAsAI()
         {
-            IActionGenerator<GameState, Player, GameAction> currentAI = CurrentAI;
+            IActionGenerator<GameState, GameAction, Player> currentAI = CurrentAI;
 
             if (currentAI != null)
             {
@@ -161,7 +161,7 @@ namespace Demos.TicTacToe
         #endregion
         #region Training
 
-        Network TrainedNetwork;
+        TicTacToeValueNetwork TrainedNetwork;
 
         private void StartTraining()
         {
@@ -184,17 +184,19 @@ namespace Demos.TicTacToe
 
         private void Training(TrainingSettings settings)
         {
-            int epoches = settings.Epoches;
-            var network = new Network(Function.ReLU, 9, 3, settings.Layers);
-            var optimizer = new SGDMomentum(network, settings.LearningRate, settings.Momentum);
-            var trainer = new Trainer(optimizer, new Random(0));
-            trainer.Monitors.Add(new TrainingMonitor(this));
-            trainer.Train(DataLoader.TrainingFeatures, DataLoader.TrainingLabels, epoches, 16);
-            TrainedNetwork = network;
+            var trainingData = TicTacToeValueLoader.LoadAllUniqueStates(Storage.Instance);
+            var trainer = new TicTacToeValueNetworkTrainer(trainingData, 0)
+            {
+                HiddenLayerSizes = settings.Layers,
+                LearingRate = settings.LearningRate,
+                Momentum = settings.Momentum,
+            };
+
+            TrainedNetwork = trainer.Train(settings.Epoches, new TrainingMonitor(this));
 
             Invoke((MethodInvoker)delegate ()
             {
-                var accuracy = AccuracyMonitor.CalculateAccuracy(optimizer);
+                var accuracy = AccuracyMonitor.CalculateAccuracy(TrainedNetwork, trainingData);
                 labelAccuracy.Text = $"{accuracy.CorrectPredictions}/{accuracy.TestingSetSize} ({accuracy.Value * 100.0:f2}%)";
                 buttonTrained.Enabled = true;
             });

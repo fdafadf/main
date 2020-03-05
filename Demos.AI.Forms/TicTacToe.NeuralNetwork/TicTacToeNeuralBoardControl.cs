@@ -66,14 +66,14 @@ namespace Demos.Forms.TicTacToe.NeuralNetwork
             }
         }
 
-        private static Dictionary<int, LabeledState<GameState, TicTacToeResultProbabilities>> allStatesByHash;
+        private static Dictionary<int, LabeledState<GameState, TicTacToeValue>> allStatesByHash;
         
-        public static LabeledState<GameState, TicTacToeResultProbabilities> Find(GameState gameState)
+        public static LabeledState<GameState, TicTacToeValue> Find(GameState gameState)
         {
             if (allStatesByHash == null)
             {
-                allStatesByHash = new Dictionary<int, LabeledState<GameState, TicTacToeResultProbabilities>>();
-                var uniqueGameStates = TicTacToeNeuralIOGenerator<TicTacToeResultProbabilities>.Instance.GetAllUniqueStates(new TicTacToeResultProbabilitiesEvaluator(TicTacToeResultProbabilitiesNeuralNetwork.DefaultInputFunction));
+                allStatesByHash = new Dictionary<int, LabeledState<GameState, TicTacToeValue>>();
+                var uniqueGameStates = TicTacToeLabeledStateGenerator<TicTacToeValue>.Instance.GetAllUniqueStates(new TicTacToeValueEvaluator(TicTacToeValueNetwork.DefaultInputTransform));
 
                 foreach (var item in uniqueGameStates)
                 {

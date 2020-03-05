@@ -1,45 +1,53 @@
 ﻿using AI.TicTacToe;
 using AI.NeuralNetworks.TicTacToe;
 using AI.NeuralNetworks;
+using AI.NeuralNetworks.Games;
+using Games.TicTacToe;
 
 namespace Demos.TicTacToe
 {
     public class AccuracyMonitor : TrainingMonitor
     {
-        Trainer Trainer;
+        TicTacToeValueNetwork Network;
+        LabeledState<GameState, TicTacToeValue>[] TestData;
 
-        public override void OnEpoch(double[][] features, double[][] labels)
+        public AccuracyMonitor(TicTacToeValueNetwork network)
         {
-            CollectedData.Add(CalculateAccuracy(Trainer.Optimizer).Value);
+            Network = network;
+        }
+
+        public override void OnEpochFinished(Projection[] data)
+        {
+            CollectedData.Add(CalculateAccuracy(Network, TestData).Value);
         }
 
         public override void OnTrainingStarted(Trainer trainer, int epoches)
         {
-            Trainer = trainer;
+            //Trainer = trainer;
         }
 
         public override void OnEvaluated(double[] features, double[] labels, double[] evaluation)
         {
         }
 
-        static double[][] Features = DataLoader.TestingFeatures;
-        static TicTacToeResultProbabilities[] Labels = DataLoader.TestingLabels;
+        //static double[][] Features = DataLoader.TestingFeatures;
+        //static TicTacToeResultProbabilities[] Labels = DataLoader.TestingLabels;
 
-        public static Accuracy CalculateAccuracy(Optimizer optimizer)
+        public static Accuracy CalculateAccuracy(TicTacToeValueNetwork network, LabeledState<GameState, TicTacToeValue>[] data)
         {
             int correctPredictionCount = 0;
 
-            for (int i = 0; i < Features.Length; i++)
+            for (int i = 0; i < data.Length; i++)
             {
-                double[] prediction = optimizer.Network.Evaluate(Features[i]);
+                double[] prediction = network.Network.Evaluate(data[i].Input);
 
-                if (TicTacToeTrainingData.IsPredictionCorrect(Labels[i], prediction))
+                if (data[i].Label.IsPredictionCorrect(prediction))
                 {
                     correctPredictionCount++;
                 }
             }
 
-            return new Accuracy(correctPredictionCount, Features.Length);
+            return new Accuracy(correctPredictionCount, data.Length);
         }
 
         public override string ToString()

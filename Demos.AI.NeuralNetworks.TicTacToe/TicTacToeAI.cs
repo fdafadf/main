@@ -1,16 +1,17 @@
 ﻿using AI;
 using AI.NeuralNetworks;
+using AI.NeuralNetworks.TicTacToe;
 using AI.TicTacToe;
 using Games.TicTacToe;
 using System.Linq;
 
 namespace Demos.TicTacToe
 {
-    public class TicTacToeAI : IActionGenerator<GameState, Player, GameAction>
+    public class TicTacToeAI : IActionGenerator<GameState, GameAction, Player>
     {
-        public Network Network { get; }
+        public TicTacToeValueNetwork Network { get; }
 
-        public TicTacToeAI(Network network)
+        public TicTacToeAI(TicTacToeValueNetwork network)
         {
             Network = network;
         }
@@ -19,9 +20,8 @@ namespace Demos.TicTacToe
         {
             var actions = TicTacToeGame.Instance.GetAllowedActions(state);
             var states = actions.Select(action => TicTacToeGame.Instance.Play(state, action));
-            var features = states.Select(DataLoader.InputTransform);
-            var predictions = features.Select(Network.Evaluate);
-            int best = TicTacToeResultProbabilities.FindBest(predictions, state.CurrentPlayer);
+            var predictions = states.Select(Network.Evaluate).Select(prediction => prediction.Probabilities);
+            int best = TicTacToeValue.FindBest(predictions, state.CurrentPlayer);
             return actions.ElementAt(best);
         }
     }

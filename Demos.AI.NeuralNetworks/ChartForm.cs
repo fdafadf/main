@@ -66,5 +66,36 @@ namespace Demos.AI.NeuralNetwork
 
             return series;
         }
+
+        public void Add<T>(Task<T>[] tasks) where T : Serie
+        {
+            Task.WaitAll(tasks);
+            Add(tasks.Select(task => task.Result));
+        }
+
+        public void Add(IEnumerable<Serie> results)
+        {
+            foreach (var result in results)
+            {
+                Add(result);
+            }
+        }
+
+        public void Add(Serie result)
+        {
+            Add(result.Name, result.Errors);
+        }
+    }
+
+    public class Serie
+    {
+        public string Name;
+        public IEnumerable<double> Errors;
+
+        public Serie(string name, IEnumerable<double> errors)
+        {
+            Name = name;
+            Errors = errors;
+        }
     }
 }

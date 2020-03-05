@@ -37,8 +37,7 @@ namespace Demos.AI.NeuralNetwork
         }
 
         Bitmap bitmap;
-        double[][] features;
-        double[][] labels;
+        Projection[] trainingData;
 
         protected override void OnPaint(PaintEventArgs e)
         {
@@ -52,13 +51,13 @@ namespace Demos.AI.NeuralNetwork
                 }
             }
 
-            if (features != null)
+            if (trainingData != null)
             {
-                for (int i = 0; i < features.Length; i++)
+                for (int i = 0; i < trainingData.Length; i++)
                 {
-                    double x = features[i][0] * ClientSize.Width;
-                    double y = features[i][1] * ClientSize.Height;
-                    var brush = labels[i][0] > 0 ? Brushes.SeaGreen : (labels[i][1] > 0 ? Brushes.Red : Brushes.Yellow);
+                    double x = trainingData[i].Input[0] * ClientSize.Width;
+                    double y = trainingData[i].Input[1] * ClientSize.Height;
+                    var brush = trainingData[i].Output[0] > 0 ? Brushes.SeaGreen : (trainingData[i].Output[1] > 0 ? Brushes.Red : Brushes.Yellow);
                     e.Graphics.FillEllipse(brush, (float)x - 2, (float)y - 2, 4, 4);
                 }
             }
@@ -107,7 +106,7 @@ namespace Demos.AI.NeuralNetwork
                 }
             }
 
-            GenerateTrainingData(random);
+            trainingData = GenerateTrainingData(random);
 
             for (int epoch = 0; epoch < 15000; epoch++)
             {
@@ -121,15 +120,14 @@ namespace Demos.AI.NeuralNetwork
                     RefreshBitmap(network, width, height, imagePointList);
                 }
 
-                trainer.Train(features, labels, 1, 1);
+                trainer.Train(trainingData, 1, 1);
                 Console.WriteLine(mseMonitor.CollectedData.Last());
             }
         }
 
-        private void GenerateTrainingData(Random random)
+        private static Projection[] GenerateTrainingData(Random random)
         {
-            List<double[]> featureList = new List<double[]>();
-            List<double[]> labelList = new List<double[]>();
+            List<Projection> result = new List<Projection>();
             double[] a = new double[] { 1, 0, 0 };
             double[] b = new double[] { 0, 1, 0 };
             double[] c = new double[] { 0, 0, 1 };
@@ -139,12 +137,10 @@ namespace Demos.AI.NeuralNetwork
                 double x = random.NextDouble();
                 double y = random.NextDouble();
                 double r = Math.Sqrt((x - 0.5) * (x - 0.5) + (y - 0.5) * (y - 0.5));
-                featureList.Add(new double[] { x, y });
-                labelList.Add(r > 0.2 ? (r > 0.3 ? a : c) : b);
+                result.Add(new Projection(new double[] { x, y }, r > 0.2 ? (r > 0.3 ? a : c) : b));
             }
 
-            features = featureList.ToArray();
-            labels = labelList.ToArray();
+            return result.ToArray();
         }
 
         byte[] rgbValues;

@@ -1,123 +1,25 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{C98D1225-1D8E-43F3-A0BC-724A5BEEA218}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Demos.AI.NeuralNetworks</RootNamespace>
-    <AssemblyName>Demos.AI.NeuralNetworks</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <Deterministic>true</Deterministic>
-    <TargetFrameworkProfile />
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ApplicationIcon />
     <StartupObject />
   </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Numerics" />
-    <Reference Include="System.Numerics.Vectors" />
-    <Reference Include="System.Windows.Forms.DataVisualization" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Deployment" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
+    <Compile Remove="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="ChartForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="ChartForm.Designer.cs">
-      <DependentUpon>ChartForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Neuron.cs" />
-    <Compile Include="Utilities.cs" />
-    <Compile Include="PlaneForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="PlaneForm.Designer.cs">
-      <DependentUpon>PlaneForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Program.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TicTacToeExamples.cs" />
-    <Compile Include="XorExamples.cs" />
-    <EmbeddedResource Include="ChartForm.resx">
-      <DependentUpon>ChartForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="PlaneForm.resx">
-      <DependentUpon>PlaneForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.1" />
+    <PackageReference Include="System.Windows.Forms.DataVisualization" Version="1.0.0-prerelease.20110.1" />
   </ItemGroup>
+
   <ItemGroup>
-    <None Include="App.config" />
+    <ProjectReference Include="..\AI.NeuralNetworks\AI.NeuralNetworks.csproj" />
+    <ProjectReference Include="..\AI\AI.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\AI.NeuralNetworks\AI.NeuralNetworks.csproj">
-      <Project>{16367db7-692c-4484-ac86-06b476846175}</Project>
-      <Name>AI.NeuralNetworks</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\AI.NeuralNetworks\AI.NeuralNetworks.csproj">
-      <Project>{16367db7-692c-4484-ac86-06b476846175}</Project>
-      <Name>AI.NeuralNetworks</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Demos.AI.NeuralNetworks.TicTacToe\Demos.AI.NeuralNetworks.TicTacToe.csproj">
-      <Project>{233297c2-8ded-445d-9062-25d36fb7c4f9}</Project>
-      <Name>Demos.AI.NeuralNetworks.TicTacToe</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Games\Games.csproj">
-      <Project>{965829bb-0a45-44c9-b9b3-df83a38c9dfc}</Project>
-      <Name>Games</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  
 </Project>

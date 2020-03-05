@@ -56,7 +56,7 @@ namespace Demos.Forms.Xor.NeuralNetwork
             DrawOutputOnBitmap();
         }
 
-        private IEnumerable<ConvertedInput> LoadTrainingSet()
+        private IEnumerable<Projection> LoadTrainingSet()
         {
             double[] classifier(double[] input)
             {
