@@ -77,3 +77,10 @@
 /Physics.Test.UI.Forms/obj
 /AI.NeuralNetworks.MLNet/bin
 /AI.NeuralNetworks.MLNet/obj
+/Core.NetStandard/bin
+/Core.NetStandard/obj
+/Core.NetFramework/bin
+/Core.NetFramework/obj
+/WindowsFormsApp1
+/Labs.AI.NeuralNetworks.Pathfinding/obj
+/Labs.AI.NeuralNetworks.Pathfinding/bin
