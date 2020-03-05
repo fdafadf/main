@@ -22,6 +22,17 @@ namespace Games.Utilities
                 array2[r] = tmp2;
             }
         }
+
+        public static void Shuffle<T1>(this Random random, T1[] array1)
+        {
+            for (int t = 0; t < array1.Length; t++)
+            {
+                int r = random.Next(array1.Length - 1);
+                T1 tmp1 = array1[t];
+                array1[t] = array1[r];
+                array1[r] = tmp1;
+            }
+        }
         //public static IEnumerable<TAttribute> Flatten<TTree, TAttribute>(this TTree self, Func<TTree, IEnumerable<TTree>> children, Func<TTree, TAttribute> attribute)
         //{
         //    List<TAttribute> result = new List<TAttribute>();

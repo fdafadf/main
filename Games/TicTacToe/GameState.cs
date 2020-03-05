@@ -199,13 +199,13 @@ namespace Games.TicTacToe
         {
             GameState otherState = obj as GameState;
 
-            if (obj != null)
+            if (otherState != null)
             {
-                for (uint y = 0; y < this.BoardSize; y++)
+                for (uint y = 0; y < BoardSize; y++)
                 {
-                    for (uint x = 0; x < this.BoardSize; x++)
+                    for (uint x = 0; x < BoardSize; x++)
                     {
-                        if (this.BoardFields[x, y] != otherState.BoardFields[x, y])
+                        if (BoardFields[x, y] != otherState.BoardFields[x, y])
                         {
                             return false;
                         }
