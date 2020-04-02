@@ -12,7 +12,7 @@ namespace Pathfinder
         public static Task<TrainingResult>[] Train(IEnumerable<TrainingSet> trainingSets)
         {
             bool liveTracking = trainingSets.Count() == 1;
-            return trainingSets.Select(set => new Training(set).Train(liveTracking)).ToArray();
+            return trainingSets.Select(set => new Training(set).Train2(liveTracking)).ToArray();
         }
 
         public static readonly object ThreadLock = new object();
@@ -41,6 +41,19 @@ namespace Pathfinder
             Momentum = training.Momentum;
             Epoches = training.Epoches;
             Seed = training.Seed.HasValue ? training.Seed.Value : Guid.NewGuid().GetHashCode();
+        }
+
+        public Task<TrainingResult> Train2(bool liveTracking)
+        {
+            return Task.Run(() =>
+            {
+                int inputSize = NetworkWalkSample.InputSize(NumberOfVertices);
+                Random random = new Random(Seed);
+                Network network = new Network(Function.ReLU, inputSize, NumberOfVertices, HiddenLayers);
+                Optimizer optimizer = new SGDMomentum(network, LearningRate, Momentum);
+                Trainer trainer = new Trainer(optimizer, random);
+
+            });
         }
 
         public Task<TrainingResult> Train(bool liveTracking)

@@ -85,7 +85,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions.cs" />
-    <Compile Include="PVNetworkTest.cs" />
+    <Compile Include="ValueNetworkTest.cs" />
     <Compile Include="PythonInterop.cs" />
     <Compile Include="DemoMainForm.cs">
       <SubType>Form</SubType>

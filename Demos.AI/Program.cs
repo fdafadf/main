@@ -64,7 +64,7 @@ namespace Demo
             //}
             //
             //return;
-            new PVNetworkTest().Test();
+            new ValueNetworkTest().Test();
             //var input = new NdArray(new double[] { 1, 0, 1, 0, 1, 0, 0, 0, 0 });
             //var expectedOutput = new NdArray(new double[] { 0, 0, 1 });
             ////var output = stack.Forward(input);

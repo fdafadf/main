@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -41,10 +42,12 @@ namespace Pathfinder
                 OnSelectedGraphIndexChanged();
             }
         }
+
         int selectedGraphIndex = -1;
 
         protected override void OnPaint(PaintEventArgs e)
         {
+            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
             networkPathPainter?.Paint(e.Graphics);
             dijkstraPathPainter?.Paint(e.Graphics);
             graphPainter?.Paint(e.Graphics);

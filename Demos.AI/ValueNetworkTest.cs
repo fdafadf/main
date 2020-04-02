@@ -13,7 +13,7 @@ using static Games.Utilities.StaticUtility;
 
 namespace Demo
 {
-    class PVNetworkTest
+    class ValueNetworkTest
     {
         public TicTacToeValueNetwork CreateNetwork()
         {

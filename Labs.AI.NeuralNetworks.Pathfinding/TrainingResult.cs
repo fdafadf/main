@@ -8,9 +8,9 @@ namespace Pathfinder
     {
         public Network Network;
         public GraphPath[] TrainingGraphs;
-        public NetworkSample[] TrainingData;
+        public NetworkSampleInput[] TrainingData;
 
-        public TrainingResult(string name, IEnumerable<double> errors, Network network, GraphPath[] trainingGraphs, NetworkSample[] trainingData) : base(name, errors)
+        public TrainingResult(string name, IEnumerable<double> errors, Network network, GraphPath[] trainingGraphs, NetworkSampleInput[] trainingData) : base(name, errors)
         {
             Network = network;
             TrainingGraphs = trainingGraphs;
