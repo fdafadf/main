@@ -52,8 +52,15 @@ namespace Labs.Agents
                 }
                 else
                 {
-                    agent.Velocity = Vector2.Normalize(agent.Target - agent.Position);
-                    agent.Position += agent.Velocity * t;
+                    if (Vector2.Distance(agent.Position, agent.Target) < agent.Size)
+                    {
+                        agent.Target = Vector2.Zero;
+                    }
+                    else
+                    {
+                        agent.Velocity = Vector2.Normalize(agent.Target - agent.Position);
+                        agent.Position += agent.Velocity * t;
+                    }
                 }
             }
         }
