@@ -3,15 +3,28 @@ using System.Numerics;
 
 namespace Labs.Agents
 {
-    public class Obstacle : SceneObject
+    public class Rectangle : SceneObject
     {
         public Vector2 Size;
 
-        public bool Collide(Agent agent)
+        public Rectangle(Vector2 position, Vector2 size)
         {
-            float cx = agent.Position.X;
-            float cy = agent.Position.Y;
-            float radius = agent.Size;
+            Position = position;
+            Size = size;
+        }
+
+        public bool Collide(Circle agent)
+        {
+            return CollideWithCircle(agent.Position, agent.Radius);
+        }
+
+        public bool CollideWithCircle(Vector2 positon, int radius)
+        {
+            return CollideWithCircle(positon.X, positon.Y, radius);
+        }
+
+        public bool CollideWithCircle(float cx, float cy, float radius)
+        {
             float rx = Position.X;
             float ry = Position.Y;
             float rw = Size.X;

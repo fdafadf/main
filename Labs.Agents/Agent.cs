@@ -3,33 +3,40 @@ using System.Numerics;
 
 namespace Labs.Agents
 {
-    public class Agent : SceneObject
+    public class Agent
     {
-        public int Size;
-        public Vector2 Target;
+        public Circle SceneObject;
         public Vector2 Velocity;
+        public Vector2 Target;
 
         public Agent(Vector2 position, int size)
         {
-            Position = position;
-            Size = size;
+            SceneObject = new Circle(position, size);
             Target = Vector2.Zero;
             Velocity = Vector2.Zero;
         }
 
-        public bool Collide(Agent agent)
+        public void Update(Simulation simulation, float t)
         {
-            return agent != this && Vector2.Distance(Position, agent.Position) < Size + agent.Size;
-        }
+            //Velocity = Vector2.Normalize(Target - SceneObject.Position);
+            //return;
 
-        public bool Collide(Obstacle obstacle)
-        {
-            return obstacle.Collide(this);
-        }
+            var rotations = simulation.Rotations.Select(rotation => rotation * t).Where(target => {
+                var originalPosition = SceneObject.Position;
+                SceneObject.Position = SceneObject.Position + target;
+                var collide = simulation.Scene.Collide(SceneObject);
+                SceneObject.Position = originalPosition;
+                return collide == false;
+            });
 
-        public bool Collide(Scene scene)
-        {
-            return scene.Agents.Any(Collide) || scene.Obstacles.Any(Collide);
+            if (rotations.Any())
+            {
+                Velocity = rotations.MinBy(rotation => Vector2.Distance(SceneObject.Position + rotation, Target));
+            }
+            else
+            {
+                Velocity = Vector2.Zero;
+            }
         }
     }
 }
