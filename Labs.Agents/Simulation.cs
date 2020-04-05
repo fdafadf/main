@@ -7,8 +7,6 @@ namespace Labs.Agents
 {
     public class Simulation
     {
-        public const int Directions = 4;
-        public readonly Vector2[] Rotations = Enumerable.Range(0, Directions).Select(i => Vector2.UnitX.Rotate(360.0f / Directions * i)).ToArray();
         public Scene Scene { get; }
         public List<Agent> Agents = new List<Agent>();
         public Random Random { get; }
@@ -60,7 +58,11 @@ namespace Labs.Agents
             {
                 if (Vector2.Zero.Equals(agent.Target))
                 {
-                    agent.Target = Random.NextVector2(Scene.Size - new Vector2(22, 22)) + new Vector2(11, 11);
+                    do
+                    {
+                        agent.Target = Random.NextVector2(Scene.Size - new Vector2(22, 22)) + new Vector2(11, 11);
+                    }
+                    while (Scene.CollideWithCircle(agent.Target, 3));
                 }
                 else
                 {

@@ -43,10 +43,10 @@ namespace Labs.Agents
                 Pen pen = simulation.Scene.Collide(agent.SceneObject) ? Pens.Red : Pens.Blue;
                 e.Graphics.DrawEllipse(pen, agent.SceneObject.Position.X - agent.SceneObject.Radius, agent.SceneObject.Position.Y - agent.SceneObject.Radius, agent.SceneObject.Radius * 2, agent.SceneObject.Radius * 2);
 
-                foreach (Vector2 rotation in simulation.Rotations)
-                {
-                    e.Graphics.DrawLine(pen, agent.SceneObject.Position, agent.SceneObject.Position + rotation * 15);
-                }
+                //foreach (Vector2 rotation in simulation.Rotations)
+                //{
+                //    e.Graphics.DrawLine(pen, agent.SceneObject.Position, agent.SceneObject.Position + rotation * 15);
+                //}
             }
         }
 

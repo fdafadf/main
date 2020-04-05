@@ -1,0 +1,15 @@
+C:\Users\pstepnowski\Source\Repos\fdafadf\main\Short.Cube\bin\Debug\netcoreapp3.0\Short.Cube.exe
+C:\Users\pstepnowski\Source\Repos\fdafadf\main\Short.Cube\bin\Debug\netcoreapp3.0\Short.Cube.deps.json
+C:\Users\pstepnowski\Source\Repos\fdafadf\main\Short.Cube\bin\Debug\netcoreapp3.0\Short.Cube.runtimeconfig.json
+C:\Users\pstepnowski\Source\Repos\fdafadf\main\Short.Cube\bin\Debug\netcoreapp3.0\Short.Cube.runtimeconfig.dev.json
+C:\Users\pstepnowski\Source\Repos\fdafadf\main\Short.Cube\bin\Debug\netcoreapp3.0\Short.Cube.dll
+C:\Users\pstepnowski\Source\Repos\fdafadf\main\Short.Cube\bin\Debug\netcoreapp3.0\Short.Cube.pdb
+C:\Users\pstepnowski\Source\Repos\fdafadf\main\Short.Cube\obj\Debug\netcoreapp3.0\Short.Cube.csprojAssemblyReference.cache
+C:\Users\pstepnowski\Source\Repos\fdafadf\main\Short.Cube\obj\Debug\netcoreapp3.0\Short.Cube.CubeForm.resources
+C:\Users\pstepnowski\Source\Repos\fdafadf\main\Short.Cube\obj\Debug\netcoreapp3.0\Short.Cube.csproj.GenerateResource.cache
+C:\Users\pstepnowski\Source\Repos\fdafadf\main\Short.Cube\obj\Debug\netcoreapp3.0\Short.Cube.csproj.CoreCompileInputs.cache
+C:\Users\pstepnowski\Source\Repos\fdafadf\main\Short.Cube\obj\Debug\netcoreapp3.0\Short.Cube.AssemblyInfoInputs.cache
+C:\Users\pstepnowski\Source\Repos\fdafadf\main\Short.Cube\obj\Debug\netcoreapp3.0\Short.Cube.AssemblyInfo.cs
+C:\Users\pstepnowski\Source\Repos\fdafadf\main\Short.Cube\obj\Debug\netcoreapp3.0\Short.Cube.dll
+C:\Users\pstepnowski\Source\Repos\fdafadf\main\Short.Cube\obj\Debug\netcoreapp3.0\Short.Cube.pdb
+C:\Users\pstepnowski\Source\Repos\fdafadf\main\Short.Cube\obj\Debug\netcoreapp3.0\Short.Cube.genruntimeconfig.cache
