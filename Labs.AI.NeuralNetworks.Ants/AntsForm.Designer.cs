@@ -1,6 +1,6 @@
-﻿namespace Labs.AI.NeuralNetworks.Car
+﻿namespace Labs.AI.NeuralNetworks.Ants
 {
-    partial class Form1
+    partial class AntsForm
     {
         /// <summary>
         ///  Required designer variable.
@@ -32,17 +32,14 @@
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
-            // timer1
-            // 
-            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
-            // 
-            // Form1
+            // AntsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Name = "Form1";
-            this.Text = "Form1";
+            this.ClientSize = new System.Drawing.Size(784, 561);
+            this.DoubleBuffered = true;
+            this.Name = "AntsForm";
+            this.Text = "Ants";
             this.ResumeLayout(false);
 
         }

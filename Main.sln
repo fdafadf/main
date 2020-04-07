@@ -64,7 +64,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Labs.AI.NeuralNetworks.Path
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Short.Cube", "Short.Cube\Short.Cube.csproj", "{6503481E-81BB-4CD2-BCA8-B4051F23FD36}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Labs.AI.NeuralNetworks.Car", "Labs.AI.NeuralNetworks.Car\Labs.AI.NeuralNetworks.Car.csproj", "{310F3400-75FC-4A97-88AB-F15CD6D18E12}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Labs.AI.NeuralNetworks.Ants", "Labs.AI.NeuralNetworks.Ants\Labs.AI.NeuralNetworks.Ants.csproj", "{310F3400-75FC-4A97-88AB-F15CD6D18E12}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
