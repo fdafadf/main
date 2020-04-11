@@ -89,7 +89,7 @@ namespace Labs.Agents.Demo
 
             // Aby wykonać pojedynczy krok symulacji, potrzebujemy opisać interakcje agentów ze środowiskiem.
             // Do tego pomocna jest klasa AgentIteractionCollection.
-            var interactions = new AgentIteractionCollection<PrecalculatedAgent, Action2>(agents);
+            var interactions = new AgentInteractionCollection<PrecalculatedAgent, Action2>(agents);
             var iterationStep = 0;
 
             while (AllAgentsFinished() == false) // ten warunek jest tylko przykładowy
@@ -124,7 +124,7 @@ namespace Labs.Agents.Demo
         {
             var environment = new Environment2<OnlineAgent, OnlineAgentState>(400, 400);
             var agents = new OnlineAgent[100];
-            var iteractions = new AgentIteractionCollection<OnlineAgent, Action2>(agents);
+            var iteractions = new AgentInteractionCollection<OnlineAgent, Action2>(agents);
             var iteration = 0;
 
             while (AllAgentsFinished() == false)

@@ -3,7 +3,7 @@ using System.Drawing;
 
 namespace Labs.Agents
 {
-    public class Environment1<TAgent, TState> : Environment<Environment1<TAgent, TState>, TAgent, TState, AgentIteraction<TAgent, Action1>>
+    public class Environment1<TAgent, TState> : Environment<Environment1<TAgent, TState>, TAgent, TState, AgentInteraction<TAgent, Action1>>
         where TAgent : IAgent<Environment1<TAgent, TState>, TAgent, TState>
         where TState : AgentState1<TAgent, TState>
     {
@@ -16,7 +16,7 @@ namespace Labs.Agents
             return new EnvironmentField<Environment1<TAgent, TState>, TAgent, TState>(this, x, y);
         }
 
-        public override void Apply(IEnumerable<AgentIteraction<TAgent, Action1>> iteractions)
+        public override void Apply(IEnumerable<AgentInteraction<TAgent, Action1>> iteractions)
         {
             foreach (var iteraction in iteractions)
             {

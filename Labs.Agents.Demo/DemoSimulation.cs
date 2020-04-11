@@ -4,11 +4,11 @@ namespace Labs.Agents.Demo
 {
     public class DemoSimulation : Simulation<Environment2<DemoAgent, DemoAgentState>, DemoAgent, DemoAgentState>
     {
-        AgentIteractionCollection<DemoAgent, Action2> EnvironmentIteractions;
+        AgentInteractionCollection<DemoAgent, Action2> EnvironmentIteractions;
 
         public DemoSimulation(Environment2<DemoAgent, DemoAgentState> environment, int numberOfAgents) : base(environment, numberOfAgents)
         {
-            EnvironmentIteractions = new AgentIteractionCollection<DemoAgent, Action2>(Agents);
+            EnvironmentIteractions = new AgentInteractionCollection<DemoAgent, Action2>(Agents);
         }
 
         protected override void InitializeAgents()

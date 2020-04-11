@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Labs.Agents
 {
-    public class Environment2<TAgent, TState> : Environment<Environment2<TAgent, TState>, TAgent, TState, AgentIteraction<TAgent, Action2>>
+    public class Environment2<TAgent, TState> : Environment<Environment2<TAgent, TState>, TAgent, TState, AgentInteraction<TAgent, Action2>>
         where TAgent : IAgent<Environment2<TAgent, TState>, TAgent, TState> 
         where TState : AgentState2<TAgent, TState>
     {
@@ -37,7 +37,7 @@ namespace Labs.Agents
             }
         }
 
-        public override void Apply(IEnumerable<AgentIteraction<TAgent, Action2>> iteractions)
+        public override void Apply(IEnumerable<AgentInteraction<TAgent, Action2>> iteractions)
         {
             for (int y = 0; y < Height; y++)
             {

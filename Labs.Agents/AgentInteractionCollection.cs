@@ -4,18 +4,18 @@ using System.Linq;
 
 namespace Labs.Agents
 {
-    public class AgentIteractionCollection<TAgent, TAction> : IEnumerable<AgentIteraction<TAgent, TAction>>
+    public class AgentInteractionCollection<TAgent, TAction> : IEnumerable<AgentInteraction<TAgent, TAction>>
     {
-        AgentIteraction<TAgent, TAction>[] Items;
+        AgentInteraction<TAgent, TAction>[] Items;
 
-        public AgentIteractionCollection(IEnumerable<TAgent> agents)
+        public AgentInteractionCollection(IEnumerable<TAgent> agents)
         {
-            Items = agents.Select(agent => new AgentIteraction<TAgent, TAction>(agent)).ToArray();
+            Items = agents.Select(agent => new AgentInteraction<TAgent, TAction>(agent)).ToArray();
         }
 
-        public IEnumerator<AgentIteraction<TAgent, TAction>> GetEnumerator()
+        public IEnumerator<AgentInteraction<TAgent, TAction>> GetEnumerator()
         {
-            return Items.Cast<AgentIteraction<TAgent, TAction>>().GetEnumerator();
+            return Items.Cast<AgentInteraction<TAgent, TAction>>().GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()

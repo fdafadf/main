@@ -1,11 +1,11 @@
 ﻿namespace Labs.Agents
 {
-    public class AgentIteraction<TAgent, TAction>
+    public class AgentInteraction<TAgent, TAction>
     {
         public TAgent Agent { get; }
         public TAction Action;
 
-        public AgentIteraction(TAgent agent)
+        public AgentInteraction(TAgent agent)
         {
             Agent = agent;
         }
