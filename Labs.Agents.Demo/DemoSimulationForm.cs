@@ -20,16 +20,24 @@ namespace Labs.Agents.Demo
         protected override void OnPaint(PaintEventArgs e)
         {
             int scale = 2;
+            var environment = Simulation.Environment;
 
-            foreach (DemoAgent agent in Simulation.Agents)
+            for (int y = 0; y < environment.Height; y++)
             {
-                if (agent.State.IsDestroyed)
+                for (int x = 0; x < environment.Width; x++)
                 {
-                    e.Graphics.FillRectangle(Brushes.Red, agent.State.Field.X * scale, agent.State.Field.Y * scale, scale, scale);
-                }
-                else
-                {
-                    e.Graphics.FillRectangle(Brushes.Black, agent.State.Field.X * scale, agent.State.Field.Y * scale, scale, scale);
+                    var field = environment[x, y];
+
+                    if (field.IsObstacle)
+                    {
+                        e.Graphics.FillRectangle(Brushes.DarkGray, x * scale, y * scale, scale, scale);
+                    }
+                    else if (field.IsAgent)
+                    {
+                        var agentState = field.Agent.State;
+                        Brush brush = agentState.IsDestroyed ? Brushes.Red : Brushes.Black;
+                        e.Graphics.FillRectangle(brush, x * scale, y * scale, scale, scale);
+                    }
                 }
             }
         }

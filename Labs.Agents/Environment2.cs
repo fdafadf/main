@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 
@@ -11,30 +10,6 @@ namespace Labs.Agents
     {
         public Environment2(int width, int height) : base(width, height)
         {
-        }
-
-        protected override EnvironmentField<Environment2<TAgent, TState>, TAgent, TState> CreateField(int x, int y)
-        {
-            return new EnvironmentField<Environment2<TAgent, TState>, TAgent, TState>(this, x, y);
-        }
-
-        void UndoIteraction(int x, int y)
-        {
-            TAgent agent = fields[x, y].Agent;
-
-            if (agent != null)
-            {
-                agent.State.IsDestroyed = true;
-                int sourceX = agent.State.Field.X;
-                int sourceY = agent.State.Field.Y;
-
-                if (sourceX != x || sourceY != y)
-                {
-                    UndoIteraction(sourceX, sourceY);
-                    fields[x, y].Agent = default;
-                    fields[sourceX, sourceY].Agent = agent;
-                }
-            }
         }
 
         public override void Apply(IEnumerable<AgentInteraction<TAgent, Action2>> iteractions)
@@ -55,6 +30,7 @@ namespace Labs.Agents
                 int sourceY = agentState.Field.Y;
                 int targetX = agentState.Field.X + iteraction.Action.X;
                 int targetY = agentState.Field.Y + iteraction.Action.Y;
+                var targetField = fields[targetX, targetY];
 
                 if (agentState.IsDestroyed)
                 {
@@ -69,9 +45,9 @@ namespace Labs.Agents
                         fields[sourceX, sourceY].Agent = agent;
                         agent.State.IsDestroyed = true;
                     }
-                    else if (fields[targetX, targetY].Agent == null)
+                    else if (targetField.IsAgent == false && targetField.IsObstacle == false)
                     {
-                        fields[targetX, targetY].Agent = agent;
+                        targetField.Agent = agent;
                     }
                     else
                     {
@@ -94,6 +70,30 @@ namespace Labs.Agents
                     {
                         agent.State.Field = field;
                     }
+                }
+            }
+        }
+
+        protected override EnvironmentField<Environment2<TAgent, TState>, TAgent, TState> CreateField(int x, int y)
+        {
+            return new EnvironmentField<Environment2<TAgent, TState>, TAgent, TState>(this, x, y);
+        }
+
+        private void UndoIteraction(int x, int y)
+        {
+            TAgent agent = fields[x, y].Agent;
+
+            if (agent != null)
+            {
+                agent.State.IsDestroyed = true;
+                int sourceX = agent.State.Field.X;
+                int sourceY = agent.State.Field.Y;
+
+                if (sourceX != x || sourceY != y)
+                {
+                    UndoIteraction(sourceX, sourceY);
+                    fields[x, y].Agent = default;
+                    fields[sourceX, sourceY].Agent = agent;
                 }
             }
         }

@@ -32,6 +32,28 @@ namespace Labs.Agents
             }
         }
 
+        public void AddObstacle(int x, int y, int width, int height)
+        {
+            int ex = x + width;
+            int ey = y + height;
+
+            for (int oy = y; oy < ey; oy++)
+            {
+                for (int ox = x; ox < ex; ox++)
+                {
+                    var field = fields[ox, oy];
+
+                    if (field.IsAgent)
+                    {
+                        throw new Exception();
+                    }
+
+                    field.IsObstacle = true;
+                    field.IsEmpty = false;
+                }
+            }
+        }
+
         protected abstract EnvironmentField<TEnvironment, TAgent, TState> CreateField(int x, int y);
 
         public EnvironmentField<TEnvironment, TAgent, TState> this[int x, int y]

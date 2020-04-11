@@ -53,6 +53,7 @@
     <Compile Include="Action2.cs" />
     <Compile Include="AgentState1.cs" />
     <Compile Include="AgentState2.cs" />
+    <Compile Include="Environment2Generator.cs" />
     <Compile Include="EnvironmentField.cs" />
     <Compile Include="IAgent.cs" />
     <Compile Include="Action1.cs" />

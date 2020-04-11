@@ -17,12 +17,14 @@ namespace Labs.Agents.Demo
             var environmentWidth = 400;
             var environmentHeight = 300;
             var numberOfAgents = 120;
-            var environment = new Environment2<DemoAgent, DemoAgentState>(environmentWidth, environmentHeight);
+            var environment = Environment2Generator<DemoAgent, DemoAgentState>.Generate(new Random(0), environmentWidth, environmentHeight, 200, 1, 20);
             var simulation = new DemoSimulation(environment, numberOfAgents);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new DemoSimulationForm(simulation));
         }
+
+        #region Przykłady (Pseudokod)
 
         class PrecalculatedAgent : IAgent<Environment2<PrecalculatedAgent, PrecalculatedAgentState>, PrecalculatedAgent, PrecalculatedAgentState>
         {
@@ -143,5 +145,7 @@ namespace Labs.Agents.Demo
         {
             return false;
         }
+
+        #endregion
     }
 }
