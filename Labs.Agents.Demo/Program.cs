@@ -79,7 +79,7 @@ namespace Labs.Agents.Demo
             {
                 agents[i] = new PrecalculatedAgent();
                 var position = environment.GetRandomUnusedPosition(random);
-                environment.Add(agents[i], position);
+                environment.AddAgent(agents[i], position);
             }
 
             // Wyliczamy z góry wszystkie akcje agentów 

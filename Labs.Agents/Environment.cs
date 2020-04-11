@@ -32,6 +32,17 @@ namespace Labs.Agents
             }
         }
 
+        public abstract void Apply(IEnumerable<TIteraction> iteractions);
+        protected abstract EnvironmentField<TEnvironment, TAgent, TState> CreateField(int x, int y);
+
+        public EnvironmentField<TEnvironment, TAgent, TState> this[int x, int y]
+        {
+            get
+            {
+                return fields.IsOutside(x, y) ? fieldOutside : fields[x, y];
+            }
+        }
+
         public void AddObstacle(int x, int y, int width, int height)
         {
             int ex = x + width;
@@ -54,17 +65,7 @@ namespace Labs.Agents
             }
         }
 
-        protected abstract EnvironmentField<TEnvironment, TAgent, TState> CreateField(int x, int y);
-
-        public EnvironmentField<TEnvironment, TAgent, TState> this[int x, int y]
-        {
-            get
-            {
-                return fields.IsOutside(x, y) ? fieldOutside : fields[x, y];
-            }
-        }
-
-        public void Add(TAgent agent, Point point)
+        public void AddAgent(TAgent agent, Point point)
         {
             if (this[point.X, point.Y].IsEmpty)
             {
@@ -76,8 +77,6 @@ namespace Labs.Agents
                 throw new Exception();
             }
         }
-
-        public abstract void Apply(IEnumerable<TIteraction> iteractions);
 
         public Point GetRandomUnusedPosition(Random random)
         {
