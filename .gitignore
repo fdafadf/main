@@ -84,3 +84,7 @@
 /WindowsFormsApp1
 /Labs.AI.NeuralNetworks.Pathfinding/obj
 /Labs.AI.NeuralNetworks.Pathfinding/bin
+/Labs.Agents/bin
+/Labs.Agents/obj
+/Labs.Agents.Demo/bin/Debug
+/Labs.Agents.Demo/obj/Debug
