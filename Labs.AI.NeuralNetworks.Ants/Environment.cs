@@ -17,7 +17,6 @@ namespace Labs.AI.NeuralNetworks.Ants
             new AgentAction(2, true),
         };
 
-        public static readonly int EncodedStateSize = 5;
         public Color SandColor = Color.Yellow;
         public Bitmap Bitmap;
         public Random Random;
@@ -30,13 +29,13 @@ namespace Labs.AI.NeuralNetworks.Ants
 
             using (ObstaclesBitmap obstacles = new ObstaclesBitmap(Bitmap))
             {
-                Agent item = new Agent();
-                item.Ant = new Ant(Bitmap.Width / 2, Bitmap.Height / 2, 1, 0);
-                item.State = GetState(item.Ant, obstacles);
+                Agent agent = new Agent();
+                agent.Ant = new Ant(Bitmap.Width / 2, Bitmap.Height / 2, 1, 0, AgentState.Sensors);
+                agent.State = GetState(agent.Ant, obstacles);
 
                 Agents = new Agent[]
                 {
-                    item
+                    agent
                 };
             }
         }
@@ -53,12 +52,12 @@ namespace Labs.AI.NeuralNetworks.Ants
                     g.FillRectangle(Brushes.Yellow, Bitmap.Width - 3, 0, Bitmap.Width, Bitmap.Height);
                     g.FillRectangle(Brushes.Yellow, 0, Bitmap.Height - 3, Bitmap.Width, Bitmap.Height);
 
-                    for (int i = 0; i < 80; i++)
+                    for (int i = 0; i < 20; i++)
                     {
                         int x = Random.Next(Bitmap.Width - 5);
                         int y = Random.Next(Bitmap.Height - 5);
-                        int width = Random.Next(30) + 5;
-                        int height = Random.Next(30) + 5;
+                        int width = Random.Next(90) + 50;
+                        int height = Random.Next(90) + 50;
                         g.FillRectangle(Brushes.Yellow, x, y, width, height);
                     }
                 }
@@ -74,25 +73,27 @@ namespace Labs.AI.NeuralNetworks.Ants
             }
         }
 
-        public void DoAction(Agent agent)
+        public double DoAction(Agent agent, AgentAction action)
         {
+            double reward = 0;
+
             lock (Bitmap)
             {
                 using (ObstaclesBitmap obstacles = new ObstaclesBitmap(Bitmap))
                 {
                     double lastDistance = agent.Ant.GetDistanceToGoal();
-                    agent.Ant.Update(agent.Action);
+                    agent.Ant.Update(action);
                     Vector2 newPosition = agent.Ant.Position + agent.Ant.Velocity;
 
                     if (obstacles.CollideRectangle(newPosition, agent.Ant.Size))
                     {
-                        agent.Reward = -1;
+                        reward = -1;
                     }
                     else
                     {
                         agent.Ant.Position = newPosition;
                         double distance = agent.Ant.GetDistanceToGoal();
-                        agent.Reward = lastDistance - distance;
+                        reward = lastDistance - distance;
 
                         if (distance < 5)
                         {
@@ -103,6 +104,8 @@ namespace Labs.AI.NeuralNetworks.Ants
                     agent.State = GetState(agent.Ant, obstacles);
                 }
             }
+
+            return reward;
         }
 
         private void NewPosition(Agent agent, ObstaclesBitmap obstacles)
@@ -137,7 +140,7 @@ namespace Labs.AI.NeuralNetworks.Ants
             return new AgentState(sin, cos, signal1, signal2, signal3);
         }
 
-        public double GetSignal(Sensor sensor, ObstaclesBitmap obstacles)
+        public double GetSignal(AntSensor sensor, ObstaclesBitmap obstacles)
         {
             sensor.UpdatePosition();
             return obstacles.GetSignal(sensor);

@@ -2,23 +2,28 @@
 
 namespace Labs.AI.NeuralNetworks.Ants
 {
-    public class History
+    public class History<TInput>
     {
         public LinkedList<Item> Items = new LinkedList<Item>();
         public int Capacity = 100000;
 
-        public void Add(AgentState state, Agent item2, double[] input)
+        public void Add(AgentState state, AgentState nextState, AgentAction action, double reward, TInput input)
         {
             Item item;
 
             if (Items.Count == Capacity)
             {
                 item = Items.Last.Value;
+                item.State = state;
+                item.NextState = nextState;
+                item.Input = input;
+                item.Action = action;
+                item.Reward = reward;
                 Items.RemoveLast();
             }
             else
             {
-                item = new Item(state, item2.State, item2.Action, item2.Reward, input);
+                item = new Item(state, nextState, action, reward, input);
             }
 
             Items.AddFirst(item);
@@ -30,9 +35,9 @@ namespace Labs.AI.NeuralNetworks.Ants
             public AgentState NextState;
             public AgentAction Action;
             public double Reward;
-            public double[] Input;
+            public TInput Input;
 
-            internal Item(AgentState state, AgentState nextState, AgentAction action, double reward, double[] input)
+            internal Item(AgentState state, AgentState nextState, AgentAction action, double reward, TInput input)
             {
                 State = state;
                 NextState = nextState;

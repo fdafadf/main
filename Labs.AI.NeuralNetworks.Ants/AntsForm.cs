@@ -24,8 +24,20 @@ namespace Labs.AI.NeuralNetworks.Ants
         public AntsForm()
         {
             InitializeComponent();
+            InitializeEnvironmentV2();
+        }
+
+        private void InitializeEnvironmentV1()
+        {
             Environment = new Environment(ClientSize.Width, ClientSize.Height, new Random(0));
-            Trainer = new Training(Environment);
+            Trainer = new Training<AntNetworkV1Input>(Environment, new AntNetworkV1());
+            SandBrush = new SolidBrush(Environment.SandColor);
+        }
+
+        private void InitializeEnvironmentV2()
+        {
+            Environment = new Environment(ClientSize.Width, ClientSize.Height, new Random(0));
+            Trainer = new Training<AntNetworkV2Input>(Environment, new AntNetworkV2(16, 32, 16));
             SandBrush = new SolidBrush(Environment.SandColor);
         }
 
@@ -142,15 +154,17 @@ namespace Labs.AI.NeuralNetworks.Ants
             DrawSensor(g, agent.Sensors[2], item.State.Signals[0]); 
         }
 
-        private void DrawSensor(Graphics g, Sensor sensor, double signal)
+        private void DrawSensor(Graphics g, AntSensor sensor, double signal)
         {
+            int size = sensor.Sensor.Size;
+
             if (signal > 0)
             {
-                g.DrawRectangle(Pens.Red, sensor.Position.X - sensor.Size, sensor.Position.Y - sensor.Size, sensor.Size * 2, sensor.Size * 2);
+                g.DrawRectangle(Pens.Red, sensor.Position.X - size, sensor.Position.Y - size, size * 2, size * 2);
             }
             else
             {
-                g.DrawRectangle(Pens.DarkGray, sensor.Position.X - sensor.Size, sensor.Position.Y - sensor.Size, sensor.Size * 2, sensor.Size * 2);
+                g.DrawRectangle(Pens.DarkGray, sensor.Position.X - size, sensor.Position.Y - size, size * 2, size * 2);
             }
         }
     }

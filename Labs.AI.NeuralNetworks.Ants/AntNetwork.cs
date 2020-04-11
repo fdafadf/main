@@ -1,28 +1,31 @@
 ﻿using AI.NeuralNetworks;
-using System;
 
 namespace Labs.AI.NeuralNetworks.Ants
 {
-    public class AntNetwork : Network
+    public abstract class AntNetwork<TInput> : Network where TInput : AntNetworkInput
     {
-        public static readonly int NetworkInputSize = Environment.EncodedStateSize + AgentAction.EncodedSize;
+        public History<TInput> History;
 
-        public AntNetwork() : base(Function.ReLU, NetworkInputSize, 1, 8, 8)
+        public AntNetwork(int inputSize) : this(inputSize, 8, 8)
         {
         }
 
-        public Prediction Predict(AgentState state)
+        public AntNetwork(int inputSize, params int[] hiddenLayerSizes) : base(Function.ReLU, inputSize, 1, hiddenLayerSizes)
         {
-            double[] input = new double[NetworkInputSize];
+            History = new History<TInput>();
+        }
+
+        public abstract TInput CreateInput(AgentState state, AgentAction action);
+        public abstract Prediction<TInput> Predict(AgentState state);
+
+        public Prediction<TInput> Predict(TInput input)
+        {
             double bestQ = double.MinValue;
             AgentAction bestAction = null;
-            Array.Copy(state.Encoded, input, state.Encoded.Length);
 
-            for (int i = 0; i < Environment.Actions.Length; i++)
+            foreach (AgentAction action in Environment.Actions)
             {
-                AgentAction action = Environment.Actions[i];
-                Array.Copy(action.Encoded, 0, input, state.Encoded.Length, action.Encoded.Length);
-                double predictQ = Evaluate(input)[0];
+                double predictQ = Evaluate(input.EncodeAction(action).Encoded)[0];
 
                 if (predictQ > bestQ)
                 {
@@ -31,16 +34,8 @@ namespace Labs.AI.NeuralNetworks.Ants
                 }
             }
 
-            Array.Copy(bestAction.Encoded, 0, input, state.Encoded.Length, bestAction.Encoded.Length);
-            return new Prediction(bestAction, bestQ, input);
-        }
-
-        public double[] CreateInput(AgentState state, AgentAction action)
-        {
-            double[] input = new double[NetworkInputSize];
-            Array.Copy(state.Encoded, input, state.Encoded.Length);
-            Array.Copy(action.Encoded, 0, input, state.Encoded.Length, action.Encoded.Length);
-            return input;
+            input.EncodeAction(bestAction);
+            return new Prediction<TInput>(bestAction, bestQ, input);
         }
     }
 }

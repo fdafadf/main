@@ -21,9 +21,9 @@ namespace Labs.AI.NeuralNetworks.Ants
             BytesPerPixel = 4;
         }
 
-        public double GetSignal(Sensor sensor)
+        public double GetSignal(AntSensor sensor)
         {
-            return GetSignal(sensor.Position, sensor.Size);
+            return GetSignal(sensor.Position, sensor.Sensor.Size);
         }
 
         public double GetSignal(Vector2 position, int size)

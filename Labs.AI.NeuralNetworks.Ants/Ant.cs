@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System.Linq;
+using System.Numerics;
 
 namespace Labs.AI.NeuralNetworks.Ants
 {
@@ -10,20 +11,15 @@ namespace Labs.AI.NeuralNetworks.Ants
         public Vector2 Goal;
         public Vector2 Velocity;
         public double DirectionAngle;
-        public Sensor[] Sensors;
+        public AntSensor[] Sensors;
 
-        public Ant(float x, float y, float dx, float dy)
+        public Ant(float x, float y, float dx, float dy, Sensor[] sensors)
         {
             Position = new Vector2(x, y);
             Direction = new Vector2(dx, dy);
             Velocity = new Vector2(dx, dy);
             Goal = new Vector2(120, 120);
-            Sensors = new Sensor[]
-            {
-                new Sensor(this, new Vector2(15, 0), 0),
-                new Sensor(this, new Vector2(15, 0), -60),
-                new Sensor(this, new Vector2(15, 0), 60),
-            };
+            Sensors = sensors.Select(sensor => new AntSensor(this, sensor)).ToArray();
         }
 
         public double GetDistanceToGoal()

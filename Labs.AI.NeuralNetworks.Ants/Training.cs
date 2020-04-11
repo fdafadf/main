@@ -6,52 +6,56 @@ using System.Linq;
 
 namespace Labs.AI.NeuralNetworks.Ants
 {
-    public class Training
+    public abstract class Training
+    {
+        public abstract void Episode();
+    }
+
+    public class Training<TInput> : Training where TInput : AntNetworkInput
     {
         Environment Environment;
-        AntNetwork Model;
-        History History;
+        AntNetwork<TInput> Model;
 
-        public Training(Environment environment)
+        public Training(Environment environment, AntNetwork<TInput> model)
         {
             Environment = environment;
-            Model = new AntNetwork();
-            History = new History();
+            Model = model;
         }
 
-        public void Episode()
+        public override void Episode()
         {
-            Agent item = Environment.Agents[0];
-            AgentState state = item.State;
+            Agent agent = Environment.Agents[0];
             double epsilon = 0.2;
-            double[] input;
+            TInput input;
+            AgentAction action;
+            AgentState state = agent.State;
 
             if (Environment.Random.NextDouble() < epsilon)
             {
-                item.Action = Environment.Random.Next(Environment.Actions);
-                input = Model.CreateInput(state, item.Action);
+                action = Environment.Random.Next(Environment.Actions);
+                input = Model.CreateInput(state, action);
             }
             else
             {
-                var prediction = Model.Predict(state);
-                item.Action = prediction.BestAction;
+                Prediction<TInput> prediction = Model.Predict(state);
                 input = prediction.Input;
+                action = prediction.BestAction;
             }
 
-            Environment.DoAction(item);
-            History.Add(state, item, input);
+            double reward = Environment.DoAction(agent, action);
+            Model.History.Add(state, agent.State, action, reward, input);
 
-            if (History.Items.Count > 128)
+            if (Model.History.Items.Count > 128)
             {
-                Fit(0.99, History.Items.Subset(128, Environment.Random), Environment.Random);
+                Fit(0.99, Model.History.Items.Subset(128, Environment.Random), Environment.Random);
             }
         }
 
-        private void Fit(double gamma, IEnumerable<History.Item> batch, Random random)
+        private void Fit(double gamma, IEnumerable<History<TInput>.Item> batch, Random random)
         {
             var optimizer = new SGDMomentum(Model, 0.001, 0.04);
             var trainer = new Trainer(optimizer, random);
-            var nextQ = batch.Select(item => new Projection(item.Input, new double[] { item.Reward + gamma * Model.Predict(item.NextState).BestValue })).ToArray();
+            var nextQ = batch.Select(item => new Projection(item.Input.Encoded, new double[] { item.Reward + gamma * Model.Predict(item.NextState).BestValue })).ToArray();
             trainer.Train(nextQ, 10, 8);
         }
     }
