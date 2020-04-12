@@ -7,7 +7,7 @@ using System.Numerics;
 
 namespace Labs.Agents
 {
-    public abstract class Environment<TEnvironment, TAgent, TState, TInteraction> : IEnvironment
+    public abstract class Environment<TEnvironment, TAgent, TState, TInteraction> : IEnvironment<TEnvironment, TAgent, TState>
         where TAgent : IAgent<TEnvironment, TAgent, TState>
         where TState : AgentState<TEnvironment, TAgent, TState>
     {

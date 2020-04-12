@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
+﻿using System.ComponentModel;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -51,6 +46,44 @@ namespace Labs.Agents
         protected virtual void SimulationStep()
         {
 
+        }
+
+        protected void DrawObstacles<TEnvironment, TAgent, TState>(Graphics graphics, TEnvironment environment, int scale)
+            where TEnvironment : IEnvironment<TEnvironment, TAgent, TState>
+            where TAgent : IAgent<TEnvironment, TAgent, TState>
+            where TState : AgentState<TEnvironment, TAgent, TState>
+        {
+            int width = environment.Width;
+            int height = environment.Height;
+
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+
+                    var field = environment[x, y];
+
+                    if (field.IsObstacle)
+                    {
+                        graphics.FillRectangle(Brushes.DarkGray, x * scale, y * scale, scale, scale);
+                    }
+                }
+            }
+        }
+
+        protected void DrawAgents<TEnvironment, TAgent, TState>(Graphics graphics, TEnvironment environment, int scale)
+            where TEnvironment : IEnvironment<TEnvironment, TAgent, TState>
+            where TAgent : IAgent<TEnvironment, TAgent, TState>
+            where TState : AgentState2<TEnvironment, TAgent, TState>
+        {
+            foreach (var agent in environment.Agents)
+            {
+                var agentState = agent.State;
+                var x = agentState.Field.X;
+                var y = agentState.Field.Y;
+                Brush brush = agentState.IsDestroyed ? Brushes.Red : Brushes.Black;
+                graphics.FillRectangle(brush, x * scale, y * scale, scale, scale);
+            }
         }
 
         private void StartStopSimulation()
