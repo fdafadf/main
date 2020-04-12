@@ -52,6 +52,9 @@
   <ItemGroup>
     <Compile Include="Action2.cs" />
     <Compile Include="Action2Environment.cs" />
+    <Compile Include="Action2EnvironmentForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="AgentState1.cs" />
     <Compile Include="AgentState2.cs" />
     <Compile Include="EnvironmentGenerator.cs" />

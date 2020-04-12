@@ -48,7 +48,7 @@
   <ItemGroup>
     <Compile Include="Agent.cs" />
     <Compile Include="AgentState.cs" />
-    <Compile Include="Form.cs">
+    <Compile Include="EnvironmentForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Program.cs" />

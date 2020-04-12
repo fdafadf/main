@@ -22,7 +22,7 @@ namespace Labs.Agents.NeuralNetworks
             var simulation = new Simulation(environment, numberOfAgents);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form());
+            Application.Run(new EnvironmentForm(simulation));
         }
     }
 }

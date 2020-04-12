@@ -6,10 +6,6 @@ using System.Windows.Forms;
 
 namespace Labs.Agents
 {
-    /// <summary>
-    /// Jeśli chcemy policzyć ścieżki przed rozpoczęciem symulacji, to parz komentarze [Wariant 1].
-    /// Jeśli chcemy liczyć ścieżki dynamicznie po każdym kroku symulacji, to parz komentarze [Wariant 2].
-    /// </summary>
     public partial class SimulationForm : Form 
     {
         CancellationTokenSource SimulationCancellation;
