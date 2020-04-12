@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 
 namespace Labs.Agents
@@ -7,7 +8,7 @@ namespace Labs.Agents
         where TAgent : IAgent<Environment1<TAgent, TState>, TAgent, TState>
         where TState : AgentState1<TAgent, TState>
     {
-        public Environment1(int width, int height) : base(width, height)
+        public Environment1(Random random, int width, int height) : base(random, width, height)
         {
         }
 

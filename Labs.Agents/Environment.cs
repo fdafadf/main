@@ -11,13 +11,17 @@ namespace Labs.Agents
         where TAgent : IAgent<TEnvironment, TAgent, TState>
         where TState : AgentState<TEnvironment, TAgent, TState>
     {
+        public Random Random { get; }
         public int Width { get; }
         public int Height { get; }
+        public IEnumerable<TAgent> Agents => agents;
+        protected readonly List<TAgent> agents = new List<TAgent>();
         protected readonly EnvironmentField<TEnvironment, TAgent, TState, TInteraction>[,] fields;
         EnvironmentField<TEnvironment, TAgent, TState, TInteraction> fieldOutside;
         
-        public Environment(int width, int height)
+        public Environment(Random random, int width, int height)
         {
+            Random = random;
             Width = width;
             Height = height;
             fields = new EnvironmentField<TEnvironment, TAgent, TState, TInteraction>[width, height];
@@ -65,7 +69,7 @@ namespace Labs.Agents
             }
         }
 
-        public void AddAgent(TAgent agent, Point point)
+        public virtual void AddAgent(TAgent agent, Point point)
         {
             var field = fields[point.X, point.Y];
 
@@ -73,6 +77,7 @@ namespace Labs.Agents
             {
                 agent.State.Field = field;
                 field.Agent = agent;
+                agents.Add(agent);
             }
             else
             {
@@ -80,14 +85,14 @@ namespace Labs.Agents
             }
         }
 
-        public Point GetRandomUnusedPosition(Random random)
+        public Point GetRandomUnusedPosition()
         {
             Point point = new Point();
 
             do
             {
-                point.X = random.Next(fields.GetLength(0));
-                point.Y = random.Next(fields.GetLength(1));
+                point.X = Random.Next(fields.GetLength(0));
+                point.Y = Random.Next(fields.GetLength(1));
             }
             while (this[point.X, point.Y].IsEmpty == false);
 

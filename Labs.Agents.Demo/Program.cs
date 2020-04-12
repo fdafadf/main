@@ -14,11 +14,12 @@ namespace Labs.Agents.Demo
         [STAThread]
         static void Main()
         {
-            var environmentWidth = 400;
-            var environmentHeight = 300;
-            var numberOfAgents = 120;
-            var environment = new Environment2<DemoAgent, DemoAgentState>(environmentWidth, environmentHeight);
-            EnvironmentGenerator.GenerateObstacles(new Random(0), environment, 200, 1, 20);
+            var environmentWidth = 200;
+            var environmentHeight = 150;
+            var numberOfAgents = 80;
+            var numberOfObstacles = 180;
+            var environment = new Environment2<DemoAgent, DemoAgentState>(new Random(0), environmentWidth, environmentHeight);
+            EnvironmentGenerator.GenerateObstacles(environment, numberOfObstacles, 1, 20);
             var simulation = new DemoSimulation(environment, numberOfAgents);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
@@ -72,14 +73,14 @@ namespace Labs.Agents.Demo
         {
             var random = new Random();
             // Tworzymy środowisko o rozmiarze 100x100
-            var environment = new Environment2<PrecalculatedAgent, PrecalculatedAgentState>(100, 100);
+            var environment = new Environment2<PrecalculatedAgent, PrecalculatedAgentState>(new Random(0), 100, 100);
             // Tworzymy 100 agentów
             var agents = new PrecalculatedAgent[100];
 
             for (int i = 0; i < agents.Length; i++)
             {
                 agents[i] = new PrecalculatedAgent();
-                var position = environment.GetRandomUnusedPosition(random);
+                var position = environment.GetRandomUnusedPosition();
                 environment.AddAgent(agents[i], position);
             }
 
@@ -125,7 +126,7 @@ namespace Labs.Agents.Demo
 
         static void OnlineAgentExample()
         {
-            var environment = new Environment2<OnlineAgent, OnlineAgentState>(400, 400);
+            var environment = new Environment2<OnlineAgent, OnlineAgentState>(new Random(0), 400, 400);
             var agents = new OnlineAgent[100];
             var iteractions = new AgentInteractionCollection<OnlineAgent, Action2>(agents);
             var iteration = 0;

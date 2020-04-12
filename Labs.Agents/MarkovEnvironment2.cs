@@ -7,7 +7,7 @@ namespace Labs.Agents
         where TAgent : IAgent<MarkovEnvironment2<TAgent, TState>, TAgent, TState>
         where TState : AgentState2<MarkovEnvironment2<TAgent, TState>, TAgent, TState>
     {
-        public MarkovEnvironment2(int width, int height) : base(width, height)
+        public MarkovEnvironment2(Random random, int width, int height) : base(random, width, height)
         {
         }
 

@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
 
 namespace Labs.Agents
 {
@@ -7,8 +9,14 @@ namespace Labs.Agents
         where TState : AgentState2<TEnvironment, TAgent, TState>
         where TInteraction : AgentInteraction<TAgent, Action2>
     {
-        public Action2Environment(int width, int height) : base(width, height)
+        public Action2Environment(Random random, int width, int height) : base(random, width, height)
         {
+        }
+
+        public override void AddAgent(TAgent agent, Point point)
+        {
+            base.AddAgent(agent, point);
+            agent.State.Goal = GetRandomUnusedPosition();
         }
 
         public override void Apply(IEnumerable<TInteraction> interactions)
@@ -73,7 +81,6 @@ namespace Labs.Agents
                 {
                     int targetX = agentState.Field.X + interaction.Action.X;
                     int targetY = agentState.Field.Y + interaction.Action.Y;
-                    var targetField = fields[targetX, targetY];
 
                     if (fields.IsOutside(targetX, targetY))
                     {
@@ -81,17 +88,22 @@ namespace Labs.Agents
                         sourceField.InteractionResult = InteractionResult.Collision;
                         UndoAssignedInteraction(sourceX, sourceY);
                     }
-                    else if (targetField.IsObstacle == false && targetField.Interaction == null)
-                    {
-                        targetField.Interaction = interaction;
-                        targetField.InteractionResult = InteractionResult.Success;
-                    }
                     else
                     {
-                        sourceField.Interaction = interaction;
-                        sourceField.InteractionResult = InteractionResult.Collision;
-                        UndoAssignedInteraction(targetX, targetY);
-                        UndoAssignedInteraction(sourceX, sourceY);
+                        var targetField = fields[targetX, targetY];
+
+                        if (targetField.IsObstacle == false && targetField.Interaction == null)
+                        {
+                            targetField.Interaction = interaction;
+                            targetField.InteractionResult = InteractionResult.Success;
+                        }
+                        else
+                        {
+                            sourceField.Interaction = interaction;
+                            sourceField.InteractionResult = InteractionResult.Collision;
+                            UndoAssignedInteraction(targetX, targetY);
+                            UndoAssignedInteraction(sourceX, sourceY);
+                        }
                     }
                 }
             }

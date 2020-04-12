@@ -15,7 +15,7 @@ namespace Labs.Agents.Demo
         {
             for (int i = 0; i < Agents.Length; i++)
             {
-                Environment.AddAgent(Agents[i] = new DemoAgent(this), Environment.GetRandomUnusedPosition(Random));
+                Environment.AddAgent(Agents[i] = new DemoAgent(this), Environment.GetRandomUnusedPosition());
             }
         }
 

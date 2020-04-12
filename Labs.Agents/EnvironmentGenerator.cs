@@ -4,8 +4,9 @@ namespace Labs.Agents
 {
     public class EnvironmentGenerator
     {
-        public static void GenerateObstacles(Random random, IEnvironment environment, int numberOfObstacles, int obstacleMinSize, int obstacleMaxSize)
+        public static void GenerateObstacles(IEnvironment environment, int numberOfObstacles, int obstacleMinSize, int obstacleMaxSize)
         {
+            Random random = environment.Random;
             int width = environment.Width;
             int height = environment.Height;
             environment.AddObstacle(0, 0, width, 1);
