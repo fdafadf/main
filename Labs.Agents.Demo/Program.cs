@@ -17,7 +17,8 @@ namespace Labs.Agents.Demo
             var environmentWidth = 400;
             var environmentHeight = 300;
             var numberOfAgents = 120;
-            var environment = Environment2Generator<DemoAgent, DemoAgentState>.Generate(new Random(0), environmentWidth, environmentHeight, 200, 1, 20);
+            var environment = new Environment2<DemoAgent, DemoAgentState>(environmentWidth, environmentHeight);
+            EnvironmentGenerator.GenerateObstacles(new Random(0), environment, 200, 1, 20);
             var simulation = new DemoSimulation(environment, numberOfAgents);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
@@ -63,7 +64,7 @@ namespace Labs.Agents.Demo
         // Warto utworzyć sklasę dla stanu agenta, choćy po to aby pozbyć się parametrów typowych.
         // Można dodawać właściwości które opisują stan agenta i np. są przydatne są punktu widzenia 
         // zastosowanego algorytmu wyliczającego akcje.
-        class PrecalculatedAgentState : AgentState2<PrecalculatedAgent, PrecalculatedAgentState>
+        class PrecalculatedAgentState : AgentState2<Environment2<PrecalculatedAgent, PrecalculatedAgentState>, PrecalculatedAgent, PrecalculatedAgentState>
         {
         }
 
@@ -118,7 +119,7 @@ namespace Labs.Agents.Demo
             }
         }
 
-        class OnlineAgentState : AgentState2<OnlineAgent, OnlineAgentState>
+        class OnlineAgentState : AgentState2<Environment2<OnlineAgent, OnlineAgentState>, OnlineAgent, OnlineAgentState>
         {
         }
 

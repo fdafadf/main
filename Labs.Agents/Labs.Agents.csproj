@@ -51,9 +51,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Action2.cs" />
+    <Compile Include="Action2Environment.cs" />
     <Compile Include="AgentState1.cs" />
     <Compile Include="AgentState2.cs" />
-    <Compile Include="Environment2Generator.cs" />
+    <Compile Include="EnvironmentGenerator.cs" />
     <Compile Include="EnvironmentField.cs" />
     <Compile Include="IAgent.cs" />
     <Compile Include="Action1.cs" />
@@ -65,8 +66,10 @@
     <Compile Include="AgentInteraction.cs" />
     <Compile Include="AgentInteractionCollection.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="IEnvironment.cs" />
     <Compile Include="IEnvironmentField.cs" />
     <Compile Include="InteractionResult.cs" />
+    <Compile Include="MarkovEnvironment2.cs" />
     <Compile Include="Simulation.cs" />
     <Compile Include="SimulationForm.cs">
       <SubType>Form</SubType>

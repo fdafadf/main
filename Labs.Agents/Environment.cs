@@ -7,12 +7,12 @@ using System.Numerics;
 
 namespace Labs.Agents
 {
-    public abstract class Environment<TEnvironment, TAgent, TState, TInteraction>
+    public abstract class Environment<TEnvironment, TAgent, TState, TInteraction> : IEnvironment
         where TAgent : IAgent<TEnvironment, TAgent, TState>
         where TState : AgentState<TEnvironment, TAgent, TState>
     {
-        public readonly int Width;
-        public readonly int Height;
+        public int Width { get; }
+        public int Height { get; }
         protected readonly EnvironmentField<TEnvironment, TAgent, TState, TInteraction>[,] fields;
         EnvironmentField<TEnvironment, TAgent, TState, TInteraction> fieldOutside;
         
