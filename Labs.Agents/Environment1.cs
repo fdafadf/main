@@ -39,9 +39,9 @@ namespace Labs.Agents
             throw new NotImplementedException();
         }
 
-        protected override EnvironmentField<Environment1<TAgent, TState>, TAgent, TState, AgentInteraction<TAgent, Action1, InteractionResult>> CreateField(int x, int y)
+        protected override EnvironmentField<Environment1<TAgent, TState>, TAgent, TState> CreateField(int x, int y)
         {
-            return new EnvironmentField<Environment1<TAgent, TState>, TAgent, TState, AgentInteraction<TAgent, Action1, InteractionResult>>(this, x, y);
+            return new EnvironmentField<Environment1<TAgent, TState>, TAgent, TState>(this, x, y);
         }
     }
 }

@@ -71,6 +71,7 @@
     <Compile Include="IEnvironment.cs" />
     <Compile Include="IEnvironmentField.cs" />
     <Compile Include="InteractionResult.cs" />
+    <Compile Include="IPoint.cs" />
     <Compile Include="MarkovAgentInteraction.cs" />
     <Compile Include="MarkovEnvironment2.cs" />
     <Compile Include="Simulation.cs" />

@@ -1,6 +1,6 @@
 ﻿namespace Labs.Agents
 {
-    public class EnvironmentField<TEnvironment, TAgent, TState, TInteraction> : IEnvironmentField<TEnvironment, TAgent, TState>
+    public class EnvironmentField<TEnvironment, TAgent, TState> : IEnvironmentField<TEnvironment, TAgent, TState>
         where TAgent : IAgent<TEnvironment, TAgent, TState>
         where TState : AgentState<TEnvironment, TAgent, TState>
     {
@@ -12,8 +12,6 @@
         public int X { get; }
         public int Y { get; }
         TAgent agent;
-        internal TInteraction Interaction;
-        //internal InteractionResult InteractionResult;
 
         public EnvironmentField(TEnvironment environment, int x, int y)
         {

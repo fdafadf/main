@@ -9,8 +9,11 @@ namespace Labs.Agents
         where TState : AgentState2<TEnvironment, TAgent, TState>
         where TInteraction : AgentInteraction<TAgent, Action2, InteractionResult>
     {
+        protected readonly TInteraction[,] interactionByTarget;
+
         public Action2Environment(Random random, int width, int height) : base(random, width, height)
         {
+            interactionByTarget = new TInteraction[width, height];
         }
 
         public override TInteraction AddAgent(TAgent agent, Point point)
@@ -22,111 +25,118 @@ namespace Labs.Agents
 
         public override void Apply(IEnumerable<TInteraction> interactions)
         {
-            AssignInteractionsToFields(interactions);
-            UpdateFieldsFromAssignedInteractions();
+            UpdateInteractionByTarget(interactions);
+            UpdateAgentPositions(interactions);
+            AssignNewGoals();
         }
 
-        private void UpdateFieldsFromAssignedInteractions()
+        protected virtual void UpdateAgentPositions(IEnumerable<TInteraction> interactions)
         {
-            for (int x = 0; x < fields.GetLength(0); x++)
-            {
-                for (int y = 0; y < fields.GetLength(1); y++)
+            foreach (var interaction in interactions)
+            { 
+                var agent = interaction.Agent;
+                var agentState = interaction.Agent.State;
+
+                if (interaction.Result == InteractionResult.Success)
                 {
-                    var targetField = fields[x, y];
-                    var interaction = targetField.Interaction;
-
-                    if (interaction != null)
-                    {
-                        var agent = interaction.Agent;
-
-                        if (targetField.Interaction.Result == InteractionResult.Success)
-                        {
-                            var sourceField = fields[agent.State.Field.X, agent.State.Field.Y];
-                            sourceField.Agent = default;
-                            targetField.Agent = agent;
-                            agent.State.Field = targetField;
-                        }
-                        else if (targetField.Interaction.Result == InteractionResult.Collision)
-                        {
-                            agent.State.IsDestroyed = true;
-                        }
-                    }
+                    var sourceField = fields[interaction.SourceField.X, interaction.SourceField.Y];
+                    var targetField = fields[interaction.TargetField.X, interaction.TargetField.Y];
+                    sourceField.Agent = default;
+                    targetField.Agent = agent;
+                    agentState.Field = targetField;
+                }
+                else if (interaction.Result == InteractionResult.Collision)
+                {
+                    agentState.IsDestroyed = true;
                 }
             }
         }
 
-        private void AssignInteractionsToFields(IEnumerable<TInteraction> interactions)
+        protected void UpdateInteractionByTarget(IEnumerable<TInteraction> interactions)
         {
+            foreach (var interaction in interactions)
+            {
+                var agentState = interaction.Agent.State;
+                int sourceX = agentState.Field.X;
+                int sourceY = agentState.Field.Y;
+                int targetX = agentState.Field.X + interaction.Action.X;
+                int targetY = agentState.Field.Y + interaction.Action.Y;
+                interaction.SourceField = fields[sourceX, sourceY];
+                interaction.TargetField = fields[targetX, targetY];
+            }
+
             for (int y = 0; y < Height; y++)
             {
                 for (int x = 0; x < Width; x++)
                 {
-                    fields[x, y].Interaction = default;
+                    interactionByTarget[x, y] = null;
                 }
             }
 
             foreach (var interaction in interactions)
             {
                 var agentState = interaction.Agent.State;
-                int sourceX = agentState.Field.X;
-                int sourceY = agentState.Field.Y;
-                var sourceField = fields[sourceX, sourceY];
 
                 if (agentState.IsDestroyed)
                 {
-                    sourceField.Interaction = interaction;
-                    sourceField.Interaction.Result = InteractionResult.Ignored;
-                    UndoAssignedInteraction(sourceX, sourceY);
+                    UndoInteraction(interaction.SourceField.X, interaction.SourceField.Y);
+                    interaction.Result = InteractionResult.Ignored;
+                    interaction.TargetField = interaction.SourceField;
+                    interactionByTarget[interaction.SourceField.X, interaction.SourceField.Y] = interaction;
                 }
                 else
                 {
-                    int targetX = agentState.Field.X + interaction.Action.X;
-                    int targetY = agentState.Field.Y + interaction.Action.Y;
-
-                    if (fields.IsOutside(targetX, targetY))
+                    if (interaction.TargetField.IsOutside)
                     {
-                        sourceField.Interaction = interaction;
-                        sourceField.Interaction.Result = InteractionResult.Collision;
-                        UndoAssignedInteraction(sourceX, sourceY);
+                        UndoInteraction(interaction.SourceField.X, interaction.SourceField.Y);
+                        interaction.Result = InteractionResult.Collision;
+                        interaction.TargetField = interaction.SourceField;
+                        interactionByTarget[interaction.SourceField.X, interaction.SourceField.Y] = interaction;
                     }
                     else
                     {
-                        var targetField = fields[targetX, targetY];
-
-                        if (targetField.IsObstacle == false && targetField.Interaction == null)
+                        if (interaction.TargetField.IsObstacle == false && interactionByTarget[interaction.TargetField.X, interaction.TargetField.Y] == null)
                         {
-                            targetField.Interaction = interaction;
-                            targetField.Interaction.Result = InteractionResult.Success;
+                            interaction.Result = InteractionResult.Success;
+                            interactionByTarget[interaction.TargetField.X, interaction.TargetField.Y] = interaction;
                         }
                         else
                         {
-                            sourceField.Interaction = interaction;
-                            sourceField.Interaction.Result = InteractionResult.Collision;
-                            UndoAssignedInteraction(targetX, targetY);
-                            UndoAssignedInteraction(sourceX, sourceY);
+                            UndoInteraction(interaction.TargetField.X, interaction.TargetField.Y);
+                            UndoInteraction(interaction.SourceField.X, interaction.SourceField.Y);
+                            interaction.Result = InteractionResult.Collision;
+                            interaction.TargetField = interaction.SourceField;
                         }
                     }
                 }
             }
         }
 
-        private void UndoAssignedInteraction(int x, int y)
+        private void UndoInteraction(int x, int y)
         {
-            var field = fields[x, y];
-            var interaction = field.Interaction;
+            var interaction = interactionByTarget[x, y];
 
             if (interaction != null)
             {
-                var agent = interaction.Agent;
-                int sourceX = agent.State.Field.X;
-                int sourceY = agent.State.Field.Y;
+                int sourceX = interaction.SourceField.X;
+                int sourceY = interaction.SourceField.Y;
 
                 if (sourceX != x || sourceY != y)
                 {
-                    var sourceField = fields[sourceX, sourceY];
-                    field.Interaction = null;
-                    UndoAssignedInteraction(sourceX, sourceY);
-                    sourceField.Interaction = interaction;
+                    interactionByTarget[x, y] = null;
+                    UndoInteraction(sourceX, sourceY);
+                    interactionByTarget[sourceX, sourceY] = interaction;
+                }
+            }
+        }
+
+        private void AssignNewGoals()
+        {
+            foreach (TAgent agent in Agents)
+            {
+                if (agent.State.IsGoalReached)
+                {
+                    agent.State.Goal = GetRandomUnusedPosition();
                 }
             }
         }

@@ -11,10 +11,10 @@ namespace Labs.Agents
         {
         }
 
-        public override void Apply(IEnumerable<MarkovAgentInteraction<TAgent, Action2, InteractionResult>> interactions)
+        protected override void UpdateAgentPositions(IEnumerable<MarkovAgentInteraction<TAgent, Action2, InteractionResult>> interactions)
         {
-            base.Apply(interactions);
             CalculateRewards(interactions);
+            base.UpdateAgentPositions(interactions);
         }
 
         protected override MarkovAgentInteraction<TAgent, Action2, InteractionResult> CreateInteraction(TAgent agent)
@@ -22,9 +22,9 @@ namespace Labs.Agents
             return new MarkovAgentInteraction<TAgent, Action2, InteractionResult>(agent);
         }
 
-        protected override EnvironmentField<MarkovEnvironment2<TAgent, TState>, TAgent, TState, MarkovAgentInteraction<TAgent, Action2, InteractionResult>> CreateField(int x, int y)
+        protected override EnvironmentField<MarkovEnvironment2<TAgent, TState>, TAgent, TState> CreateField(int x, int y)
         {
-            return new EnvironmentField<MarkovEnvironment2<TAgent, TState>, TAgent, TState, MarkovAgentInteraction<TAgent, Action2, InteractionResult>>(this, x, y);
+            return new EnvironmentField<MarkovEnvironment2<TAgent, TState>, TAgent, TState>(this, x, y);
         }
 
         private void CalculateRewards(IEnumerable<MarkovAgentInteraction<TAgent, Action2, InteractionResult>> interactions)
@@ -45,10 +45,10 @@ namespace Labs.Agents
                     {
                         interaction.Reward = -0.1;
                     }
-                    else 
+                    else
                     {
-                        double distance = 0;
-                        double previousDistance = 0;
+                        double previousDistance = interaction.SourceField.Distance(interaction.Agent.State.Goal);
+                        double distance = interaction.TargetField.Distance(interaction.Agent.State.Goal);
                         interaction.Reward = previousDistance - distance;
                     }
                 }

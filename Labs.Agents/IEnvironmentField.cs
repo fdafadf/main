@@ -8,13 +8,11 @@
         TAgent Agent { get; }
     }
 
-    public interface IEnvironmentField
+    public interface IEnvironmentField : IPoint
     {
         bool IsOutside { get; }
         bool IsEmpty { get; }
         bool IsObstacle { get; }
         bool IsAgent { get; }
-        int X { get; }
-        int Y { get; }
     }
 }

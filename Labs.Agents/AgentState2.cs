@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using System.Numerics;
 
 namespace Labs.Agents
 {
@@ -8,5 +9,7 @@ namespace Labs.Agents
     {
         public Point Goal { get; internal set; }
         public bool IsDestroyed { get; internal set; }
+        public bool IsGoalReached => Goal.X == Field.X && Goal.Y == Field.Y;
+        public double DistanceToGoal => Field.Distance(Goal);
     }
 }

@@ -10,7 +10,7 @@ namespace Labs.Agents
         where TState : AgentState2<TEnvironment, TAgent, TState>
         where TInteraction : AgentInteraction<TAgent, Action2, InteractionResult>
     {
-        int iterationNumber;
+        protected int iterationNumber;
         protected TSimulation Simulation { get; }
 
         public Action2EnvironmentForm(TSimulation simulation)

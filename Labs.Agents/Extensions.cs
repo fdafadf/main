@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -7,6 +8,13 @@ namespace Labs.Agents
 {
     public static class Extensions
     {
+        public static double Distance(this IPoint self, Point p)
+        {
+            double dx = self.X - p.X;
+            double dy = self.Y - p.Y;
+            return Math.Sqrt(dx * dx + dy * dy);
+        }
+
         public static bool IsOutside<T>(this T[,] self, int x, int y)
         {
             return x < 0 || y < 0 || x >= self.GetLength(0) || y >= self.GetLength(1);

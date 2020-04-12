@@ -32,10 +32,14 @@ namespace Labs.Agents.NeuralNetworks
                         var field = historyItem.Input.Encoded[AgentNetworkInput.ObstaclesOffset + i++];
                         var pen = field > 0 ? Brushes.Black : Brushes.White;
                         e.Graphics.FillRectangle(pen, px + x * 10, py + y * 10, 9, 9);
-                        //var field = environment[px + x, py + y];
-                        //Encoded[i++] = field.IsOutside || field.IsObstacle ? 1 : 0;
                     }
                 }
+
+                px = Simulation.Environment.Width * scale + 25;
+                py = AgentNetworkInput.V * 10 + 25;
+                float dx = (float)historyItem.Input.Encoded[AgentNetworkInput.DirectionOffset] * 25;
+                float dy = (float)historyItem.Input.Encoded[AgentNetworkInput.DirectionOffset + 1] * 25;
+                e.Graphics.DrawLine(Pens.Black, px, py, px + dx, py + dy);
             }
         }
     }
