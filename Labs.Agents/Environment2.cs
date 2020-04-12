@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Labs.Agents
 {
-    public class Environment2<TAgent, TState> : Action2Environment<Environment2<TAgent, TState>, TAgent, TState, AgentInteraction<TAgent, Action2>>
+    public class Environment2<TAgent, TState> : Action2Environment<Environment2<TAgent, TState>, TAgent, TState, AgentInteraction<TAgent, Action2, InteractionResult>>
         where TAgent : IAgent<Environment2<TAgent, TState>, TAgent, TState> 
         where TState : AgentState2<Environment2<TAgent, TState>, TAgent, TState>
     {
@@ -11,14 +11,14 @@ namespace Labs.Agents
         {
         }
 
-        protected override EnvironmentField<Environment2<TAgent, TState>, TAgent, TState, AgentInteraction<TAgent, Action2>> CreateField(int x, int y)
+        protected override EnvironmentField<Environment2<TAgent, TState>, TAgent, TState, AgentInteraction<TAgent, Action2, InteractionResult>> CreateField(int x, int y)
         {
-            return new EnvironmentField<Environment2<TAgent, TState>, TAgent, TState, AgentInteraction<TAgent, Action2>>(this, x, y);
+            return new EnvironmentField<Environment2<TAgent, TState>, TAgent, TState, AgentInteraction<TAgent, Action2, InteractionResult>>(this, x, y);
         }
 
-        protected override AgentInteraction<TAgent, Action2> CreateInteraction(TAgent agent)
+        protected override AgentInteraction<TAgent, Action2, InteractionResult> CreateInteraction(TAgent agent)
         {
-            return new AgentInteraction<TAgent, Action2>(agent);
+            return new AgentInteraction<TAgent, Action2, InteractionResult>(agent);
         }
     }
 }

@@ -7,7 +7,7 @@ namespace Labs.Agents
     public abstract class Action2Environment<TEnvironment, TAgent, TState, TInteraction> : Environment<TEnvironment, TAgent, TState, TInteraction>
         where TAgent : IAgent<TEnvironment, TAgent, TState>
         where TState : AgentState2<TEnvironment, TAgent, TState>
-        where TInteraction : AgentInteraction<TAgent, Action2>
+        where TInteraction : AgentInteraction<TAgent, Action2, InteractionResult>
     {
         public Action2Environment(Random random, int width, int height) : base(random, width, height)
         {
@@ -39,14 +39,14 @@ namespace Labs.Agents
                     {
                         var agent = interaction.Agent;
 
-                        if (targetField.InteractionResult == InteractionResult.Success)
+                        if (targetField.Interaction.Result == InteractionResult.Success)
                         {
                             var sourceField = fields[agent.State.Field.X, agent.State.Field.Y];
                             sourceField.Agent = default;
                             targetField.Agent = agent;
                             agent.State.Field = targetField;
                         }
-                        else if (targetField.InteractionResult == InteractionResult.Collision)
+                        else if (targetField.Interaction.Result == InteractionResult.Collision)
                         {
                             agent.State.IsDestroyed = true;
                         }
@@ -75,7 +75,7 @@ namespace Labs.Agents
                 if (agentState.IsDestroyed)
                 {
                     sourceField.Interaction = interaction;
-                    sourceField.InteractionResult = InteractionResult.Ignored;
+                    sourceField.Interaction.Result = InteractionResult.Ignored;
                     UndoAssignedInteraction(sourceX, sourceY);
                 }
                 else
@@ -86,7 +86,7 @@ namespace Labs.Agents
                     if (fields.IsOutside(targetX, targetY))
                     {
                         sourceField.Interaction = interaction;
-                        sourceField.InteractionResult = InteractionResult.Collision;
+                        sourceField.Interaction.Result = InteractionResult.Collision;
                         UndoAssignedInteraction(sourceX, sourceY);
                     }
                     else
@@ -96,12 +96,12 @@ namespace Labs.Agents
                         if (targetField.IsObstacle == false && targetField.Interaction == null)
                         {
                             targetField.Interaction = interaction;
-                            targetField.InteractionResult = InteractionResult.Success;
+                            targetField.Interaction.Result = InteractionResult.Success;
                         }
                         else
                         {
                             sourceField.Interaction = interaction;
-                            sourceField.InteractionResult = InteractionResult.Collision;
+                            sourceField.Interaction.Result = InteractionResult.Collision;
                             UndoAssignedInteraction(targetX, targetY);
                             UndoAssignedInteraction(sourceX, sourceY);
                         }

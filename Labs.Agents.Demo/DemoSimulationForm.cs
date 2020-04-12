@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 using DemoEnvironment = Labs.Agents.Environment2<Labs.Agents.Demo.DemoAgent, Labs.Agents.Demo.DemoAgentState>;
-using DemoInteraction = Labs.Agents.AgentInteraction<Labs.Agents.Demo.DemoAgent, Labs.Agents.Action2>;
+using DemoInteraction = Labs.Agents.AgentInteraction<Labs.Agents.Demo.DemoAgent, Labs.Agents.Action2, Labs.Agents.InteractionResult>;
 
 namespace Labs.Agents.Demo
 {

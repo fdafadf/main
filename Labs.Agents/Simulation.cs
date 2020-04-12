@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Labs.Agents
 {
@@ -8,17 +9,13 @@ namespace Labs.Agents
     {
         public Random Random { get; }
         public TEnvironment Environment { get; }
-        public TAgent[] Agents { get; }
 
-        public Simulation(TEnvironment environment, int numberOfAgents)
+        public Simulation(TEnvironment environment)
         {
             Environment = environment;
             Random = new Random(0);
-            Agents = new TAgent[numberOfAgents];
-            InitializeAgents();
         }
 
         public abstract void Step();
-        protected abstract void InitializeAgents();
     }
 }

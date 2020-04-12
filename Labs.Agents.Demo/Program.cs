@@ -78,7 +78,7 @@ namespace Labs.Agents.Demo
             var agents = new PrecalculatedAgent[100];
             // Aby wykonać pojedynczy krok symulacji, potrzebujemy opisać interakcje agentów ze środowiskiem.
             // Podczas dodawania agenta do środowiska otrzymujemy obiekt który pozwala opisać interakcję agenta.
-            var interactions = new List<AgentInteraction<PrecalculatedAgent, Action2>>();
+            var interactions = new List<AgentInteraction<PrecalculatedAgent, Action2, InteractionResult>>();
 
             for (int i = 0; i < agents.Length; i++)
             {
@@ -129,7 +129,7 @@ namespace Labs.Agents.Demo
         {
             var environment = new Environment2<OnlineAgent, OnlineAgentState>(new Random(0), 400, 400);
             var agents = new OnlineAgent[100];
-            var interactions = new List<AgentInteraction<OnlineAgent, Action2>>();
+            var interactions = new List<AgentInteraction<OnlineAgent, Action2, InteractionResult>>();
             var iteration = 0;
 
             while (AllAgentsFinished() == false)

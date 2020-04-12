@@ -13,7 +13,7 @@
         public int Y { get; }
         TAgent agent;
         internal TInteraction Interaction;
-        internal InteractionResult InteractionResult;
+        //internal InteractionResult InteractionResult;
 
         public EnvironmentField(TEnvironment environment, int x, int y)
         {

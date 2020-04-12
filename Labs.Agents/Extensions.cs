@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace Labs.Agents
@@ -54,6 +56,28 @@ namespace Labs.Agents
             {
                 action();
             });
+        }
+
+        public static IEnumerable<T> Subset<T>(this IEnumerable<T> self, int size, Random random)
+        {
+            var enumerator = self.GetEnumerator();
+            double available = self.Count();
+            int selected = 0;
+            int needed = size;
+
+            while (selected < size)
+            {
+                enumerator.MoveNext();
+
+                if (random.NextDouble() < needed / available)
+                {
+                    yield return enumerator.Current;
+                    needed--;
+                    selected++;
+                }
+
+                available--;
+            }
         }
     }
 }

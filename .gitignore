@@ -90,3 +90,6 @@
 /Labs.Agents.Demo/obj/Debug
 /Labs.Agents.NeuralNetworks/obj/Debug
 /Labs.Agents.NeuralNetworks/bin/Debug
+/Labs.Agents.Demo/obj/Release
+/Labs.Agents.NeuralNetworks/bin/Release
+/Labs.Agents.NeuralNetworks/obj/Release

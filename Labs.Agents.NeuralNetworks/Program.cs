@@ -13,16 +13,16 @@ namespace Labs.Agents.NeuralNetworks
         [STAThread]
         static void Main()
         {
-            var environmentWidth = 200;
-            var environmentHeight = 150;
-            var numberOfAgents = 80;
-            var numberOfObstacles = 180;
-            var environment = new MarkovEnvironment2<Agent, AgentState>(new Random(0), environmentWidth, environmentHeight);
-            EnvironmentGenerator.GenerateObstacles(environment, numberOfObstacles, 1, 20);
-            var simulation = new Simulation(environment, numberOfAgents);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new EnvironmentForm(simulation));
+            Application.Run(new EnvironmentForm(Simulation(200, 150, 1, 0)));
+        }
+
+        static Simulation Simulation(int environmentWidth, int environmentHeight, int numberOfAgents, int numberOfObstacles)
+        {
+            var environment = new MarkovEnvironment2<Agent, AgentState>(new Random(0), environmentWidth, environmentHeight);
+            EnvironmentGenerator.GenerateObstacles(environment, numberOfObstacles, 1, 20);
+            return new Simulation(environment, numberOfAgents);
         }
     }
 }

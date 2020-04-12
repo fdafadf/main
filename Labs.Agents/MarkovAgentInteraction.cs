@@ -1,6 +1,6 @@
 ﻿namespace Labs.Agents
 {
-    public class MarkovAgentInteraction<TAgent, TAction> : AgentInteraction<TAgent, TAction>
+    public class MarkovAgentInteraction<TAgent, TAction, TResult> : AgentInteraction<TAgent, TAction, TResult>
     {
         public double Reward;
 

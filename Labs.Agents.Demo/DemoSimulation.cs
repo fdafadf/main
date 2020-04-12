@@ -5,17 +5,13 @@ namespace Labs.Agents.Demo
 {
     public class DemoSimulation : Simulation<Environment2<DemoAgent, DemoAgentState>, DemoAgent, DemoAgentState>
     {
-        List<AgentInteraction<DemoAgent, Action2>> EnvironmentIteractions = new List<AgentInteraction<DemoAgent, Action2>>();
+        List<AgentInteraction<DemoAgent, Action2, InteractionResult>> EnvironmentIteractions = new List<AgentInteraction<DemoAgent, Action2, InteractionResult>>();
 
-        public DemoSimulation(Environment2<DemoAgent, DemoAgentState> environment, int numberOfAgents) : base(environment, numberOfAgents)
+        public DemoSimulation(Environment2<DemoAgent, DemoAgentState> environment, int numberOfAgents) : base(environment)
         {
-        }
-
-        protected override void InitializeAgents()
-        {
-            for (int i = 0; i < Agents.Length; i++)
+            for (int i = 0; i < numberOfAgents; i++)
             {
-                var interaction = Environment.AddAgent(Agents[i] = new DemoAgent(this), Environment.GetRandomUnusedPosition());
+                var interaction = Environment.AddAgent(new DemoAgent(this), Environment.GetRandomUnusedPosition());
                 EnvironmentIteractions.Add(interaction);
             }
         }

@@ -4,7 +4,7 @@ using System.Drawing;
 
 namespace Labs.Agents
 {
-    public class Environment1<TAgent, TState> : Environment<Environment1<TAgent, TState>, TAgent, TState, AgentInteraction<TAgent, Action1>>
+    public class Environment1<TAgent, TState> : Environment<Environment1<TAgent, TState>, TAgent, TState, AgentInteraction<TAgent, Action1, InteractionResult>>
         where TAgent : IAgent<Environment1<TAgent, TState>, TAgent, TState>
         where TState : AgentState1<TAgent, TState>
     {
@@ -12,7 +12,7 @@ namespace Labs.Agents
         {
         }
 
-        public override void Apply(IEnumerable<AgentInteraction<TAgent, Action1>> iteractions)
+        public override void Apply(IEnumerable<AgentInteraction<TAgent, Action1, InteractionResult>> iteractions)
         {
             foreach (var iteraction in iteractions)
             {
@@ -34,14 +34,14 @@ namespace Labs.Agents
             }
         }
 
-        protected override AgentInteraction<TAgent, Action1> CreateInteraction(TAgent agent)
+        protected override AgentInteraction<TAgent, Action1, InteractionResult> CreateInteraction(TAgent agent)
         {
             throw new NotImplementedException();
         }
 
-        protected override EnvironmentField<Environment1<TAgent, TState>, TAgent, TState, AgentInteraction<TAgent, Action1>> CreateField(int x, int y)
+        protected override EnvironmentField<Environment1<TAgent, TState>, TAgent, TState, AgentInteraction<TAgent, Action1, InteractionResult>> CreateField(int x, int y)
         {
-            return new EnvironmentField<Environment1<TAgent, TState>, TAgent, TState, AgentInteraction<TAgent, Action1>>(this, x, y);
+            return new EnvironmentField<Environment1<TAgent, TState>, TAgent, TState, AgentInteraction<TAgent, Action1, InteractionResult>>(this, x, y);
         }
     }
 }

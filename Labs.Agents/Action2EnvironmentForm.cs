@@ -8,7 +8,7 @@ namespace Labs.Agents
         where TEnvironment : Action2Environment<TEnvironment, TAgent, TState, TInteraction> 
         where TAgent : IAgent<TEnvironment, TAgent, TState>
         where TState : AgentState2<TEnvironment, TAgent, TState>
-        where TInteraction : AgentInteraction<TAgent, Action2>
+        where TInteraction : AgentInteraction<TAgent, Action2, InteractionResult>
     {
         int iterationNumber;
         protected TSimulation Simulation { get; }
