@@ -13,10 +13,11 @@ namespace Labs.Agents
         {
         }
 
-        public override void AddAgent(TAgent agent, Point point)
+        public override TInteraction AddAgent(TAgent agent, Point point)
         {
-            base.AddAgent(agent, point);
+            TInteraction interaction = base.AddAgent(agent, point);
             agent.State.Goal = GetRandomUnusedPosition();
+            return interaction;
         }
 
         public override void Apply(IEnumerable<TInteraction> interactions)

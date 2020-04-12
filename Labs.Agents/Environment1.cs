@@ -12,11 +12,6 @@ namespace Labs.Agents
         {
         }
 
-        protected override EnvironmentField<Environment1<TAgent, TState>, TAgent, TState, AgentInteraction<TAgent, Action1>> CreateField(int x, int y)
-        {
-            return new EnvironmentField<Environment1<TAgent, TState>, TAgent, TState, AgentInteraction<TAgent, Action1>>(this, x, y);
-        }
-
         public override void Apply(IEnumerable<AgentInteraction<TAgent, Action1>> iteractions)
         {
             foreach (var iteraction in iteractions)
@@ -37,6 +32,16 @@ namespace Labs.Agents
                         break;
                 }
             }
+        }
+
+        protected override AgentInteraction<TAgent, Action1> CreateInteraction(TAgent agent)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override EnvironmentField<Environment1<TAgent, TState>, TAgent, TState, AgentInteraction<TAgent, Action1>> CreateField(int x, int y)
+        {
+            return new EnvironmentField<Environment1<TAgent, TState>, TAgent, TState, AgentInteraction<TAgent, Action1>>(this, x, y);
         }
     }
 }

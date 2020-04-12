@@ -76,12 +76,16 @@ namespace Labs.Agents.Demo
             var environment = new Environment2<PrecalculatedAgent, PrecalculatedAgentState>(new Random(0), 100, 100);
             // Tworzymy 100 agentów
             var agents = new PrecalculatedAgent[100];
+            // Aby wykonać pojedynczy krok symulacji, potrzebujemy opisać interakcje agentów ze środowiskiem.
+            // Podczas dodawania agenta do środowiska otrzymujemy obiekt który pozwala opisać interakcję agenta.
+            var interactions = new List<AgentInteraction<PrecalculatedAgent, Action2>>();
 
             for (int i = 0; i < agents.Length; i++)
             {
                 agents[i] = new PrecalculatedAgent();
                 var position = environment.GetRandomUnusedPosition();
-                environment.AddAgent(agents[i], position);
+                var interaction = environment.AddAgent(agents[i], position);
+                interactions.Add(interaction);
             }
 
             // Wyliczamy z góry wszystkie akcje agentów 
@@ -91,9 +95,6 @@ namespace Labs.Agents.Demo
                 agents[i].Precalculate();
             }
 
-            // Aby wykonać pojedynczy krok symulacji, potrzebujemy opisać interakcje agentów ze środowiskiem.
-            // Do tego pomocna jest klasa AgentIteractionCollection.
-            var interactions = new AgentInteractionCollection<PrecalculatedAgent, Action2>(agents);
             var iterationStep = 0;
 
             while (AllAgentsFinished() == false) // ten warunek jest tylko przykładowy
@@ -128,17 +129,17 @@ namespace Labs.Agents.Demo
         {
             var environment = new Environment2<OnlineAgent, OnlineAgentState>(new Random(0), 400, 400);
             var agents = new OnlineAgent[100];
-            var iteractions = new AgentInteractionCollection<OnlineAgent, Action2>(agents);
+            var interactions = new List<AgentInteraction<OnlineAgent, Action2>>();
             var iteration = 0;
 
             while (AllAgentsFinished() == false)
             {
-                foreach (var iteraction in iteractions)
+                foreach (var interaction in interactions)
                 {
-                    iteraction.Action = iteraction.Agent.CalculateAction();
+                    interaction.Action = interaction.Agent.CalculateAction();
                 }
 
-                environment.Apply(iteractions);
+                environment.Apply(interactions);
                 iteration++;
             }
         }

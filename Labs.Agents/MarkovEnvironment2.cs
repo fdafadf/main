@@ -17,6 +17,11 @@ namespace Labs.Agents
             CalculateRewards(interactions);
         }
 
+        protected override MarkovAgentInteraction<TAgent, Action2> CreateInteraction(TAgent agent)
+        {
+            return new MarkovAgentInteraction<TAgent, Action2>(agent);
+        }
+
         protected override EnvironmentField<MarkovEnvironment2<TAgent, TState>, TAgent, TState, MarkovAgentInteraction<TAgent, Action2>> CreateField(int x, int y)
         {
             return new EnvironmentField<MarkovEnvironment2<TAgent, TState>, TAgent, TState, MarkovAgentInteraction<TAgent, Action2>>(this, x, y);

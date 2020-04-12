@@ -64,11 +64,11 @@
     <Compile Include="CardinalPoint.cs" />
     <Compile Include="Environment.cs" />
     <Compile Include="AgentInteraction.cs" />
-    <Compile Include="AgentInteractionCollection.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="IEnvironment.cs" />
     <Compile Include="IEnvironmentField.cs" />
     <Compile Include="InteractionResult.cs" />
+    <Compile Include="MarkovAgentInteraction.cs" />
     <Compile Include="MarkovEnvironment2.cs" />
     <Compile Include="Simulation.cs" />
     <Compile Include="SimulationForm.cs">

@@ -37,6 +37,7 @@ namespace Labs.Agents
         }
 
         public abstract void Apply(IEnumerable<TInteraction> iteractions);
+        protected abstract TInteraction CreateInteraction(TAgent agent);
         protected abstract EnvironmentField<TEnvironment, TAgent, TState, TInteraction> CreateField(int x, int y);
 
         public IEnvironmentField<TEnvironment, TAgent, TState> this[int x, int y]
@@ -69,7 +70,7 @@ namespace Labs.Agents
             }
         }
 
-        public virtual void AddAgent(TAgent agent, Point point)
+        public virtual TInteraction AddAgent(TAgent agent, Point point)
         {
             var field = fields[point.X, point.Y];
 
@@ -78,6 +79,7 @@ namespace Labs.Agents
                 agent.State.Field = field;
                 field.Agent = agent;
                 agents.Add(agent);
+                return CreateInteraction(agent);
             }
             else
             {
