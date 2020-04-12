@@ -11,9 +11,9 @@ namespace Labs.Agents
         {
         }
 
-        protected override EnvironmentField<Environment1<TAgent, TState>, TAgent, TState> CreateField(int x, int y)
+        protected override EnvironmentField<Environment1<TAgent, TState>, TAgent, TState, AgentInteraction<TAgent, Action1>> CreateField(int x, int y)
         {
-            return new EnvironmentField<Environment1<TAgent, TState>, TAgent, TState>(this, x, y);
+            return new EnvironmentField<Environment1<TAgent, TState>, TAgent, TState, AgentInteraction<TAgent, Action1>>(this, x, y);
         }
 
         public override void Apply(IEnumerable<AgentInteraction<TAgent, Action1>> iteractions)

@@ -1,17 +1,19 @@
 ﻿namespace Labs.Agents
 {
-    public class EnvironmentField<TEnvironment, TAgent, TState>
+    public class EnvironmentField<TEnvironment, TAgent, TState, TInteraction> : IEnvironmentField<TEnvironment, TAgent, TState>
         where TAgent : IAgent<TEnvironment, TAgent, TState>
         where TState : AgentState<TEnvironment, TAgent, TState>
     {
-        public readonly TEnvironment Environment;
-        public bool IsOutside;
-        public bool IsEmpty;
-        public bool IsObstacle;
-        public bool IsAgent;
-        public readonly int X;
-        public readonly int Y;
+        public TEnvironment Environment { get; }
+        public bool IsOutside { get; internal set; }
+        public bool IsEmpty { get; internal set; }
+        public bool IsObstacle { get; internal set; }
+        public bool IsAgent { get; internal set; }
+        public int X { get; }
+        public int Y { get; }
         TAgent agent;
+        internal TInteraction Interaction;
+        internal InteractionResult InteractionResult;
 
         public EnvironmentField(TEnvironment environment, int x, int y)
         {

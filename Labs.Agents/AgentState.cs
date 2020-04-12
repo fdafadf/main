@@ -7,6 +7,6 @@ namespace Labs.Agents
         where TAgent : IAgent<TEnvironment, TAgent, TState>
         where TState : AgentState<TEnvironment, TAgent, TState>
     {
-        public EnvironmentField<TEnvironment, TAgent, TState> Field { get; internal set; }
+        public IEnvironmentField<TEnvironment, TAgent, TState> Field { get; internal set; }
     }
 }

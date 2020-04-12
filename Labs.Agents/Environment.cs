@@ -7,20 +7,20 @@ using System.Numerics;
 
 namespace Labs.Agents
 {
-    public abstract class Environment<TEnvironment, TAgent, TState, TIteraction>
+    public abstract class Environment<TEnvironment, TAgent, TState, TInteraction>
         where TAgent : IAgent<TEnvironment, TAgent, TState>
         where TState : AgentState<TEnvironment, TAgent, TState>
     {
         public readonly int Width;
         public readonly int Height;
-        protected readonly EnvironmentField<TEnvironment, TAgent, TState>[,] fields;
-        EnvironmentField<TEnvironment, TAgent, TState> fieldOutside;
+        protected readonly EnvironmentField<TEnvironment, TAgent, TState, TInteraction>[,] fields;
+        EnvironmentField<TEnvironment, TAgent, TState, TInteraction> fieldOutside;
         
         public Environment(int width, int height)
         {
             Width = width;
             Height = height;
-            fields = new EnvironmentField<TEnvironment, TAgent, TState>[width, height];
+            fields = new EnvironmentField<TEnvironment, TAgent, TState, TInteraction>[width, height];
             fieldOutside = CreateField(-1, -1);
 
             for (int y = 0; y < height; y++)
@@ -32,10 +32,10 @@ namespace Labs.Agents
             }
         }
 
-        public abstract void Apply(IEnumerable<TIteraction> iteractions);
-        protected abstract EnvironmentField<TEnvironment, TAgent, TState> CreateField(int x, int y);
+        public abstract void Apply(IEnumerable<TInteraction> iteractions);
+        protected abstract EnvironmentField<TEnvironment, TAgent, TState, TInteraction> CreateField(int x, int y);
 
-        public EnvironmentField<TEnvironment, TAgent, TState> this[int x, int y]
+        public IEnvironmentField<TEnvironment, TAgent, TState> this[int x, int y]
         {
             get
             {
@@ -67,10 +67,12 @@ namespace Labs.Agents
 
         public void AddAgent(TAgent agent, Point point)
         {
-            if (this[point.X, point.Y].IsEmpty)
+            var field = fields[point.X, point.Y];
+
+            if (field.IsEmpty)
             {
-                agent.State.Field = fields[point.X, point.Y];
-                agent.State.Field.Agent = agent;
+                agent.State.Field = field;
+                field.Agent = agent;
             }
             else
             {
