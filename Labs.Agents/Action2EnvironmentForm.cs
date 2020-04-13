@@ -1,9 +1,9 @@
-﻿using System.Drawing;
+﻿using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace Labs.Agents
 {
-    public abstract class Action2EnvironmentForm<TSimulation, TEnvironment, TAgent, TState, TInteraction> : SimulationForm
+    public class Action2EnvironmentForm<TSimulation, TEnvironment, TAgent, TState, TInteraction> : EnvironmentForm
         where TSimulation : Simulation<TEnvironment, TAgent, TState>
         where TEnvironment : Action2Environment<TEnvironment, TAgent, TState, TInteraction> 
         where TAgent : IAgent<TEnvironment, TAgent, TState>
@@ -29,26 +29,9 @@ namespace Labs.Agents
         {
             int scale = 3;
             var environment = Simulation.Environment;
-            DrawObstacles<TEnvironment, TAgent, TState>(e.Graphics, environment, scale);
-            DrawGoals(e.Graphics, environment, scale);
-            DrawAgents<TEnvironment, TAgent, TState>(e.Graphics, environment, scale);
-        }
-
-        private void DrawGoals(Graphics graphics, TEnvironment environment, int scale)
-        {
-            foreach (var agent in environment.Agents)
-            {
-                var agentState = agent.State;
-
-                if (agentState.Goal != Point.Empty)
-                {
-                    var ax = agentState.Field.X;
-                    var ay = agentState.Field.Y;
-                    var bx = agentState.Goal.X;
-                    var by = agentState.Goal.Y;
-                    graphics.DrawLine(Pens.LightBlue, ax * scale, ay * scale, bx * scale, by * scale);
-                }
-            }
+            //EnvironmentPainter.DrawObstacles(e.Graphics, environment, scale);
+            //DrawGoals(e.Graphics, environment, scale);
+            //EnvironmentPainter.DrawAgents<TEnvironment, TAgent, TState>(e.Graphics, environment.Agents, scale);
         }
     }
 }

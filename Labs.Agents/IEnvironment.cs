@@ -11,6 +11,7 @@ namespace Labs.Agents
         int Height { get; }
         void AddObstacle(int x, int y, int width, int height);
         Point GetRandomUnusedPosition();
+        IEnvironmentField this[int x, int y] { get; }
     }
 
     public interface IEnvironment<TEnvironment, TAgent, TState> : IEnvironment
@@ -18,7 +19,7 @@ namespace Labs.Agents
         where TState : AgentState<TEnvironment, TAgent, TState>
     {
         IEnumerable<TAgent> Agents { get; }
-        IEnvironmentField<TEnvironment, TAgent, TState> this[int x, int y] { get; }
+        new IEnvironmentField<TEnvironment, TAgent, TState> this[int x, int y] { get; }
     }
 
 }

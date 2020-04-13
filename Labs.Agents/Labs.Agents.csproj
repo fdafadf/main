@@ -52,13 +52,12 @@
   <ItemGroup>
     <Compile Include="Action2.cs" />
     <Compile Include="Action2Environment.cs" />
-    <Compile Include="Action2EnvironmentForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="Action2EnvironmentPainter.cs" />
     <Compile Include="AgentState1.cs" />
     <Compile Include="AgentState2.cs" />
     <Compile Include="EnvironmentGenerator.cs" />
     <Compile Include="EnvironmentField.cs" />
+    <Compile Include="EnvironmentPainter.cs" />
     <Compile Include="IAgent.cs" />
     <Compile Include="Action1.cs" />
     <Compile Include="Environment1.cs" />
@@ -71,20 +70,13 @@
     <Compile Include="IEnvironment.cs" />
     <Compile Include="IEnvironmentField.cs" />
     <Compile Include="InteractionResult.cs" />
+    <Compile Include="IPainter.cs" />
     <Compile Include="IPoint.cs" />
     <Compile Include="MarkovAgentInteraction.cs" />
     <Compile Include="MarkovEnvironment2.cs" />
     <Compile Include="Simulation.cs" />
-    <Compile Include="SimulationForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="SimulationForm.Designer.cs">
-      <DependentUpon>SimulationForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="SimulationForm.resx">
-      <DependentUpon>SimulationForm.cs</DependentUpon>
-    </EmbeddedResource>
+    <Compile Include="SimulationTask.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

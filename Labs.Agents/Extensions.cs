@@ -58,12 +58,19 @@ namespace Labs.Agents
             return self;
         }
 
-        public static void InvokeAction(this Form self, Action action)
+        public static void InvokeAction(this Control self, Action action)
         {
-            self.Invoke((MethodInvoker)delegate
+            if (self.InvokeRequired)
+            {
+                self.Invoke((MethodInvoker)delegate
+                {
+                    action();
+                });
+            }
+            else
             {
                 action();
-            });
+            }
         }
 
         public static IEnumerable<T> Subset<T>(this IEnumerable<T> self, int size, Random random)

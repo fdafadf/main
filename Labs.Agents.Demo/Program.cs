@@ -23,7 +23,7 @@ namespace Labs.Agents.Demo
             var simulation = new DemoSimulation(environment, numberOfAgents);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new DemoSimulationForm(simulation));
+            Application.Run(new DemoForm(simulation));
         }
 
         #region Przykłady (Pseudokod)

@@ -40,13 +40,8 @@ namespace Labs.Agents
         protected abstract TInteraction CreateInteraction(TAgent agent);
         protected abstract EnvironmentField<TEnvironment, TAgent, TState> CreateField(int x, int y);
 
-        public IEnvironmentField<TEnvironment, TAgent, TState> this[int x, int y]
-        {
-            get
-            {
-                return fields.IsOutside(x, y) ? fieldOutside : fields[x, y];
-            }
-        }
+        public IEnvironmentField<TEnvironment, TAgent, TState> this[int x, int y] => fields.IsOutside(x, y) ? fieldOutside : fields[x, y];
+        IEnvironmentField IEnvironment.this[int x, int y] => this[x, y];
 
         public void AddObstacle(int x, int y, int width, int height)
         {

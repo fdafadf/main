@@ -5,16 +5,16 @@ using Interaction = Labs.Agents.MarkovAgentInteraction<Labs.Agents.NeuralNetwork
 
 namespace Labs.Agents.NeuralNetworks
 {
-    public class EnvironmentForm : Action2EnvironmentForm<Simulation, MarkovEnvironment2<Agent, AgentState>, Agent, AgentState, Interaction>
+    public class EnvironmentForm : Form //Action2EnvironmentForm<Simulation, MarkovEnvironment2<Agent, AgentState>, Agent, AgentState, Interaction>
     {
-        public EnvironmentForm(Simulation simulation) : base(simulation)
+        public EnvironmentForm(Simulation simulation) : base()
         {
         }
 
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
-
+            /*
             if (Simulation.History.Any())
             {
                 int scale = 3;
@@ -41,6 +41,19 @@ namespace Labs.Agents.NeuralNetworks
                 float dy = (float)historyItem.Input.Encoded[AgentNetworkInput.DirectionOffset + 1] * 25;
                 e.Graphics.DrawLine(Pens.Black, px, py, px + dx, py + dy);
             }
+            */
+        }
+
+        private void InitializeComponent()
+        {
+            this.SuspendLayout();
+            // 
+            // EnvironmentForm
+            // 
+            this.ClientSize = new System.Drawing.Size(607, 328);
+            this.Name = "EnvironmentForm";
+            this.ResumeLayout(false);
+
         }
     }
 }

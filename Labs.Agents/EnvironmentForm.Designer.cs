@@ -1,6 +1,6 @@
 ﻿namespace Labs.Agents
 {
-    partial class SimulationForm
+    partial class EnvironmentForm
     {
         /// <summary>
         /// Required designer variable.
