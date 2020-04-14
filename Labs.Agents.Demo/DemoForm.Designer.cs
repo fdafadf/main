@@ -48,11 +48,11 @@
             // toolStripContainer1.ContentPanel
             // 
             this.toolStripContainer1.ContentPanel.Controls.Add(this.environmentControl);
-            this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(800, 403);
+            this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(784, 514);
             this.toolStripContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.toolStripContainer1.Location = new System.Drawing.Point(0, 0);
             this.toolStripContainer1.Name = "toolStripContainer1";
-            this.toolStripContainer1.Size = new System.Drawing.Size(800, 450);
+            this.toolStripContainer1.Size = new System.Drawing.Size(784, 561);
             this.toolStripContainer1.TabIndex = 0;
             this.toolStripContainer1.Text = "toolStripContainer1";
             // 
@@ -63,7 +63,7 @@
             this.iterationStatusLabel});
             this.statusStrip1.Location = new System.Drawing.Point(0, 0);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(800, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(784, 22);
             this.statusStrip1.TabIndex = 0;
             // 
             // iterationStatusLabel
@@ -73,16 +73,17 @@
             // 
             // environmentControl
             // 
-            this.environmentControl.Location = new System.Drawing.Point(12, 13);
+            this.environmentControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.environmentControl.Location = new System.Drawing.Point(0, 0);
             this.environmentControl.Name = "environmentControl";
-            this.environmentControl.Size = new System.Drawing.Size(657, 274);
+            this.environmentControl.Size = new System.Drawing.Size(784, 514);
             this.environmentControl.TabIndex = 0;
             // 
             // DemoForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(784, 561);
             this.Controls.Add(this.toolStripContainer1);
             this.DoubleBuffered = true;
             this.Name = "DemoForm";
