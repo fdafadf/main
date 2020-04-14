@@ -14,16 +14,9 @@ namespace Labs.Agents.Demo
         [STAThread]
         static void Main()
         {
-            var environmentWidth = 200;
-            var environmentHeight = 150;
-            var numberOfAgents = 80;
-            var numberOfObstacles = 180;
-            var environment = new Environment2<DemoAgent, DemoAgentState>(new Random(0), environmentWidth, environmentHeight);
-            EnvironmentGenerator.GenerateObstacles(environment, numberOfObstacles, 1, 20);
-            var simulation = new DemoSimulation(environment, numberOfAgents);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new DemoForm(simulation));
+            Application.Run(new DemoForm());
         }
 
         #region Przykłady (Pseudokod)

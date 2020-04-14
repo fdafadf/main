@@ -8,6 +8,11 @@ namespace Labs.Agents.NeuralNetworks
         {
         }
 
+        public Prediction Predict(AgentState state)
+        {
+            return Predict(new AgentNetworkInput(state));
+        }
+
         public Prediction Predict(AgentNetworkInput input)
         {
             double bestValue = double.MinValue;

@@ -48,7 +48,6 @@
   <ItemGroup>
     <Compile Include="DemoAgent.cs" />
     <Compile Include="DemoAgentState.cs" />
-    <Compile Include="DemoSimulation.cs" />
     <Compile Include="DemoForm.cs">
       <SubType>Form</SubType>
     </Compile>

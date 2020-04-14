@@ -2,31 +2,60 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.Linq;
 using Interaction = Labs.Agents.MarkovAgentInteraction<Labs.Agents.NeuralNetworks.Agent, Labs.Agents.Action2, Labs.Agents.InteractionResult>;
 
 namespace Labs.Agents.NeuralNetworks
 {
-    public class Simulation : Simulation<MarkovEnvironment2<Agent, AgentState>, Agent, AgentState>
+    public class Simulation //: Simulation<MarkovEnvironment2<Agent, AgentState>, Agent, AgentState>
     {
+        public MarkovEnvironment2<Agent, AgentState> MarkovEnvironment { get; }
         List<Interaction> EnvironmentIteractions = new List<Interaction>();
         public List<HistoryItem> History = new List<HistoryItem>();
         AgentNetwork Network = new AgentNetwork();
+        bool Training;
+        public int StepNumber = 0;
 
-        public Simulation(MarkovEnvironment2<Agent, AgentState> environment, int numberOfAgents) : base(environment)
+        public Simulation(MarkovEnvironment2<Agent, AgentState> environment, int numberOfAgents) //: base(environment)
         {
-            CreateAgents(numberOfAgents);
+            MarkovEnvironment = environment;
+            AddAgents(numberOfAgents);
         }
 
-        public override void Step()
+        public Simulation(MarkovEnvironment2<Agent, AgentState> environment, bool[,] agentsMap) //: base(environment)
         {
+            MarkovEnvironment = environment;
+            AddAgents(agentsMap);
+        }
+
+        public void Step()
+        {
+            StepNumber++;
+
+            if (Training)
+            {
+
+            }
+            else
+            {
+                foreach (var interaction in EnvironmentIteractions)
+                {
+                    interaction.Action = Network.Predict(interaction.Agent.State).Action;
+                }
+
+                MarkovEnvironment.Apply(EnvironmentIteractions);
+                int numberOfRemovedAgents = EnvironmentIteractions.RemoveAll(interaction => interaction.Result == InteractionResult.Collision);
+                AddAgents(numberOfRemovedAgents);
+            }
+            /*
             double epsilon = 0.2;
 
             foreach (var interaction in EnvironmentIteractions)
             {
-                if (Environment.Random.NextDouble() < epsilon)
+                if (MarkovEnvironment.Random.NextDouble() < epsilon)
                 {
-                    interaction.Action = Environment.Random.Next(Action2.All);
+                    interaction.Action = MarkovEnvironment.Random.Next(Action2.All);
                     interaction.Agent.LastInput = new AgentNetworkInput(interaction.Agent.State);
                     interaction.Agent.LastInput.EncodeAction(interaction.Action);
                 }
@@ -39,7 +68,7 @@ namespace Labs.Agents.NeuralNetworks
                 }
             }
 
-            Environment.Apply(EnvironmentIteractions);
+            MarkovEnvironment.Apply(EnvironmentIteractions);
 
             foreach (var interaction in EnvironmentIteractions)
             {
@@ -57,23 +86,36 @@ namespace Labs.Agents.NeuralNetworks
 
             if (History.Count > 256)
             {
-                Fit(0.99, History.Subset(64, Environment.Random), Environment.Random);
+                Fit(0.99, History.Subset(64, MarkovEnvironment.Random), MarkovEnvironment.Random);
             }
+            */
         }
 
-        private void CreateAgents(int numberOfAgents)
+        private void AddAgents(int numberOfAgents)
         {
             for (int i = 0; i < numberOfAgents; i++)
             {
-                CreateAgent();
+                AddAgent();
             }
         }
 
-        private void CreateAgent()
+        private void AddAgents(bool[,] agentsMap)
         {
-            var interaction = Environment.AddAgent(new Agent(), Environment.GetRandomUnusedPosition());
-            EnvironmentIteractions.Add(interaction);
+            for (int x = 0; x < agentsMap.GetLength(0); x++)
+            {
+                for (int y = 0; y < agentsMap.GetLength(1); y++)
+                {
+                    if (agentsMap[x, y])
+                    {
+                        AddAgent(x, y);
+                    }
+                }
+            }
         }
+
+        private void AddAgent() => AddAgent(MarkovEnvironment.GetRandomUnusedPosition());
+        private void AddAgent(Point p) => EnvironmentIteractions.Add(MarkovEnvironment.AddAgent(new Agent(), p));
+        private void AddAgent(int x, int y) => AddAgent(new Point(x, y));
 
         private void Fit(double gamma, IEnumerable<HistoryItem> batch, Random random)
         {

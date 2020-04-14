@@ -43,6 +43,20 @@ namespace Labs.Agents
         public IEnvironmentField<TEnvironment, TAgent, TState> this[int x, int y] => fields.IsOutside(x, y) ? fieldOutside : fields[x, y];
         IEnvironmentField IEnvironment.this[int x, int y] => this[x, y];
 
+        public void AddObstacles(bool[,] obstaclesMap)
+        {
+            for (int x = 0; x < obstaclesMap.GetLength(0); x++)
+            {
+                for (int y = 0; y < obstaclesMap.GetLength(1); y++)
+                {
+                    if (obstaclesMap[x, y])
+                    {
+                        AddObstacle(x, y, 1, 1);
+                    }
+                }
+            }
+        }
+
         public void AddObstacle(int x, int y, int width, int height)
         {
             int ex = x + width;
@@ -63,6 +77,24 @@ namespace Labs.Agents
                     field.IsEmpty = false;
                 }
             }
+        }
+
+        public virtual IEnumerable<TInteraction> AddAgents(Func<TAgent> factory, bool[,] agentsMap)
+        {
+            List<TInteraction> interactions = new List<TInteraction>();
+
+            for (int x = 0; x < agentsMap.GetLength(0); x++)
+            {
+                for (int y = 0; y < agentsMap.GetLength(1); y++)
+                {
+                    if (agentsMap[x, y])
+                    {
+                        interactions.Add(AddAgent(factory(), new Point(x, y)));
+                    }
+                }
+            }
+
+            return interactions;
         }
 
         public virtual TInteraction AddAgent(TAgent agent, Point point)

@@ -9,15 +9,16 @@ namespace Labs.Agents
     {
         public bool IsStarted => CancellationSource != null;
         public bool IsPaused { get; private set; }
-        Action SimulationStep;
+        public int Step { get; private set; }
+        Action SimulationStepAction;
         Action RefreshAction;
         CancellationTokenSource CancellationSource;
         TaskCompletionSource<object> CompletionSource;
         EventWaitHandle PauseHandle = new EventWaitHandle(true, EventResetMode.ManualReset);
 
-        public SimulationTask(Action simulationStep, Action refreshAction)
+        public SimulationTask(Action simulationStepAction, Action refreshAction)
         {
-            SimulationStep = simulationStep;
+            SimulationStepAction = simulationStepAction;
             RefreshAction = refreshAction;
         }
 
@@ -79,7 +80,8 @@ namespace Labs.Agents
                     }
                     else
                     {
-                        SimulationStep();
+                        Step++;
+                        SimulationStepAction();
                         RefreshAction();
                     }
                 }

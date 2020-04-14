@@ -8,6 +8,24 @@ namespace Labs.Agents
 {
     public static class Extensions
     {
+        public static int Count<T>(this T[,] self, Func<T, bool> match)
+        {
+            int result = 0;
+
+            for (int x = 0; x < self.GetLength(0); x++)
+            {
+                for (int y = 0; y < self.GetLength(1); y++)
+                {
+                    if (match(self[x, y]))
+                    {
+                        result++;
+                    }
+                }
+            }
+
+            return result;
+        }
+
         public static double Distance(this IPoint self, Point p)
         {
             double dx = self.X - p.X;
@@ -58,6 +76,11 @@ namespace Labs.Agents
             return self;
         }
 
+        public static Action CreateInvoker(this Control self, Action action)
+        {
+            return () => self.InvokeAction(action);
+        }
+
         public static void InvokeAction(this Control self, Action action)
         {
             if (self.InvokeRequired)
@@ -93,6 +116,48 @@ namespace Labs.Agents
 
                 available--;
             }
+        }
+
+        public static ToolStripSeparator AddSeparator(this ToolStripDropDownButton self)
+        {
+            var separator = new ToolStripSeparator();
+            self.DropDownItems.Add(separator);
+            return separator;
+        }
+
+        public static ToolStripMenuItem AddMenuItem(this ToolStripDropDownButton self, string text, Action action)
+        {
+            var menuItem = new ToolStripMenuItem();
+            menuItem.Text = text;
+            menuItem.Click += new EventHandler((sender, e) => action());
+            self.DropDownItems.Add(menuItem);
+            return menuItem;
+        }
+
+        public static ToolStripSeparator AddSeparator(this ToolStrip self)
+        {
+            var separator = new ToolStripSeparator();
+            self.Items.Add(separator);
+            return separator;
+        }
+
+        public static ToolStripDropDownButton AddDropDownButton(this ToolStrip self, string text)
+        {
+            var button = new ToolStripDropDownButton()
+            {
+                Text = text
+            };
+            self.Items.Add(button);
+            return button;
+        }
+
+        public static ToolStripButton AddButton(this ToolStrip self, string text, Action action)
+        {
+            var button = new ToolStripButton();
+            button.Text = text;
+            button.Click += new EventHandler((sender, e) => action());
+            self.Items.Add(button);
+            return button;
         }
     }
 }

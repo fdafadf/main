@@ -12,45 +12,58 @@ using DemoInteraction = Labs.Agents.AgentInteraction<Labs.Agents.Demo.DemoAgent,
 
 namespace Labs.Agents.Demo
 {
-    public partial class DemoForm : Form
+    public partial class DemoForm : SimulationForm
     {
-        SimulationTask SimulationTask;
         IPainter EnvironmentPainter;
+        DemoEnvironment Environment;
+        IEnumerable<DemoInteraction> EnvironmentIteractions;
 
-        public DemoForm(DemoSimulation simulation)
+        public DemoForm()
         {
             InitializeComponent();
-            SimulationTask = new SimulationTask(simulation.Step, RefreshEnvironment);
-            EnvironmentPainter = new Action2EnvironmentPainter<DemoEnvironment, DemoAgent, DemoAgentState, DemoInteraction>(simulation.Environment);
+            InitializeMenu(toolStripContainer1);
+            InitializeSimulation();
+            IterationStatusLabel = iterationStatusLabel;
+            SimulationTask = new SimulationTask(SimulationStep, this.CreateInvoker(RefreshEnvironment));
+            EnvironmentPainter = new Action2EnvironmentPainter<DemoEnvironment, DemoAgent, DemoAgentState, DemoInteraction>(Environment);
+            environmentControl.Paint += ContentPanel_Paint;
         }
 
-        protected void RefreshEnvironment()
+        protected override void RefreshEnvironment()
         {
-            this.InvokeAction(Refresh);
+            base.RefreshEnvironment();
+            environmentControl.Refresh();
         }
 
-        protected override void OnPaint(PaintEventArgs e)
+        protected void SimulationStep()
+        {
+            foreach (var iteraction in EnvironmentIteractions)
+            {
+                iteraction.Action = iteraction.Agent.GetAction();
+            }
+
+            Environment.Apply(EnvironmentIteractions);
+        }
+
+        private void InitializeSimulation()
+        {
+            var environmentWidth = 200;
+            var environmentHeight = 150;
+            var numberOfAgents = 80;
+            var numberOfObstacles = 180;
+            var random = new Random(0);
+            Environment = new DemoEnvironment(random, environmentWidth, environmentHeight);
+            var obstacles = new bool[environmentWidth, environmentHeight];
+            var agents = new bool[environmentWidth, environmentHeight];
+            EnvironmentGenerator.GenerateObstacles(random, obstacles, numberOfObstacles, 1, 20);
+            EnvironmentGenerator.GenerateAgents(random, obstacles, agents, numberOfAgents);
+            Environment.AddObstacles(obstacles);
+            EnvironmentIteractions = Environment.AddAgents(() => new DemoAgent(Environment), agents);
+        }
+
+        private void ContentPanel_Paint(object sender, PaintEventArgs e)
         {
             EnvironmentPainter.Paint(e.Graphics);
-        }
-
-        protected override void OnKeyDown(KeyEventArgs e)
-        {
-            switch (e.KeyCode)
-            {
-                case Keys.Space:
-                    SimulationTask.PauseOrResume();
-                    break;
-            }
-        }
-
-        protected override void OnClosing(CancelEventArgs e)
-        {
-            if (SimulationTask.IsStarted)
-            {
-                e.Cancel = true;
-                SimulationTask?.Stop().ContinueWith(task => this.InvokeAction(Close));
-            }
         }
     }
 }

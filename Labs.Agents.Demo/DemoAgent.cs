@@ -1,15 +1,17 @@
 ﻿using Labs.Agents;
+using System;
+using DemoEnvironment = Labs.Agents.Environment2<Labs.Agents.Demo.DemoAgent, Labs.Agents.Demo.DemoAgentState>;
 
 namespace Labs.Agents.Demo
 {
     public class DemoAgent : IAgent<Environment2<DemoAgent, DemoAgentState>, DemoAgent, DemoAgentState>
     {
-        public DemoSimulation Simulation { get; }
+        public DemoEnvironment Environment { get; }
         public DemoAgentState State { get; }
 
-        public DemoAgent(DemoSimulation simulation)
+        public DemoAgent(DemoEnvironment environment)
         {
-            Simulation = simulation;
+            Environment = environment;
             State = new DemoAgentState();
         }
 
@@ -21,7 +23,7 @@ namespace Labs.Agents.Demo
 
         public Action2 GetRandomAction()
         {
-            return Simulation.Random.Next(Action2.All);
+            return Environment.Random.Next(Action2.All);
         }
 
         public Action2 GetLegalRandomAction()
@@ -30,7 +32,7 @@ namespace Labs.Agents.Demo
 
             do
             {
-                action = Simulation.Random.Next(Action2.All);
+                action = Environment.Random.Next(Action2.All);
             }
             while (State.IsPossible(action) == false);
 
