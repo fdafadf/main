@@ -7,63 +7,77 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using DemoEnvironment = Labs.Agents.Environment2<Labs.Agents.Demo.DemoAgent, Labs.Agents.Demo.DemoAgentState>;
-using DemoInteraction = Labs.Agents.AgentInteraction<Labs.Agents.Demo.DemoAgent, Labs.Agents.Action2, Labs.Agents.InteractionResult>;
 
 namespace Labs.Agents.Demo
 {
     public partial class DemoForm : SimulationForm
     {
-        IPainter EnvironmentPainter;
-        DemoEnvironment Environment;
-        IEnumerable<DemoInteraction> EnvironmentIteractions;
+        Painter Painter;
+        GoalDestructibleCardinalMovementSimulation Simulation;
+        Random random = new Random(0);
 
         public DemoForm()
         {
             InitializeComponent();
             InitializeMenu(toolStripContainer1);
-            InitializeSimulation();
-            IterationStatusLabel = iterationStatusLabel;
-            SimulationTask = new SimulationTask(SimulationStep, this.CreateInvoker(RefreshEnvironment));
-            EnvironmentPainter = new Action2EnvironmentPainter<DemoEnvironment, DemoAgent, DemoAgentState, DemoInteraction>(Environment);
+            InitializeEnvironment();
             environmentControl.Paint += ContentPanel_Paint;
+            SimulationWorker.Start();
         }
 
-        protected override void RefreshEnvironment()
+        protected override void LoadEnvironment(EnvironmentBitmap environmentBitmap)
         {
-            base.RefreshEnvironment();
+            var random = new Random(0);
+            Simulation = new GoalDestructibleCardinalMovementSimulation(environmentBitmap);
+            Painter = new Painter(Simulation.InteractiveSpace);
+            this.InvokeAction(RefreshEnvironment);
+        }
+
+        int Iterations;
+
+        protected override bool IterateSimulation()
+        {
+            Iterations++;
+
+            foreach (var agent in Simulation.Agents)
+            {
+                agent.Interaction.Action = random.Next(CardinalMovement.All);
+            }
+
+            Simulation.Iterate();
+            this.InvokeAction(RefreshEnvironment);
+            return Simulation.Agents.Any(agent => agent.Fitness.IsDestroyed == false);
+        }
+
+        protected void RefreshEnvironment()
+        {
+            iterationStatusLabel.Text = $"Iteration: {Iterations} Reached Goals: {Simulation.Goals.Reached}";
             environmentControl.Refresh();
         }
 
-        protected void SimulationStep()
+        private void InitializeEnvironment()
         {
-            foreach (var iteraction in EnvironmentIteractions)
+            SpaceGeneratorProperties properties = new SpaceGeneratorProperties()
             {
-                iteraction.Action = iteraction.Agent.GetAction();
-            }
-
-            Environment.Apply(EnvironmentIteractions);
-        }
-
-        private void InitializeSimulation()
-        {
-            var environmentWidth = 200;
-            var environmentHeight = 150;
-            var numberOfAgents = 80;
-            var numberOfObstacles = 180;
-            var random = new Random(0);
-            Environment = new DemoEnvironment(random, environmentWidth, environmentHeight);
-            var obstacles = new bool[environmentWidth, environmentHeight];
-            var agents = new bool[environmentWidth, environmentHeight];
-            EnvironmentGenerator.GenerateObstacles(random, obstacles, numberOfObstacles, 1, 20);
-            EnvironmentGenerator.GenerateAgents(random, obstacles, agents, numberOfAgents);
-            Environment.AddObstacles(obstacles);
-            EnvironmentIteractions = Environment.AddAgents(() => new DemoAgent(Environment), agents);
+                Seed = 0,
+                Width = 200,
+                Height = 150,
+                NumberOfAgents = 80,
+                NumberOfObstacles = 180,
+                ObstacleMinSize = 2,
+                ObstacleMaxSize = 15
+            };
+            var obstacles = SpaceGenerator.GenerateObstacles(properties);
+            var agents = SpaceGenerator.GenerateAgents(properties, obstacles);
+            EnvironmentBitmap = new EnvironmentBitmap(obstacles, agents);
+            LoadEnvironment(EnvironmentBitmap);
         }
 
         private void ContentPanel_Paint(object sender, PaintEventArgs e)
         {
-            EnvironmentPainter.Paint(e.Graphics);
+            Painter.PaintObstacles(e.Graphics);
+            Painter.PaintAgents(e.Graphics, Simulation.Agents);
+            Painter.PaintGoals(e.Graphics, Simulation.Agents);
         }
     }
 }

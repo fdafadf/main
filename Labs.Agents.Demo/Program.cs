@@ -19,6 +19,7 @@ namespace Labs.Agents.Demo
             Application.Run(new DemoForm());
         }
 
+        /*
         #region Przykłady (Pseudokod)
 
         class PrecalculatedAgent : IAgent<Environment2<PrecalculatedAgent, PrecalculatedAgentState>, PrecalculatedAgent, PrecalculatedAgentState>
@@ -143,5 +144,6 @@ namespace Labs.Agents.Demo
         }
 
         #endregion
+        */
     }
 }

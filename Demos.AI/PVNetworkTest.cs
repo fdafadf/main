@@ -17,7 +17,7 @@ namespace Demo
     {
         public TicTacToeValueNetwork CreateNetwork()
         {
-            return new TicTacToeValueNetwork(new int[] { 72, 72, 72, 36, 36, 36, 18, 18 }, Function.ReLU, new Random(Guid.NewGuid().GetHashCode()));
+            return new TicTacToeValueNetwork(new int[] { 72, 72, 72, 36, 36, 36, 18, 18 }, FunctionName.ReLU, new Random(Guid.NewGuid().GetHashCode()));
         }
 
         public TicTacToeValueNetwork CreateTrainedNetwork()
@@ -244,7 +244,7 @@ namespace Demo
 
         public TicTacToePVNetwork()
         {
-            Network = new Network(Function.ReLU, 9, 3, 72, 72, 72, 36, 36, 36, 18, 18);
+            Network = NetworkBuilder.Build(new NetworkDefinition(FunctionName.ReLU, 9, 3, 72, 72, 72, 36, 36, 36, 18, 18), new He(0));
         }
 
         public PVNetworkOutput<GameAction> Predict(GameState state)

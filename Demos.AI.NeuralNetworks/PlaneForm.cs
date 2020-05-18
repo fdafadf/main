@@ -75,12 +75,12 @@ namespace Demos.AI.NeuralNetwork
                 //var network = NetworkBuilder.Build(Function.ReLU, 2, 3, 64, 64, 32, 32);
                 //evaluator = new NetworkEvaluator(network);
                 //optimizer = new SGDMomentum(evaluator, 0.001, 0.04);
-                network = new Network(Function.ReLU, 2, 3, 72, 72, 72, 36, 36, 36, 18, 18);
+                network = NetworkBuilder.Build(new NetworkDefinition(FunctionName.ReLU, 2, 3, 72, 72, 72, 36, 36, 36, 18, 18), new He(0));
                 optimizer = new SGDMomentum(network, 0.001, 0.008);
             }
             else
             {
-                network = new Network(Function.Sigmoidal, 2, 3, 32, 8);
+                network = NetworkBuilder.Build(new NetworkDefinition(FunctionName.Sigmoidal, 2, 3, 32, 8), new He(0));
                 optimizer = new SGDMomentum(network, 0.1, 0.8);
             }
 

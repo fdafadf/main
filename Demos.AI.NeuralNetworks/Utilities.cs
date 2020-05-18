@@ -6,9 +6,9 @@ namespace Demos.AI.NeuralNetwork
 {
     public static class NetworkUtilities
     {
-        public static readonly IFunction RELU = Function.ReLU;
-        public static readonly IFunction LEAKY = Function.LeakyReLU;
-        public static readonly IFunction SIGM = Function.Sigmoidal;
+        public static readonly FunctionName RELU = FunctionName.ReLU;
+        public static readonly FunctionName LEAKY = FunctionName.LeakyReLU;
+        public static readonly FunctionName SIGM = FunctionName.Sigmoidal;
 
         public static TrainingMonitor MSE
         {
@@ -23,9 +23,9 @@ namespace Demos.AI.NeuralNetwork
             return monitors.Union(new TrainingMonitor[] { new TrainingEpochMonitor(t => { Console.Title = t; }, Console.Out) }).ToArray();
         }
 
-        public static Network Network(IFunction activationFunction, int inputSize, int outputSize, params int[] hiddenLayersSizes)
+        public static Network Network(FunctionName activationFunction, int inputSize, int outputSize, params int[] hiddenLayersSizes)
         {
-            return new Network(activationFunction, inputSize, outputSize, hiddenLayersSizes);
+            return NetworkBuilder.Build(new NetworkDefinition(activationFunction, inputSize, outputSize, hiddenLayersSizes), new He(0));
         }
 
         public static SGD SGD(Network evaluator, double learningRate)

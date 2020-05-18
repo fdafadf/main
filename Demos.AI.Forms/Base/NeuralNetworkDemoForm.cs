@@ -111,7 +111,7 @@ namespace Demos.Forms.Base
         protected virtual Network CreateNeuralNetwork()
         {
             Random random = new Random(Properties.Seed);
-            return new Network(Function.Sigmoidal, Properties.NetworkInputSize, 1, Properties.NetworkLayersSize);
+            return NetworkBuilder.Build(new NetworkDefinition(FunctionName.Sigmoidal, Properties.NetworkInputSize, 1, Properties.NetworkLayersSize), new He(Properties.Seed));
         }
 
         protected override NeuralNetworkDemoFormProperties InitializeProperties()
@@ -179,7 +179,7 @@ namespace Demos.Forms.Base
         {
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                NeuralNetwork.LoadWeights(openFileDialog1.FileName);
+                //NeuralNetwork.LoadWeights(openFileDialog1.FileName);
                 NetworkChanged();
             }
         }
@@ -188,7 +188,7 @@ namespace Demos.Forms.Base
         {
             if (saveFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                NeuralNetwork.SaveWeights(saveFileDialog1.FileName);
+                //NeuralNetwork.SaveWeights(saveFileDialog1.FileName);
             }
         }
     }
