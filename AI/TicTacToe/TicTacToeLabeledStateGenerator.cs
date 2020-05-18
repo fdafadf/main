@@ -1,10 +1,7 @@
-﻿using Games;
-using Games.TicTacToe;
-using System;
+﻿using Games.TicTacToe;
 using System.Collections.Generic;
 using System.Linq;
 using Games.Utilities;
-using AI.NeuralNetworks;
 using AI.NeuralNetworks.Games;
 
 namespace AI.NeuralNetworks.TicTacToe

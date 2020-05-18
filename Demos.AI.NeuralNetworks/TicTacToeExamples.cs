@@ -1,8 +1,6 @@
 ﻿using AI.NeuralNetworks;
 using AI.TicTacToe;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using static Demos.AI.NeuralNetwork.NetworkUtilities;
 
 namespace Demos.AI.NeuralNetwork

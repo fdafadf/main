@@ -1,4 +1,4 @@
-﻿namespace Labs.Agents.Dijkstra
+﻿namespace Labs.Agents.Simulations.Dijkstra
 {
     public class DijkstraAgentFactory : IAgentFactory<DestructibleInteractiveSpace<CardinalMovementSpace<DijkstraAgent>, DijkstraAgent>, DijkstraAgent>
     {

@@ -1,34 +1,56 @@
 ﻿using Labs.Agents.Properties;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Windows.Forms;
 
 namespace Labs.Agents
 {
-    public class WorkspaceSpaces : IEnumerable<ISpaceDefinition>
+    public class WorkspaceSpaces : IEnumerable<ISpaceTemplateFactory>
     {
         public FileInfo SpacesFile { get; }
         public DirectoryInfo SpacesDirectory { get; }
-        List<ISpaceDefinition> Items;
+        List<ISpaceTemplateFactory> Items;
 
         public WorkspaceSpaces(FileInfo spacesFile, DirectoryInfo spacesDirectory)
         {
             SpacesFile = spacesFile;
             SpacesDirectory = spacesDirectory;
+            bool createSpacesFile = false;
 
             if (SpacesFile.Exists)
             {
-                Items = SpacesFile.Deserialize<List<ISpaceDefinition>>();
+                try
+                {
+                    Items = SpacesFile.Deserialize<List<ISpaceTemplateFactory>>();
+                }
+                catch (Exception exception)
+                {
+                    if (MessageBox.Show($"Do you want to remove file '{SpacesFile.Name}'?\r\n\r\n{exception.Message}", "Deserialisation error", MessageBoxButtons.YesNo, MessageBoxIcon.Error) == DialogResult.Yes)
+                    {
+                        SpacesFile.Delete();
+                        createSpacesFile = true;
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
             }
             else
             {
-                Items = new List<ISpaceDefinition>();
-                Add(new SpaceTemplateGeneratingDefinition(new SpaceTemplateGeneratorProperties("Test1")));
-                Add(new SpaceTemplateGeneratingDefinition(new SpaceTemplateGeneratorProperties("Test2") { Seed = 1 }));
+                createSpacesFile = true;
+            }
+           
+            if (createSpacesFile)
+            {
+                Items = new List<ISpaceTemplateFactory>();
+                Add(new SpaceTemplateGeneratingDefinition(new SpaceTemplateGeneratorProperties("Generated Example 1")));
+                Add(new SpaceTemplateGeneratingDefinition(new SpaceTemplateGeneratorProperties("Generated Example 2") { Seed = 1 }));
             }
 
             if (spacesDirectory.Exists == false)
@@ -55,12 +77,12 @@ namespace Labs.Agents
             }
         }
 
-        public ISpaceDefinition GetByName(string name)
+        public ISpaceTemplateFactory GetByName(string name)
         {
             return Items.FirstOrDefault(space => space.Name == name);
         }
 
-        public bool Remove(ISpaceDefinition space)
+        public bool Remove(ISpaceTemplateFactory space)
         {
             bool removed = space != null && Items.Remove(space);
 
@@ -77,13 +99,13 @@ namespace Labs.Agents
             return Remove(GetByName(name));
         }
 
-        public void Add(ISpaceDefinition space)
+        public void Add(ISpaceTemplateFactory space)
         {
             Items.Add(space);
             SpacesFile.Serialize(Items.Where(s => s is SpaceTemplateBitmapDefinition == false).ToList());
         }
 
-        public IEnumerator<ISpaceDefinition> GetEnumerator()
+        public IEnumerator<ISpaceTemplateFactory> GetEnumerator()
         {
             return Items.GetEnumerator();
         }

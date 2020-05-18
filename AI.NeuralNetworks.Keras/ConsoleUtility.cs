@@ -1,7 +1,6 @@
 ﻿using AI.MonteCarlo;
 using Games;
 using Games.TicTacToe;
-using Games.Utilities;
 using System;
 using System.IO;
 using System.Linq;

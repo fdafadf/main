@@ -1,18 +1,11 @@
 ﻿using Labs.Agents.ComponentModel;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 
 namespace Labs.Agents
 {
-    public enum AgentsCollisionModel
-    {
-        Destroy,
-        Ghost,
-    }
-
-    public class SimulationDefinition : IValidatable
+    public class SimulationFactory : IValidatable
     {
         [Category("General")]
         public string Name { get; set; }
@@ -33,12 +26,12 @@ namespace Labs.Agents
         [Category("Agent")]
         [TypeConverter(typeof(DropDownStringConverter))]
         [DisplayName("Name")]
-        public string Driver { get; set; }
+        public string SimulationPlugin { get; set; }
         [Category("Agent")]
         public AgentsCollisionModel AgentsCollisionModel { get; set; }
         Workspace Workspace;
 
-        public SimulationDefinition(Workspace workspace)
+        public SimulationFactory(Workspace workspace)
         {
             Workspace = workspace;
         }
@@ -49,42 +42,42 @@ namespace Labs.Agents
             Assert.NotNullOrWhiteSpace(MovementSystem, $"Property 'System' in category 'Movement' can not be empty.");
             Assert.NotNullOrWhiteSpace(GoalSystem, $"Property 'System' in category 'Goal' can not be empty.");
             Assert.NotNullOrWhiteSpace(Space, $"Property 'Name' in category 'Space' can not be empty.");
-            Assert.NotNullOrWhiteSpace(Driver, $"Property 'Name' in category 'Agent' can not be empty.");
+            Assert.NotNullOrWhiteSpace(SimulationPlugin, $"Property 'Name' in category 'Agent' can not be empty.");
         }
 
         public ISimulation CreateSimulation()
         {
             var spaceDefinition = Workspace.Spaces.GetByName(Space);
-            var agentDriverDefinition = Workspace.GetAgentsDriver(Driver);
-            var agentDriver = agentDriverDefinition.CreateDriver();
+            var simulationPluginFactory = Workspace.GetSimulationPluginFactory(SimulationPlugin);
+            var simulationPlugin = simulationPluginFactory.CreatePlugin();
             var method = GetType().GetMethods().Where(m => m.Name == "CreateSimulation").Skip(1).First();
-            method = method.MakeGenericMethod(agentDriver.GetType(), agentDriver.AgentType);
-            return method.Invoke(this, new object[] { spaceDefinition, agentDriver, agentDriverDefinition.Name }) as ISimulation;
+            method = method.MakeGenericMethod(simulationPlugin.GetType(), simulationPlugin.AgentType);
+            return method.Invoke(this, new object[] { spaceDefinition, simulationPlugin, simulationPluginFactory.Name }) as ISimulation;
         }
 
-        public ISimulation CreateSimulation<TDriver, TAgent>(ISpaceDefinition spaceDefinition, TDriver agentDriver, string agentName)
-            where TDriver : SimulationAgentDriver<DestructibleInteractiveSpace<CardinalMovementSpace<TAgent>, TAgent>, TAgent> 
+        public ISimulation CreateSimulation<TPlugin, TAgent>(ISpaceTemplateFactory spaceDefinition, TPlugin simulationPlugin, string pluginName)
+            where TPlugin : SimulationPlugin<DestructibleInteractiveSpace<CardinalMovementSpace<TAgent>, TAgent>, TAgent> 
             where TAgent : IAnchoredAgent<TAgent>, IInteractiveAgent<CardinalMovement, InteractionResult>, IDestructibleAgent, IGoalAgent
         {
-            return new SimulationModel1<TDriver, TAgent>(spaceDefinition, agentDriver, agentName, AgentsCollisionModel);
+            return new SimulationModel1<TPlugin, TAgent>(spaceDefinition, simulationPlugin, pluginName, AgentsCollisionModel);
         }
 
         public ISimulationViualisation CreateSimulationForm()
         {
             var spaceDefinition = Workspace.Spaces.GetByName(Space);
-            var agentDriverDefinition = Workspace.GetAgentsDriver(Driver);
-            var agentDriver = agentDriverDefinition.CreateDriver();
+            var simulationPluginFactory = Workspace.GetSimulationPluginFactory(SimulationPlugin);
+            var simulationPlugin = simulationPluginFactory.CreatePlugin();
             var method = GetType().GetMethods().Where(m => m.Name == "CreateSimulationForm").Skip(1).First();
-            method = method.MakeGenericMethod(agentDriver.GetType(), agentDriver.AgentType);
-            return method.Invoke(this, new object[] { spaceDefinition, agentDriver, agentDriverDefinition.Name }) as ISimulationViualisation;
+            method = method.MakeGenericMethod(simulationPlugin.GetType(), simulationPlugin.AgentType);
+            return method.Invoke(this, new object[] { spaceDefinition, simulationPlugin, simulationPluginFactory.Name }) as ISimulationViualisation;
         }
 
-        public ISimulationViualisation CreateSimulationForm<TDriver, TAgent>(ISpaceDefinition spaceDefinition, TDriver agentDriver, string agentName)
-            where TDriver : SimulationAgentDriver<DestructibleInteractiveSpace<CardinalMovementSpace<TAgent>, TAgent>, TAgent>
+        public ISimulationViualisation CreateSimulationForm<TPlugin, TAgent>(ISpaceTemplateFactory spaceDefinition, TPlugin simulationPlugin, string pluginName)
+            where TPlugin : SimulationPlugin<DestructibleInteractiveSpace<CardinalMovementSpace<TAgent>, TAgent>, TAgent>
             where TAgent : IAnchoredAgent<TAgent>, IInteractiveAgent<CardinalMovement, InteractionResult>, IDestructibleAgent, IGoalAgent
         {
-            var simulation = new SimulationModel1<TDriver, TAgent>(spaceDefinition, agentDriver, agentName, AgentsCollisionModel);
-            return new SimulationModel1Visualisation<TDriver, TAgent>(simulation);
+            var simulation = new SimulationModel1<TPlugin, TAgent>(spaceDefinition, simulationPlugin, pluginName, AgentsCollisionModel);
+            return new SimulationModel1Visualisation<TPlugin, TAgent>(simulation);
         }
 
         public IEnumerable<string> GetMovementSystems()
@@ -108,9 +101,9 @@ namespace Labs.Agents
             return Workspace.Spaces.Select(space => space.Name);
         }
 
-        public IEnumerable<string> GetDrivers()
+        public IEnumerable<string> GetSimulationPlugins()
         {
-            return Workspace.AgentsDrivers.Select(driver => driver.Name);
+            return Workspace.SimulationPlugins.Select(driver => driver.Name);
         }
     }
 }

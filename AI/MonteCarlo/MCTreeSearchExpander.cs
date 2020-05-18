@@ -1,8 +1,6 @@
 ﻿using Games;
 using Games.Utilities;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace AI.MonteCarlo
 {

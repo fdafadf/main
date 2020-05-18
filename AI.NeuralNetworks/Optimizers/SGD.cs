@@ -1,10 +1,5 @@
 ﻿//#define MOMENTUM
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Games.Utilities;
-
 namespace AI.NeuralNetworks
 {
     // Stochastic Gradient Descent

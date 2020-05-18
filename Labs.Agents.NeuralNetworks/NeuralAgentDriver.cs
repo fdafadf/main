@@ -1,12 +1,11 @@
 ﻿using AI.NeuralNetworks;
-using Labs.Agents;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Labs.Agents.NeuralNetworks
 {
-    public class SimulationNeuralAgentDriver : SimulationAgentDriver<DestructibleInteractiveSpace<CardinalMovementSpace<NeuralAgent>, NeuralAgent>, NeuralAgent>
+    public class NeuralAgentDriver : SimulationPlugin<DestructibleInteractiveSpace<CardinalMovementSpace<NeuralAgent>, NeuralAgent>, NeuralAgent>
     {
         public Random Random;
         public AgentNetwork Network;
@@ -14,7 +13,7 @@ namespace Labs.Agents.NeuralNetworks
         AgentNetworkTrainingConfiguration TrainingConfiguration;
         public List<MarkovHistoryItem> MarkovHistory = new List<MarkovHistoryItem>();
 
-        public SimulationNeuralAgentDriver(AgentNetwork network, AgentNetworkTrainingConfiguration trainingConfiguration, int seed) : base(new NeuralAgentFactory())
+        public NeuralAgentDriver(AgentNetwork network, AgentNetworkTrainingConfiguration trainingConfiguration, int seed) : base(new NeuralAgentFactory())
         {
             Random = new Random(seed);
             Network = network;

@@ -1,6 +1,4 @@
-﻿using System.Windows.Forms;
-
-namespace Labs.Agents
+﻿namespace Labs.Agents
 {
     public interface ISimulationViualisation<TSimulation> where TSimulation : ISimulation
     {

@@ -4,10 +4,10 @@ namespace Labs.Agents
 {
     public interface ILabForm
     {
-        MenuStrip MenuAgentDrivers { get; }
+        MenuStrip MenuAgents { get; }
         ToolStripMenuItem MenuNewSimulation { get; }
         ToolStripMenuItem MenuNewAgent { get; }
         ListView Simulations { get; }
-        ListView AgentDrivers { get; }
+        ListView Agents { get; }
     }
 }

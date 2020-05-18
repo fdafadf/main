@@ -1,13 +1,10 @@
 ﻿using AI.NeuralNetworks;
-using AI.TicTacToe;
 using AI.NeuralNetworks.TicTacToe;
 using Demos.Forms.Base;
 using Games.TicTacToe;
 using System;
-using System.Configuration;
 using System.IO;
 using System.Windows.Forms;
-using System.Linq;
 
 namespace Demos.Forms.TicTacToe.NeuralNetwork
 {

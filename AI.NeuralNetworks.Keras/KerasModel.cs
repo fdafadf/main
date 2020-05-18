@@ -1,12 +1,7 @@
 ﻿using Keras.Models;
 using Numpy;
-using Python.Runtime;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace AI.Keras
 {

@@ -1,9 +1,7 @@
-﻿using Labs.Agents.Utilities;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
 
-namespace Labs.Agents.Dijkstra
+namespace Labs.Agents.Simulations.Dijkstra
 {
     public class DijkstraAgent : IAnchoredAgent<DijkstraAgent>, IDestructibleAgent, IInteractiveAgent<CardinalMovement, InteractionResult>, IGoalAgent
     {
@@ -98,12 +96,12 @@ namespace Labs.Agents.Dijkstra
 
             while (unvisited.Count > 0)
             {
-                UShortPoint current = removeUnvisitedMin();
-                int currentDistance = distances[current];
+                UShortPoint currentMin = removeUnvisitedMin();
+                int currentDistance = distances[currentMin];
 
                 foreach (CardinalMovement move in CardinalMovement.All)
                 {
-                    UShortPoint neighbor = current.Add(move);
+                    UShortPoint neighbor = currentMin.Add(move);
                     var neighborField = space[neighbor.X, neighbor.Y];
 
                     if (neighborField.IsEmpty || neighborField.IsAgent)

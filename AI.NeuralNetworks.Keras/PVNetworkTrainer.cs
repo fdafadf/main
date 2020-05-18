@@ -4,8 +4,6 @@ using Games.TicTacToe;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using TicTacToeMCTreeSearchPVNetwork = AI.MonteCarlo.PVNetworkBasedMCTreeSearch<Games.TicTacToe.TicTacToeGame, Games.TicTacToe.GameState, Games.TicTacToe.GameAction, Games.TicTacToe.Player>;
 
 namespace AI.Keras
 {

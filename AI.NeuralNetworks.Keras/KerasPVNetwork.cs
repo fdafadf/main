@@ -1,9 +1,7 @@
 ﻿using AI.MonteCarlo;
 using Games;
-using Games.TicTacToe;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace AI.Keras
 {

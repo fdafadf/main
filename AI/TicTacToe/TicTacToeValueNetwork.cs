@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using AI.NeuralNetworks;
-using AI.NeuralNetworks.Games;
 using AI.TicTacToe;
 using Games.TicTacToe;
 

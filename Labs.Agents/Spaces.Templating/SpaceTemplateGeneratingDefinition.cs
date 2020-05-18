@@ -1,6 +1,6 @@
 ﻿namespace Labs.Agents
 {
-    public class SpaceTemplateGeneratingDefinition : ISpaceDefinition
+    public class SpaceTemplateGeneratingDefinition : ISpaceTemplateFactory
     {
         public string Name => GeneratorProperties.Name;
         public SpaceTemplateGeneratorProperties GeneratorProperties { get; private set; }

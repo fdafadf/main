@@ -6,19 +6,19 @@ namespace Labs.Agents
 {
     public class Workspace
     {
-        public WorkspaceItemsFile<SimulationDefinition> Simulations { get; private set; }
-        public WorkspaceItemsFile<ISimulationAgentDriverDefinition> AgentsDrivers { get; private set; }
+        public WorkspaceItemsFile<SimulationFactory> Simulations { get; private set; }
+        public WorkspaceItemsFile<ISimulationPluginFactory> SimulationPlugins { get; private set; }
         public WorkspaceSpaces Spaces { get; private set; }
         public WorkspaceItemsDirectory<SimulationResults> SimulationResults { get; private set; }
 
-        public T GetAgentsDriver<T>(string name) where T : ISimulationAgentDriverDefinition
+        public T GetSimulationPluginFactory<T>(string name) where T : ISimulationPluginFactory
         {
-            return AgentsDrivers.OfType<T>().FirstOrDefault(driver => driver.Name == name);
+            return SimulationPlugins.OfType<T>().FirstOrDefault(driver => driver.Name == name);
         }
 
-        public ISimulationAgentDriverDefinition GetAgentsDriver(string name)
+        public ISimulationPluginFactory GetSimulationPluginFactory(string name)
         {
-            var result = AgentsDrivers.FirstOrDefault(driver => driver.Name == name);
+            var result = SimulationPlugins.FirstOrDefault(driver => driver.Name == name);
 
             if (result == null)
             {
@@ -31,10 +31,10 @@ namespace Labs.Agents
         protected void Load()
         {
             Spaces = new WorkspaceSpaces(Settings.ProductDirectory.GetFile("Spaces.json"), Settings.SpacesDirectory);
-            AgentsDrivers = new WorkspaceItemsFile<ISimulationAgentDriverDefinition>(Settings.ProductDirectory.GetFile("AgentsDrivers.json"));
-            Simulations = new WorkspaceItemsFile<SimulationDefinition>(Settings.ProductDirectory.GetFile("Simulations.json"));
+            SimulationPlugins = new WorkspaceItemsFile<ISimulationPluginFactory>(Settings.ProductDirectory.GetFile("SimulationPlugins.json"));
+            Simulations = new WorkspaceItemsFile<SimulationFactory>(Settings.ProductDirectory.GetFile("Simulations.json"));
             SimulationResults = new WorkspaceItemsDirectory<SimulationResults>(Settings.ProductDirectory.GetDirectory("SimulationResults"));
-            FieldInfo workspaceProperty = typeof(SimulationDefinition).GetField("Workspace", BindingFlags.NonPublic | BindingFlags.Instance);
+            FieldInfo workspaceProperty = typeof(SimulationFactory).GetField("Workspace", BindingFlags.NonPublic | BindingFlags.Instance);
 
             foreach (var simulation in Simulations)
             {

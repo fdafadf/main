@@ -17,6 +17,8 @@
             MoveWest,
         };
 
+        public static readonly CardinalMovement[] AllExceptNothing;
+
         static CardinalMovement()
         {
             Nothing.Opposite = Nothing;
@@ -24,6 +26,14 @@
             MoveSouth.Opposite = MoveNorth;
             MoveEast.Opposite = MoveWest;
             MoveWest.Opposite = MoveEast;
+
+            AllExceptNothing = new CardinalMovement[]
+            {
+                MoveNorth,
+                MoveSouth,
+                MoveEast,
+                MoveWest
+            };
         }
 
         public int Index { get; }

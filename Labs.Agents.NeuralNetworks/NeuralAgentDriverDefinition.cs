@@ -1,12 +1,10 @@
 ﻿using Labs.Agents.ComponentModel;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Linq;
 
 namespace Labs.Agents.NeuralNetworks
 {
-    public class SimulationNeuralAgentDriverDefinition : ISimulationAgentDriverDefinition
+    public class NeuralAgentDriverDefinition : ISimulationPluginFactory
     {
         public string Name { get; set; }
         [DisplayName("Training Enabled")]
@@ -19,7 +17,7 @@ namespace Labs.Agents.NeuralNetworks
         public string Description { get; private set; }
         string network;
 
-        public SimulationNeuralAgentDriverDefinition(string name, string network, int seed)
+        public NeuralAgentDriverDefinition(string name, string network, int seed)
         {
             Name = name;
             Network = network;
@@ -47,10 +45,10 @@ namespace Labs.Agents.NeuralNetworks
         }
 
         // TODO: otypować mocniej
-        public SimulationAgentDriver CreateDriver()
+        public SimulationPlugin CreatePlugin()
         {
             var network = Workspace.Instance.LoadNetwork(Network);
-            return new SimulationNeuralAgentDriver(network, TrainingConfiguration, Seed);
+            return new NeuralAgentDriver(network, TrainingConfiguration, Seed);
         }
 
         public IEnumerable<string> GetNetworks()

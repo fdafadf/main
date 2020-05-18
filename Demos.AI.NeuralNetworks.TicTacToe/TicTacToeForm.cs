@@ -4,10 +4,8 @@ using AI.NeuralNetworks.TicTacToe;
 using AI.TicTacToe;
 using Core.NetFramework;
 using Games.TicTacToe;
-using Newtonsoft.Json;
 using System;
 using System.ComponentModel;
-using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 

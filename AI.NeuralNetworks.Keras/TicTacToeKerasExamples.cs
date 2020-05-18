@@ -1,16 +1,11 @@
-﻿using AI.NeuralNetworks;
-using AI.NeuralNetworks.Games;
+﻿using AI.NeuralNetworks.Games;
 using AI.NeuralNetworks.TicTacToe;
 using AI.TicTacToe;
-using Games.TicTacToe;
 using Games.Utilities;
 using Keras.Models;
-using Python.Runtime;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace AI.Keras
 {

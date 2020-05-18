@@ -1,4 +1,6 @@
-﻿namespace Labs.Agents.Utilities
+﻿using System;
+
+namespace Labs.Agents
 {
     public class UShortPoint
     {
@@ -31,6 +33,11 @@
             {
                 return false;
             }
+        }
+
+        public int Distance(UShortPoint point)
+        {
+            return Math.Abs(X - point.X) + Math.Abs(Y - point.Y);
         }
     }
 }

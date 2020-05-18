@@ -1,8 +1,5 @@
 ﻿//#define MOMENTUM
 
-using Games.Utilities;
-using System;
-
 namespace AI.NeuralNetworks
 {
     public abstract class Optimizer

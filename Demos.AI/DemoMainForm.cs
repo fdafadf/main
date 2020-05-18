@@ -1,8 +1,5 @@
-﻿using AI.NeuralNetworks;
-using Games.TicTacToe;
-using System;
+﻿using System;
 using System.Windows.Forms;
-using AI.NeuralNetworks.Games;
 using Demos.Forms.TicTacToe.NeuralNetwork;
 using Demos.Forms.Xor.NeuralNetwork;
 using Demos.Forms.TicTacToe.MonteCarlo;

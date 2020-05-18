@@ -5,7 +5,6 @@ using Microsoft.ML.Data;
 using System;
 using Games.Utilities;
 using AI.TicTacToe;
-using AI.NeuralNetworks.Games;
 using System.Linq;
 using AI.NeuralNetworks.TicTacToe;
 

@@ -1,5 +1,3 @@
-﻿using System.Numerics;
-
-namespace Demos.AI.NeuralNetwork
+﻿namespace Demos.AI.NeuralNetwork
 {
 }

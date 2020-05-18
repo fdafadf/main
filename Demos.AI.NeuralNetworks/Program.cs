@@ -1,8 +1,4 @@
-﻿using AI.NeuralNetworks;
-using Core.NetStandard;
-using System.Numerics;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using Core.NetStandard;
 
 namespace Demos.AI.NeuralNetwork
 {

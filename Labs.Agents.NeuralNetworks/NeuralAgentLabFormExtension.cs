@@ -1,5 +1,4 @@
 ﻿using AI.NeuralNetworks;
-using Games.Utilities;
 using Labs.Agents.Forms;
 using System;
 using System.Linq;
@@ -7,9 +6,9 @@ using System.Windows.Forms;
 
 namespace Labs.Agents.NeuralNetworks
 {
-    public class NeuralAgentExtension : LabFormExtension<SimulationNeuralAgentDriverDefinition>
+    public class NeuralAgentLabFormExtension : LabFormExtension<NeuralAgentDriverDefinition>
     {
-        public NeuralAgentExtension(ILabForm labForm, Workspace workspace) : base(labForm, workspace)
+        public NeuralAgentLabFormExtension(ILabForm labForm, Workspace workspace) : base(labForm, workspace)
         {
             AddNewAgentMenuItem("&Neural Agent", menuItemNewAgentOnClick);
 
@@ -37,7 +36,7 @@ namespace Labs.Agents.NeuralNetworks
         {
             using (var form = new PropertyGridForm("New Agent"))
             {
-                var driverDefinition = new SimulationNeuralAgentDriverDefinition(string.Empty, string.Empty, 0);
+                var driverDefinition = new NeuralAgentDriverDefinition(string.Empty, string.Empty, 0);
                 form.PropertyGrid.GetToolStrip().AddButton("New Network", ShowNewNetworkDialog);
                 form.PropertyGrid.SelectedObject = driverDefinition;
                 form.FormClosing += (s, closingEvent) =>
@@ -48,8 +47,8 @@ namespace Labs.Agents.NeuralNetworks
                         {
                             Assert.NotNullOrWhiteSpace(driverDefinition.Name, "Property Name is required.");
                             Assert.NotNullOrWhiteSpace(driverDefinition.Network, "Property Network is required.");
-                            Assert.Unique(driverDefinition.Name, Workspace.Instance.AgentsDrivers.Select(driver => driver.Name), "Name already exists.");
-                            Workspace.Instance.AgentsDrivers.Add(driverDefinition);
+                            Assert.Unique(driverDefinition.Name, Workspace.Instance.SimulationPlugins.Select(driver => driver.Name), "Name already exists.");
+                            Workspace.Instance.SimulationPlugins.Add(driverDefinition);
                             Add(driverDefinition);
                         }
                         catch (Exception exception)
@@ -89,13 +88,13 @@ namespace Labs.Agents.NeuralNetworks
             }
         }
 
-        protected override void Add(SimulationNeuralAgentDriverDefinition driverDefinition)
+        protected override void Add(NeuralAgentDriverDefinition driverDefinition)
         {
             var item = new ListViewItem(driverDefinition.Name);
             item.SubItems.Add("Neural");
             item.SubItems.Add(driverDefinition.Description);
             item.Tag = driverDefinition;
-            LabForm.AgentDrivers.Items.Add(item);
+            LabForm.Agents.Items.Add(item);
         }
     }
 }

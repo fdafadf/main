@@ -1,10 +1,8 @@
-﻿using System;
-
-namespace Labs.Agents.Dijkstra
+﻿namespace Labs.Agents.Simulations.Dijkstra
 {
-    public class SimulationDijkstraAgentDriver : SimulationAgentDriver<DestructibleInteractiveSpace<CardinalMovementSpace<DijkstraAgent>, DijkstraAgent>, DijkstraAgent>
+    public class DijkstraSimulationPlugin : SimulationPlugin<DestructibleInteractiveSpace<CardinalMovementSpace<DijkstraAgent>, DijkstraAgent>, DijkstraAgent>
     {
-        public SimulationDijkstraAgentDriver() : base(new DijkstraAgentFactory())
+        public DijkstraSimulationPlugin() : base(new DijkstraAgentFactory())
         {
         }
 

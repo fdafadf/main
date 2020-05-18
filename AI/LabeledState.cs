@@ -1,8 +1,4 @@
-﻿using Games;
-using Games.Utilities;
-using System;
-
-namespace AI.NeuralNetworks.Games
+﻿namespace AI.NeuralNetworks.Games
 {
     public class LabeledState<TState, TLabel> : Projection
     {

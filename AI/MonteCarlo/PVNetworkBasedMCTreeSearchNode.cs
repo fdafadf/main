@@ -1,8 +1,5 @@
-﻿using AI.MonteCarlo;
-using Games;
-using Games.TicTacToe;
+﻿using Games;
 using System;
-using System.Collections.Generic;
 
 namespace AI.MonteCarlo
 {

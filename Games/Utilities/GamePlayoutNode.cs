@@ -1,6 +1,4 @@
-﻿using Games.Utilities;
-
-namespace Games.Utilities
+﻿namespace Games.Utilities
 {
     public class GamePlayoutNode<TGameState, TGameAction> : GameTreeNode<GamePlayoutNode<TGameState, TGameAction>, TGameState, TGameAction>
     {

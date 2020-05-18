@@ -1,5 +1,4 @@
-﻿using AI.NeuralNetworks;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 
 namespace Demos.Forms.Utilities
 {

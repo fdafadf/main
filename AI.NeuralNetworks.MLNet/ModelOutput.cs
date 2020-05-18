@@ -1,5 +1,4 @@
 ﻿using Microsoft.ML.Data;
-using System;
 
 namespace Basics.MLNet
 {

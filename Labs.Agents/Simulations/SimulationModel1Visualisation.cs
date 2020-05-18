@@ -1,18 +1,15 @@
 ﻿using Labs.Agents.Forms;
-using System;
-using System.Collections.Generic;
-using System.Windows.Forms;
 
 namespace Labs.Agents
 {
-    public class SimulationModel1Visualisation<TDriver, TAgent> : ISimulationViualisation<SimulationModel1<TDriver, TAgent>>, ISimulationViualisation
-        where TDriver : SimulationAgentDriver<DestructibleInteractiveSpace<CardinalMovementSpace<TAgent>, TAgent>, TAgent> // IAnchoredAgent<TAgent>, IInteractiveAgent<CardinalMovement, InteractionResult>, IDestructible, IGoalAgent
+    public class SimulationModel1Visualisation<TPlugin, TAgent> : ISimulationViualisation<SimulationModel1<TPlugin, TAgent>>, ISimulationViualisation
+        where TPlugin : SimulationPlugin<DestructibleInteractiveSpace<CardinalMovementSpace<TAgent>, TAgent>, TAgent> // IAnchoredAgent<TAgent>, IInteractiveAgent<CardinalMovement, InteractionResult>, IDestructible, IGoalAgent
         where TAgent : IAnchoredAgent<TAgent>, IInteractiveAgent<CardinalMovement, InteractionResult>, IDestructibleAgent, IGoalAgent
     {
-        public SimulationModel1<TDriver, TAgent> Simulation { get; }
+        public SimulationModel1<TPlugin, TAgent> Simulation { get; }
         ISimulation ISimulationViualisation.Simulation => Simulation;
 
-        public SimulationModel1Visualisation(SimulationModel1<TDriver, TAgent> simulation)
+        public SimulationModel1Visualisation(SimulationModel1<TPlugin, TAgent> simulation)
         {
             Simulation = simulation;
         }

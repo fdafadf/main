@@ -1,21 +1,18 @@
 ﻿using Games.Utilities;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Labs.Agents.Forms
 {
     public partial class LabForm : Form, ILabForm
     {
-        public MenuStrip MenuAgentDrivers => menuStrip1;
+        public MenuStrip MenuAgents => menuStrip1;
         public ToolStripMenuItem MenuNewSimulation => menuNewSimulation;
         public ToolStripMenuItem MenuNewAgent => menuItemNewAgent;
         public ListView Simulations => listViewSimulationDefinitions;
-        public ListView AgentDrivers => listViewAgentDrivers;
+        public ListView Agents => listViewAgents;
         public Workspace Workspace;
         protected SpaceTemplateGeneratorForm EnvironmentGeneratorForm = new SpaceTemplateGeneratorForm();
 
@@ -24,7 +21,7 @@ namespace Labs.Agents.Forms
             InitializeComponent();
             tabControl1.SelectedIndex = 2;
             listViewEnvironments.AddContextAction("&Remove", RemoveEnvironment);
-            listViewAgentDrivers.AddContextAction("&Remove", RemoveAgentDriver);
+            listViewAgents.AddContextAction("&Remove", RemoveAgent);
             listViewSimulationDefinitions.AddContextAction("&Run", RunSimulation);
             listViewSimulationDefinitions.AddContextAction("&Remove", RemoveSimulationDefinition);
             listViewSimulationResults.AddContextAction("&Remove", RemoveSimulationResults);
@@ -45,11 +42,11 @@ namespace Labs.Agents.Forms
             }
         }
 
-        private void RemoveAgentDriver(ListViewItem item)
+        private void RemoveAgent(ListViewItem item)
         {
-            if (Workspace.AgentsDrivers.Remove(item.Tag as ISimulationAgentDriverDefinition))
+            if (Workspace.SimulationPlugins.Remove(item.Tag as ISimulationPluginFactory))
             {
-                listViewAgentDrivers.Items.Remove(item);
+                listViewAgents.Items.Remove(item);
             }
         }
 
@@ -63,7 +60,7 @@ namespace Labs.Agents.Forms
 
         private void RemoveSimulationDefinition(ListViewItem item)
         {
-            if (Workspace.Simulations.Remove(item.Tag as SimulationDefinition))
+            if (Workspace.Simulations.Remove(item.Tag as SimulationFactory))
             {
                 listViewSimulationDefinitions.Items.Remove(item);
             }
@@ -71,7 +68,7 @@ namespace Labs.Agents.Forms
 
         private void RunSimulation(ListViewItem item)
         {
-            if (item.Tag is SimulationDefinition definition)
+            if (item.Tag is SimulationFactory definition)
             {
                 var results = definition.CreateSimulationForm().Show();
                 Workspace.SimulationResults.Add(results);
@@ -92,7 +89,7 @@ namespace Labs.Agents.Forms
             tabControl1.SelectedTab = tabPageSimulationResults;
         }
 
-        private void Add(ISpaceDefinition spaceDefinition)
+        private void Add(ISpaceTemplateFactory spaceDefinition)
         {
             if (spaceDefinition is SpaceTemplateGeneratingDefinition generated)
             {
@@ -141,7 +138,7 @@ namespace Labs.Agents.Forms
             if (listViewEnvironments.SelectedItems.Count == 1)
             {
                 var item = listViewEnvironments.SelectedItems[0];
-                var definition = item.Tag as ISpaceDefinition;
+                var definition = item.Tag as ISpaceTemplateFactory;
                 var spaceTemplate = definition.CreateSpaceTemplate();
                 var oldImage = pictureBoxSpacePreview.Image;
                 pictureBoxSpacePreview.Image = null;
@@ -184,7 +181,7 @@ namespace Labs.Agents.Forms
         private void menuNewSimulation_Click(object sender, EventArgs e)
         {
             var form2 = new PropertyGridForm("New Simulation");
-            var simulationDefinition = new SimulationDefinition(Workspace);
+            var simulationDefinition = new SimulationFactory(Workspace);
             form2.PropertyGrid.SelectedObject = simulationDefinition;
 
             if (form2.ShowDialog() == DialogResult.OK)
@@ -194,11 +191,11 @@ namespace Labs.Agents.Forms
             }
         }
 
-        private void Add(SimulationDefinition simulationDefinition)
+        private void Add(SimulationFactory simulationDefinition)
         {
             var item = new ListViewItem(simulationDefinition.Name);
             item.SubItems.Add(simulationDefinition.Space);
-            item.SubItems.Add(simulationDefinition.Driver);
+            item.SubItems.Add(simulationDefinition.SimulationPlugin);
             item.SubItems.Add(simulationDefinition.Iterations.ToString());
             item.Tag = simulationDefinition;
             listViewSimulationDefinitions.Items.Add(item);

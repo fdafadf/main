@@ -1,7 +1,4 @@
-﻿using Games;
-using Games.Utilities;
-
-namespace Games.Utilities
+﻿namespace Games.Utilities
 {
     public class GamePlayoutNavigator<TState, TAction, TPlayer> : IGameTreeNavigator<GamePlayoutNode<TState, TAction>, TState, TAction>
         where TState : IGameState<TPlayer>

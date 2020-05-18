@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace AI.MonteCarlo
+﻿namespace AI.MonteCarlo
 {
     public class MCTreeSearchNode<TState, TAction> : MCTreeNode<MCTreeSearchNode<TState, TAction>, TState, TAction>
     {

@@ -1,5 +1,4 @@
-﻿using AI.NeuralNetworks;
-using System;
+﻿using System;
 using System.Linq;
 
 namespace AI.NeuralNetworks

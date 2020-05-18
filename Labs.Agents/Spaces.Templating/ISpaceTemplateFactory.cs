@@ -1,6 +1,6 @@
 ﻿namespace Labs.Agents
 {
-    public interface ISpaceDefinition
+    public interface ISpaceTemplateFactory
     {
         string Name { get; }
         SpaceTemplate CreateSpaceTemplate();

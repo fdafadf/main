@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Games.Utilities
+﻿namespace Games.Utilities
 {
     public abstract class GameTree<TNode, TState, TAction>
         : IGameTree<TNode, TState, TAction>

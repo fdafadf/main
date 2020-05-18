@@ -2,13 +2,6 @@
 using Games.TicTacToe;
 using Games.Utilities;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using TicTacToeMcts = AI.MonteCarlo.MCTreeSearch<Games.TicTacToe.TicTacToeGame, Games.TicTacToe.GameState, Games.TicTacToe.GameAction, Games.TicTacToe.Player>;
 using TicTacToeMctsNode = AI.MonteCarlo.MCTreeSearchNode<Games.TicTacToe.GameState, Games.TicTacToe.GameAction>;

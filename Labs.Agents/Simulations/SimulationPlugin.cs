@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Labs.Agents
 {
-    public abstract class SimulationAgentDriver
+    public abstract class SimulationPlugin
     {
         public abstract void OnInteractionCompleted();
         public abstract void OnIterationCompleted();
@@ -11,12 +11,12 @@ namespace Labs.Agents
         public abstract Type AgentType { get; }
     }
 
-    public abstract class SimulationAgentDriver<TSpace, TAgent> : SimulationAgentDriver
+    public abstract class SimulationPlugin<TSpace, TAgent> : SimulationPlugin
     {
         public List<TAgent> Agents = new List<TAgent>();
         IAgentFactory<TSpace, TAgent> AgentFactory;
 
-        public SimulationAgentDriver(IAgentFactory<TSpace, TAgent> agentFactory)
+        public SimulationPlugin(IAgentFactory<TSpace, TAgent> agentFactory)
         {
             AgentFactory = agentFactory;
         }

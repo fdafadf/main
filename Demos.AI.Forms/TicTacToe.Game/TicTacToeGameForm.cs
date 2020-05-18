@@ -1,11 +1,6 @@
 ﻿using AI;
 using Games.TicTacToe;
-using System;
-using System.Configuration;
-using System.IO;
 using System.Windows.Forms;
-using AI.NeuralNetworks.Games;
-using System.Threading.Tasks;
 
 namespace Demos.Forms.TicTacToe.Game
 {

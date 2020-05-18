@@ -5,8 +5,8 @@ using System.Linq;
 
 namespace Labs.Agents
 {
-    public class SimulationModel1<TDriver, TAgent> : ISimulation
-        where TDriver : SimulationAgentDriver<DestructibleInteractiveSpace<CardinalMovementSpace<TAgent>, TAgent>, TAgent> // IAnchoredAgent<TAgent>, IInteractiveAgent<CardinalMovement, InteractionResult>, IDestructible, IGoalAgent
+    public class SimulationModel1<TPlugin, TAgent> : ISimulation
+        where TPlugin : SimulationPlugin<DestructibleInteractiveSpace<CardinalMovementSpace<TAgent>, TAgent>, TAgent> 
         where TAgent : IAnchoredAgent<TAgent>, IInteractiveAgent<CardinalMovement, InteractionResult>, IDestructibleAgent, IGoalAgent
     {
         public Random Random = new Random(0);
@@ -14,23 +14,23 @@ namespace Labs.Agents
         public RandomRenewableGoals<TAgent> Goals;
         public SimulationResults Results;
         public List<TAgent> Agents = new List<TAgent>();
-        TDriver AgentDriver;
+        TPlugin Plugin;
         DateTime StartTime;
         List<double> ConsumedTime = new List<double>();
 
-        public SimulationModel1(ISpaceDefinition spaceDefinition, TDriver agentDriver, string agentName, AgentsCollisionModel agentsCollisionModel)
+        public SimulationModel1(ISpaceTemplateFactory spaceDefinition, TPlugin plugin, string pluginName, AgentsCollisionModel agentsCollisionModel)
         {
             var spaceTemplate = spaceDefinition.CreateSpaceTemplate();
             var cardinalSpace = new CardinalMovementSpace<TAgent>(spaceTemplate, agentsCollisionModel);
             Space = new DestructibleInteractiveSpace<CardinalMovementSpace<TAgent>, TAgent>(cardinalSpace);
-            Agents.AddRange(spaceTemplate.AgentMap.SelectTrue((x, y) => agentDriver.CreateAgent(Space, x, y)));
+            Agents.AddRange(spaceTemplate.AgentMap.SelectTrue((x, y) => plugin.CreateAgent(Space, x, y)));
             Goals = new RandomRenewableGoals<TAgent>(Space.InteractiveSpace, new Random(0));
             Goals.Update(Agents);
-            Results = new SimulationResults(agentName, spaceDefinition.Name);
+            Results = new SimulationResults(pluginName, spaceDefinition.Name);
             Results.Series.Add("Reached Goals", Goals.ReachedGoals);
             Results.Series.Add("Collisions", Space.Collisions);
             Results.Series.Add("ConsumedTime", ConsumedTime);
-            AgentDriver = agentDriver;
+            Plugin = plugin;
         }
 
         public bool Iterate()
@@ -40,19 +40,19 @@ namespace Labs.Agents
                 StartTime = DateTime.Now;
             }
 
-            AgentDriver.OnIterationStarted();
+            Plugin.OnIterationStarted();
             Space.Interact(Agents);
-            AgentDriver.OnInteractionCompleted();
+            Plugin.OnInteractionCompleted();
             Goals.Update(Agents);
             int destroyed = Agents.Count(agent => agent.Interaction.ActionResult == InteractionResult.Collision);
 
             for (int i = 0; i < destroyed; i++)
             {
                 var field = Random.GetUnusedField(Space.InteractiveSpace);
-                Agents.Add(AgentDriver.CreateAgent(Space, field.X, field.Y));
+                Agents.Add(Plugin.CreateAgent(Space, field.X, field.Y));
             }
 
-            AgentDriver.OnIterationCompleted();
+            Plugin.OnIterationCompleted();
             ConsumedTime.Add((DateTime.Now - StartTime).TotalSeconds);
             return true;
         }

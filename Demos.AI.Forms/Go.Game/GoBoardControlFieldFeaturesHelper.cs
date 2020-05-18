@@ -1,10 +1,8 @@
 ﻿using AI.MonteCarlo;
 using Games.Go;
 using Games.Utilities;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using GoMcts = AI.MonteCarlo.MCTreeSearch<Games.Go.GoGame, Games.Go.GameState, Games.Go.FieldCoordinates, Games.Go.Stone>;
 
 namespace Demos.Forms.Go.Game
 {

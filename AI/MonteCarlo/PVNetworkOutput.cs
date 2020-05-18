@@ -1,8 +1,4 @@
-﻿using Games;
-using System;
-using System.Collections.Generic;
-
-namespace AI.MonteCarlo
+﻿namespace AI.MonteCarlo
 {
     public abstract class PVNetworkOutput<TAction>
     {

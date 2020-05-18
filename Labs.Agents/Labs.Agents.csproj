@@ -57,12 +57,17 @@
     <Compile Include="Agents.Features\AgentAnchor.cs" />
     <Compile Include="Agents.Features\AgentGoal.cs" />
     <Compile Include="Agents.Features\AgentRotation.cs" />
+    <Compile Include="Simulations.AStar\AStarLabFormExtension.cs" />
+    <Compile Include="Simulations.AStar\AStarAgentFactory.cs" />
+    <Compile Include="Simulations.AStar\AStarSimulationPluginFactory.cs" />
+    <Compile Include="Simulations.AStar\AStarSimulationPlugin.cs" />
+    <Compile Include="Simulations.AStar\AStarAgent.cs" />
     <Compile Include="System\Assert.cs" />
     <Compile Include="System.ComponentModel\CsvTypeConverter.cs" />
     <Compile Include="System.ComponentModel\DropDownStringConverter.cs" />
     <Compile Include="Agents\IAgentFactory.cs" />
     <Compile Include="Simulations.Dijkstra\DijkstraAgent.cs" />
-    <Compile Include="Simulations.Dijkstra\DijkstraAgentExtension.cs" />
+    <Compile Include="Simulations.Dijkstra\DijkstraLabFormExtension.cs" />
     <Compile Include="Simulations.Dijkstra\DijkstraAgentFactory.cs" />
     <Compile Include="System\INamed.cs" />
     <Compile Include="Simulations\ISimulationViualisation.cs" />
@@ -86,8 +91,8 @@
     <Compile Include="Forms\PropertyGridForm.Designer.cs">
       <DependentUpon>PropertyGridForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Simulations.Dijkstra\SimulationDijkstraAgentDriver.cs" />
-    <Compile Include="Simulations.Dijkstra\SimulationDijkstraAgentDriverDefinition.cs" />
+    <Compile Include="Simulations.Dijkstra\DijkstraSimulationPlugin.cs" />
+    <Compile Include="Simulations.Dijkstra\DijkstraSimulationPluginFactory.cs" />
     <Compile Include="Simulations\SimulationModel1.cs" />
     <Compile Include="Forms\SimulationForm.cs">
       <SubType>Form</SubType>
@@ -95,14 +100,15 @@
     <Compile Include="Forms\SimulationForm.Designer.cs">
       <DependentUpon>SimulationForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Simulations\SimulationAgentDriver.cs" />
+    <Compile Include="Simulations\SimulationPlugin.cs" />
     <Compile Include="Simulations\SimulationModel1Visualisation.cs" />
     <Compile Include="Simulations\SimulationResults.cs" />
     <Compile Include="Spaces.Templating\SpaceTemplateGeneratingDefinition.cs" />
-    <Compile Include="Workspaces\ISimulationAgentDriverDefinition.cs" />
+    <Compile Include="Simulations\ISimulationPluginFactory.cs" />
     <Compile Include="Simulations\ISimulation.cs" />
-    <Compile Include="Workspaces\SimulationDefinition.cs" />
-    <Compile Include="Workspaces\ISpaceDefinition.cs" />
+    <Compile Include="Spaces\AgentsCollisionModel.cs" />
+    <Compile Include="Simulations\SimulationFactory.cs" />
+    <Compile Include="Spaces.Templating\ISpaceTemplateFactory.cs" />
     <Compile Include="Spaces.Templating\SpaceTemplateBitmapDefinition.cs" />
     <Compile Include="System\UShortPoint.cs" />
     <Compile Include="Workspaces\Workspace.cs" />
@@ -207,9 +213,7 @@
     <None Include="Resources\Empty-Small.png" />
     <None Include="Resources\Store-Medium.png" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Simulations.AStar\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="Resources\Bottleneck-Small-1.png" />
   </ItemGroup>

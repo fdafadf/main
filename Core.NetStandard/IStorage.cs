@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Core.NetStandard
+﻿namespace Core.NetStandard
 {
     public interface IStorage
     {

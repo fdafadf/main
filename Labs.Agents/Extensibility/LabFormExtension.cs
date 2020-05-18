@@ -5,18 +5,18 @@ using System.Windows.Forms;
 
 namespace Labs.Agents
 {
-    public abstract class LabFormExtension<TDriverDefinition>
-        where TDriverDefinition : ISimulationAgentDriverDefinition
+    public abstract class LabFormExtension<TPluginFactory>
+        where TPluginFactory : ISimulationPluginFactory
     {
         public ILabForm LabForm { get; }
 
         public LabFormExtension(ILabForm labForm, Workspace workspace)
         {
             LabForm = labForm;
-            workspace.AgentsDrivers.OfType<TDriverDefinition>().ForEach(Add);
+            workspace.SimulationPlugins.OfType<TPluginFactory>().ForEach(Add);
         }
 
-        protected abstract void Add(TDriverDefinition driverDefinition);
+        protected abstract void Add(TPluginFactory pluginFactory);
 
         protected void AddNewAgentMenuItem(string text, Action<object, EventArgs> clickAction)
         {

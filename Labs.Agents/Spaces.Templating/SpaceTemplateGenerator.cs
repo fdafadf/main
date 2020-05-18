@@ -1,5 +1,4 @@
-﻿using AI.NeuralNetworks;
-using System;
+﻿using System;
 
 namespace Labs.Agents
 {

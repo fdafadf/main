@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-
-namespace Labs.Agents.NeuralNetworks
+﻿namespace Labs.Agents.NeuralNetworks
 {
     public class AgentNetworkTrainingConfiguration
     {

@@ -1,9 +1,6 @@
-﻿using AI.TicTacToe;
-using Microsoft.ML;
+﻿using Microsoft.ML;
 using Microsoft.ML.Transforms;
 using System;
-using System.IO;
-using System.Linq;
 
 namespace Basics.MLNet
 {

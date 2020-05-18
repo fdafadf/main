@@ -1,7 +1,5 @@
-﻿using AI.NeuralNetworks.Games;
-using Games.TicTacToe;
+﻿using Games.TicTacToe;
 using Games.Utilities;
-using System;
 
 namespace AI.TicTacToe
 {

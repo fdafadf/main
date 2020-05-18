@@ -49,7 +49,7 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.agentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItemNewAgent = new System.Windows.Forms.ToolStripMenuItem();
-            this.listViewAgentDrivers = new System.Windows.Forms.ListView();
+            this.listViewAgents = new System.Windows.Forms.ListView();
             this.columnHeader9 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader13 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader10 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -244,7 +244,7 @@
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel2.Controls.Add(this.menuStrip1, 0, 0);
-            this.tableLayoutPanel2.Controls.Add(this.listViewAgentDrivers, 0, 1);
+            this.tableLayoutPanel2.Controls.Add(this.listViewAgents, 0, 1);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel2.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
@@ -279,21 +279,21 @@
             this.menuItemNewAgent.Size = new System.Drawing.Size(98, 22);
             this.menuItemNewAgent.Text = "&New";
             // 
-            // listViewAgentDrivers
+            // listViewAgenTPlugins
             // 
-            this.listViewAgentDrivers.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.listViewAgents.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader9,
             this.columnHeader13,
             this.columnHeader10});
-            this.listViewAgentDrivers.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listViewAgentDrivers.FullRowSelect = true;
-            this.listViewAgentDrivers.HideSelection = false;
-            this.listViewAgentDrivers.Location = new System.Drawing.Point(3, 27);
-            this.listViewAgentDrivers.Name = "listViewAgentDrivers";
-            this.listViewAgentDrivers.Size = new System.Drawing.Size(709, 340);
-            this.listViewAgentDrivers.TabIndex = 0;
-            this.listViewAgentDrivers.UseCompatibleStateImageBehavior = false;
-            this.listViewAgentDrivers.View = System.Windows.Forms.View.Details;
+            this.listViewAgents.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listViewAgents.FullRowSelect = true;
+            this.listViewAgents.HideSelection = false;
+            this.listViewAgents.Location = new System.Drawing.Point(3, 27);
+            this.listViewAgents.Name = "listViewAgenTPlugins";
+            this.listViewAgents.Size = new System.Drawing.Size(709, 340);
+            this.listViewAgents.TabIndex = 0;
+            this.listViewAgents.UseCompatibleStateImageBehavior = false;
+            this.listViewAgents.View = System.Windows.Forms.View.Details;
             // 
             // columnHeader9
             // 
@@ -536,7 +536,7 @@
         private System.Windows.Forms.ColumnHeader columnHeader2;
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.TabPage tabPageSimulationResults;
-        private System.Windows.Forms.ListView listViewAgentDrivers;
+        private System.Windows.Forms.ListView listViewAgents;
         private System.Windows.Forms.ColumnHeader columnHeader9;
         private System.Windows.Forms.ColumnHeader columnHeader10;
         private System.Windows.Forms.ColumnHeader columnHeader11;

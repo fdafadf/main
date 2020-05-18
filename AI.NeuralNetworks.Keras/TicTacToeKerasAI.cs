@@ -1,9 +1,7 @@
-﻿using AI.NeuralNetworks.Games;
-using AI.NeuralNetworks.TicTacToe;
+﻿using AI.NeuralNetworks.TicTacToe;
 using AI.TicTacToe;
 using Games.TicTacToe;
 using Keras.Models;
-using Python.Runtime;
 using System;
 using System.Linq;
 

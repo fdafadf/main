@@ -1,15 +1,8 @@
-﻿using Labs.Agents.ComponentModel;
-using Labs.Agents.Dijkstra;
-using Labs.Agents.Forms;
+﻿using Labs.Agents.Forms;
+using Labs.Agents.Simulations.AStar;
+using Labs.Agents.Simulations.Dijkstra;
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.IO;
-using System.Linq;
-using System.Security.Policy;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Labs.Agents.NeuralNetworks
@@ -29,8 +22,9 @@ namespace Labs.Agents.NeuralNetworks
             var workspace = Workspace.Instance;
             var form = new LabForm();
             form.Workspace = workspace;
-            var extension1 = new NeuralAgentExtension(form, workspace);
-            var extension2 = new DijkstraAgentExtension(form, workspace);
+            var extension1 = new NeuralAgentLabFormExtension(form, workspace);
+            var extension2 = new DijkstraLabFormExtension(form, workspace);
+            var extension3 = new AStarLabFormExtension(form, workspace);
             Application.Run(form);
         }
 
