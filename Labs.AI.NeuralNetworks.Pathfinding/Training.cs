@@ -49,7 +49,7 @@ namespace Pathfinder
             {
                 int inputSize = NetworkSampleInput.InputSize(NumberOfVertices);
                 Random random = new Random(Seed);
-                Network network = new Network(Function.ReLU, inputSize, NumberOfVertices, HiddenLayers);
+                Network network = NetworkBuilder.Build(new NetworkDefinition(FunctionName.ReLU, inputSize, NumberOfVertices, HiddenLayers), new He(Seed));
                 Optimizer optimizer = new SGDMomentum(network, LearningRate, Momentum);
                 Trainer trainer = new Trainer(optimizer, random);
 
