@@ -8,7 +8,12 @@ namespace AI.NeuralNetworks
         public const double Bias = 1;
         public double[] Weights { get; }
 
-        public Neuron(int inputSize)
+        public Neuron(double[] weights)
+        {
+            Weights = weights;
+        }
+
+        private Neuron(int inputSize)
         {
             Weights = new double[inputSize + 1];
         }

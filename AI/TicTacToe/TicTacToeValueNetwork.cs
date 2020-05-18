@@ -38,16 +38,16 @@ namespace AI.NeuralNetworks.TicTacToe
         public Func<GameState, double[]> InputTransform;
         public Func<double[], TicTacToeValue> OutputTransform;
 
-        public TicTacToeValueNetwork(int[] hiddenLayerSizes, IFunction activationFunction, Random random) 
+        public TicTacToeValueNetwork(int[] hiddenLayerSizes, FunctionName activationFunction, Random random) 
         {
-            Network = new Network(activationFunction, 9, 3, hiddenLayerSizes);
+            Network = NetworkBuilder.Build(new NetworkDefinition(activationFunction, 9, 3, hiddenLayerSizes), new He(0));
             InputTransform = DefaultInputTransform;
             OutputTransform = TicTacToeLabeledStateLoader.OutputTransforms.ResultProbabilities;
         }
         
         public TicTacToeValueNetwork()
         {
-            Network = new Network(Function.Sigmoidal, 9, 9, new int[] { 9, 9 });
+            Network = NetworkBuilder.Build(new NetworkDefinition(FunctionName.Sigmoidal, 9, 9, new int[] { 9, 9 }), new He(0));
         }
 
         public TicTacToeValue Evaluate(GameState gameState)

@@ -5,7 +5,7 @@ namespace AI.NeuralNetworks.TicTacToe
 {
     public class TicTacToeValueNetworkTrainer
     {
-        public IFunction ActivationFunction;
+        public FunctionName ActivationFunction;
         public int[] HiddenLayerSizes;
         public double LearingRate;
         public double Momentum;
@@ -15,7 +15,7 @@ namespace AI.NeuralNetworks.TicTacToe
 
         public TicTacToeValueNetworkTrainer(TicTacToeLabeledState[] trainingData, int seed)
         {
-            ActivationFunction = Function.ReLU;
+            ActivationFunction = FunctionName.ReLU;
             HiddenLayerSizes = new[] { 72, 72, 72, 36, 36, 36, 18, 18 };
             LearingRate = 0.001;
             Momentum = 0.04;

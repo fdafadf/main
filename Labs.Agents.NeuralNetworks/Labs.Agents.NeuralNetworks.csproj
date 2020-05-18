@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{7086488E-0B15-46E8-BF14-8F38577945AE}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <RootNamespace>Labs.Agents.NeuralNetworks</RootNamespace>
     <AssemblyName>Labs.Agents.NeuralNetworks</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
@@ -32,10 +32,25 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AI">
+      <HintPath>..\AI\bin\Debug\netstandard1.0\AI.dll</HintPath>
+    </Reference>
+    <Reference Include="Games, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Games\bin\Debug\netstandard1.0\Games.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Numerics" />
+    <Reference Include="System.Windows.Forms.DataVisualization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -47,43 +62,31 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Agent.cs" />
+    <Compile Include="NeuralAgent.cs" />
     <Compile Include="AgentNetwork.cs" />
-    <Compile Include="AgentNetworkInput.cs" />
-    <Compile Include="AgentState.cs" />
-    <Compile Include="SimulationForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Extensions.cs" />
-    <Compile Include="Form1.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Form2.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Form2.Designer.cs">
-      <DependentUpon>Form2.cs</DependentUpon>
-    </Compile>
-    <Compile Include="HistoryItem.cs" />
-    <Compile Include="Prediction.cs" />
-    <Compile Include="Program.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Simulation.cs" />
-    <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
+    <Compile Include="AgentNetworkDefinition.cs" />
+    <Compile Include="AgentNetworkInputCoder.cs" />
+    <Compile Include="MarkovHistoryItem.cs" />
+    <Compile Include="SimulationNeuralAgentDriver.cs" />
+    <Compile Include="SimulationNeuralAgentDriverDefinition.cs" />
+    <Compile Include="NeuralAgentExtension.cs" />
+    <Compile Include="NeuralAgentFactory.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="AgentNetworkPrediction.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="AgentNetworkTrainingConfiguration.cs" />
+    <Compile Include="Workspace.cs" />
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -102,10 +105,17 @@
       <Project>{16367DB7-692C-4484-AC86-06B476846175}</Project>
       <Name>AI.NeuralNetworks</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Demos.AI.Forms\Demos.AI.Forms.csproj">
+      <Project>{3EC473C3-A711-409E-BB44-92187DDB1239}</Project>
+      <Name>Demos.AI.Forms</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Labs.Agents\Labs.Agents.csproj">
       <Project>{DC386219-4BEF-463B-BADB-3ABA3C955427}</Project>
       <Name>Labs.Agents</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

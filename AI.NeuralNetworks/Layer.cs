@@ -1,4 +1,6 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace AI.NeuralNetworks
 {
@@ -6,12 +8,13 @@ namespace AI.NeuralNetworks
     {
         public Neuron[] Neurons { get; }
         public IFunction ActivationFunction { get; }
+        public FunctionName ActivationFunctionName { get; }
 
-        public Layer(Neuron[] neurons, IFunction activationFunction, ILayerInitializer initializer)
+        public Layer(IEnumerable<Neuron> neurons, FunctionName activationFunctionName)
         {
-            Neurons = neurons;
-            ActivationFunction = activationFunction;
-            initializer.Initialize(this);
+            Neurons = neurons.ToArray();
+            ActivationFunction = Function.Get(activationFunctionName);
+            ActivationFunctionName = activationFunctionName;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

@@ -9,6 +9,57 @@ namespace Games.Utilities
 {
     public static class Extensions
     {
+        public static void Initialize<T>(this T[] self, Func<T> initializer)
+        {
+            for (int i = 0; i < self.Length; i++)
+            {
+                self[i] = initializer();
+            }
+        }
+
+        public static void Apply<T>(this Action<T> self, IEnumerable<T> collection)
+        {
+            foreach (var item in collection)
+            {
+                self(item);
+            }
+        }
+
+        public static void WriteDoubleArray(this BinaryWriter self, double[] array)
+        {
+            Action<double> write = self.Write;
+            write.Apply(array);
+        }
+        
+        public static T[] EvaluateMany<T>(this Func<T> self, int size)
+        {
+            T[] result = new T[size];
+
+            for (int i = 0; i < size; i++)
+            {
+                result[i] = self();
+            }
+
+            return result;
+        }
+
+        public static double[] ReadDoubleArray(this BinaryReader self, int size)
+        {
+            Func<double> read = self.ReadDouble;
+            return read.EvaluateMany(size);
+        }
+
+        public static int[] ReadInt32Array(this BinaryReader self, int size)
+        {
+            Func<int> read = self.ReadInt32;
+            return read.EvaluateMany(size);
+        }
+
+        public static T ReadEnum<T>(this BinaryReader self) where T : Enum
+        {
+            return (T)Enum.ToObject(typeof(T), self.ReadInt32());
+        }
+
         public static void Shuffle<T1, T2>(this Random random, T1[] array1, T2[] array2)
         {
             for (int t = 0; t < array1.Length; t++)

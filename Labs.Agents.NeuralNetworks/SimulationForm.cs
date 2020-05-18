@@ -1,86 +1,48 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data;
 using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Labs.Agents.NeuralNetworks
 {
-    public class SimulationForm : Form
+    public partial class SimulationForm : SimulationWorkerForm
     {
-        protected SimulationTask SimulationTask;
-        protected EnvironmentGeneratorForm EnvironmentGeneratorForm = new EnvironmentGeneratorForm();
-        private ToolStrip MainMenuControl;
-        private ToolStripButton PauseButton;
-        private ToolStripButton ResumeButton;
+        Control environmentControl;
 
-        protected override void OnClosing(CancelEventArgs e)
+        public SimulationForm()
         {
-            if (SimulationTask?.IsStarted == true)
+            InitializeComponent();
+            //panel1.Paint += Panel1_Paint;
+            InitializeMenu(this.toolStripContainer1);
+            SimulationWorker.Start();
+        }
+
+        public Control EnvironmentControl
+        {
+            get
             {
-                e.Cancel = true;
-                SimulationTask?.Stop().ContinueWith(task => this.InvokeAction(Close));
+                return environmentControl;
+            }
+            set
+            {
+                environmentControl = value;
+                environmentControl.Dock = DockStyle.Fill;
+                environmentControl.Location = new Point(0, 0);
+                environmentControl.TabIndex = 0;
+                toolStripContainer1.ContentPanel.Controls.Add(environmentControl);
             }
         }
 
-        protected void InitializeMenu(ToolStripContainer container)
+        protected override bool IterateSimulation()
         {
-            MainMenuControl = new ToolStrip();
-            MainMenuControl.SuspendLayout();
-            container.TopToolStripPanel.Controls.Add(MainMenuControl);
-            MainMenuControl.Dock = DockStyle.None;
-            InitializeMenuItems(MainMenuControl);
-            MainMenuControl.Location = new Point(3, 0);
-            MainMenuControl.Name = "mainMenuControl";
-            MainMenuControl.Size = new Size(478, 25);
-            MainMenuControl.TabIndex = 1;
-            MainMenuControl.ResumeLayout(false);
-            MainMenuControl.PerformLayout();
-        }
-
-        protected void InitializeMenuItems(ToolStrip menu)
-        {
-            InitializeMenuEnvironment(menu);
-            menu.AddSeparator();
-            InitializeMenuStart(menu);
-        }
-
-        protected void InitializeMenuStart(ToolStrip menu)
-        {
-            PauseButton = menu.AddButton("Pause", Pause);
-            ResumeButton = menu.AddButton("Resume", Resume);
-        }
-
-        protected void InitializeMenuEnvironment(ToolStrip menu)
-        {
-            var environmentMenu = menu.AddDropDownButton("Environment");
-            environmentMenu.AddMenuItem("&Load...", LoadEnvironment);
-            environmentMenu.AddSeparator();
-        }
-
-        protected void LoadEnvironment()
-        {
-            if (EnvironmentGeneratorForm.ShowDialog() == DialogResult.OK)
-            {
-                LoadEnvironment(EnvironmentGeneratorForm.EnvironmentBitmap);
-            }
-        }
-
-        protected virtual void LoadEnvironment(EnvironmentGeneratorBitmap generatorBitmap)
-        {
-        }
-
-        protected void Pause()
-        {
-            ResumeButton.Enabled = true;
-            PauseButton.Enabled = false;
-            SimulationTask?.Pause();
-        }
-
-        protected void Resume()
-        {
-            ResumeButton.Enabled = false;
-            PauseButton.Enabled = true;
-            SimulationTask?.Resume();
+            bool result = base.IterateSimulation();
+            this.InvokeAction(environmentControl.Refresh);
+            return result;
         }
     }
 }

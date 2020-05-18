@@ -36,9 +36,13 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Numerics" />
+    <Reference Include="System.Windows.Forms.DataVisualization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -50,60 +54,131 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Action2.cs" />
-    <Compile Include="Action2Environment.cs" />
-    <Compile Include="Action2EnvironmentPainter.cs" />
-    <Compile Include="AgentState1.cs" />
-    <Compile Include="AgentState2.cs" />
-    <Compile Include="BufferedPanel.cs">
+    <Compile Include="Agents.Features\AgentAnchor.cs" />
+    <Compile Include="Agents.Features\AgentGoal.cs" />
+    <Compile Include="Agents.Features\AgentRotation.cs" />
+    <Compile Include="System\Assert.cs" />
+    <Compile Include="System.ComponentModel\CsvTypeConverter.cs" />
+    <Compile Include="System.ComponentModel\DropDownStringConverter.cs" />
+    <Compile Include="Agents\IAgentFactory.cs" />
+    <Compile Include="Simulations.Dijkstra\DijkstraAgent.cs" />
+    <Compile Include="Simulations.Dijkstra\DijkstraAgentExtension.cs" />
+    <Compile Include="Simulations.Dijkstra\DijkstraAgentFactory.cs" />
+    <Compile Include="System\INamed.cs" />
+    <Compile Include="Simulations\ISimulationViualisation.cs" />
+    <Compile Include="System\IValidatable.cs" />
+    <Compile Include="Extensibility\LabFormExtension.cs" />
+    <Compile Include="Forms\LabForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\LabForm.Designer.cs">
+      <DependentUpon>LabForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Extensibility\ILabForm.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\PropertyGridForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\PropertyGridForm.Designer.cs">
+      <DependentUpon>PropertyGridForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Simulations.Dijkstra\SimulationDijkstraAgentDriver.cs" />
+    <Compile Include="Simulations.Dijkstra\SimulationDijkstraAgentDriverDefinition.cs" />
+    <Compile Include="Simulations\SimulationModel1.cs" />
+    <Compile Include="Forms\SimulationForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\SimulationForm.Designer.cs">
+      <DependentUpon>SimulationForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Simulations\SimulationAgentDriver.cs" />
+    <Compile Include="Simulations\SimulationModel1Visualisation.cs" />
+    <Compile Include="Simulations\SimulationResults.cs" />
+    <Compile Include="Spaces.Templating\SpaceTemplateGeneratingDefinition.cs" />
+    <Compile Include="Workspaces\ISimulationAgentDriverDefinition.cs" />
+    <Compile Include="Simulations\ISimulation.cs" />
+    <Compile Include="Workspaces\SimulationDefinition.cs" />
+    <Compile Include="Workspaces\ISpaceDefinition.cs" />
+    <Compile Include="Spaces.Templating\SpaceTemplateBitmapDefinition.cs" />
+    <Compile Include="System\UShortPoint.cs" />
+    <Compile Include="Workspaces\Workspace.cs" />
+    <Compile Include="Spaces.Interaction\CardinalMovement.cs" />
+    <Compile Include="Agents.Features\AgentFitness.cs" />
+    <Compile Include="System.Threading\BackgroundWorker.cs" />
+    <Compile Include="Forms\BufferedPanel.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="EnvironmentGenerator.cs" />
-    <Compile Include="EnvironmentField.cs" />
-    <Compile Include="EnvironmentGeneratorBitmap.cs" />
-    <Compile Include="EnvironmentGeneratorForm.cs">
+    <Compile Include="Spaces\CardinalMovementSpace.cs" />
+    <Compile Include="Forms\ChartForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="EnvironmentGeneratorForm.Designer.cs">
-      <DependentUpon>EnvironmentGeneratorForm.cs</DependentUpon>
+    <Compile Include="Forms\ChartForm.Designer.cs">
+      <DependentUpon>ChartForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="EnvironmentGeneratorProperties.cs" />
-    <Compile Include="EnvironmentPainter.cs" />
-    <Compile Include="IAgent.cs" />
-    <Compile Include="Action1.cs" />
-    <Compile Include="Environment1.cs" />
-    <Compile Include="Environment2.cs" />
-    <Compile Include="AgentState.cs" />
-    <Compile Include="CardinalPoint.cs" />
-    <Compile Include="Environment.cs" />
-    <Compile Include="AgentInteraction.cs" />
+    <Compile Include="Spaces\DestructibleInteractiveSpace.cs" />
+    <Compile Include="Agents\IAnchoredAgent.cs" />
+    <Compile Include="Agents\IDestructibleAgent.cs" />
+    <Compile Include="Agents\IGoalAgent.cs" />
+    <Compile Include="Agents\IInteractiveAgent.cs" />
+    <Compile Include="Spaces\Interfaces\IInteractiveSpace.cs" />
+    <Compile Include="Spaces.Interaction\Interaction.cs" />
+    <Compile Include="Spaces\InteractiveSpace.cs" />
+    <Compile Include="Agents\IRotatedAgent.cs" />
+    <Compile Include="Forms\SimulationWorkerForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Spaces.Templating\SpaceTemplateGenerator.cs" />
+    <Compile Include="Spaces\SpaceField.cs" />
+    <Compile Include="Spaces.Templating\SpaceTemplate.cs" />
+    <Compile Include="Forms\SpaceTemplateGeneratorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\SpaceTemplateGeneratorForm.Designer.cs">
+      <DependentUpon>SpaceTemplateGeneratorForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Spaces.Templating\SpaceTemplateGeneratorProperties.cs" />
+    <Compile Include="System.Drawing\Painter.cs" />
+    <Compile Include="Spaces.Interaction\RotableMovement.cs" />
+    <Compile Include="Spaces.Interaction\CardinalPoint.cs" />
     <Compile Include="Extensions.cs" />
-    <Compile Include="IEnvironment.cs" />
-    <Compile Include="IEnvironmentField.cs" />
-    <Compile Include="InteractionResult.cs" />
-    <Compile Include="IPainter.cs" />
-    <Compile Include="IPoint.cs" />
-    <Compile Include="MarkovAgentInteraction.cs" />
-    <Compile Include="MarkovEnvironment2.cs" />
+    <Compile Include="Spaces\Interfaces\ISpace.cs" />
+    <Compile Include="Spaces\Interfaces\ISpaceField.cs" />
+    <Compile Include="Spaces.Interaction\InteractionResult.cs" />
+    <Compile Include="System\IPoint.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings.cs" />
-    <Compile Include="SimulationForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="SimulationTask.cs" />
-    <EmbeddedResource Include="EnvironmentGeneratorForm.resx">
-      <DependentUpon>EnvironmentGeneratorForm.cs</DependentUpon>
+    <Compile Include="Spaces\Space.cs" />
+    <Compile Include="Workspaces\WorkspaceItemsDirectory.cs" />
+    <Compile Include="Workspaces\WorkspaceItemsFile.cs" />
+    <Compile Include="Workspaces\WorkspaceSpaces.cs" />
+    <EmbeddedResource Include="Forms\LabForm.resx">
+      <DependentUpon>LabForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ChartForm.resx">
+      <DependentUpon>ChartForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\PropertyGridForm.resx">
+      <DependentUpon>PropertyGridForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\SimulationWorkerForm.resx">
+      <DependentUpon>SimulationWorkerForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\SpaceTemplateGeneratorForm.resx">
+      <DependentUpon>SpaceTemplateGeneratorForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-    </Compile>
+    <EmbeddedResource Include="Forms\SimulationForm.resx">
+      <DependentUpon>SimulationForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -126,6 +201,17 @@
       <Project>{965829BB-0A45-44C9-B9B3-DF83A38C9DFC}</Project>
       <Name>Games</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Store-Small.png" />
+    <None Include="Resources\Empty-Small.png" />
+    <None Include="Resources\Store-Medium.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Simulations.AStar\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Bottleneck-Small-1.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
