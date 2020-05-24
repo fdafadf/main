@@ -62,6 +62,9 @@
     <Compile Include="Simulations.AStar\AStarSimulationPluginFactory.cs" />
     <Compile Include="Simulations.AStar\AStarSimulationPlugin.cs" />
     <Compile Include="Simulations.AStar\AStarAgent.cs" />
+    <Compile Include="Simulations\AgentDestructionModel.cs" />
+    <Compile Include="Simulations\SimulationResultsDescription.cs" />
+    <Compile Include="Simulations\SimulationTemplate.cs" />
     <Compile Include="System\Assert.cs" />
     <Compile Include="System.ComponentModel\CsvTypeConverter.cs" />
     <Compile Include="System.ComponentModel\DropDownStringConverter.cs" />
@@ -103,13 +106,13 @@
     <Compile Include="Simulations\SimulationPlugin.cs" />
     <Compile Include="Simulations\SimulationModel1Visualisation.cs" />
     <Compile Include="Simulations\SimulationResults.cs" />
-    <Compile Include="Spaces.Templating\SpaceTemplateGeneratingDefinition.cs" />
+    <Compile Include="Spaces.Templating\SpaceTemplateGeneratorDefinition.cs" />
     <Compile Include="Simulations\ISimulationPluginFactory.cs" />
     <Compile Include="Simulations\ISimulation.cs" />
     <Compile Include="Spaces\AgentsCollisionModel.cs" />
-    <Compile Include="Simulations\SimulationFactory.cs" />
+    <Compile Include="Simulations\SimulationTemplateDefinition.cs" />
     <Compile Include="Spaces.Templating\ISpaceTemplateFactory.cs" />
-    <Compile Include="Spaces.Templating\SpaceTemplateBitmapDefinition.cs" />
+    <Compile Include="Spaces.Templating\SpaceTemplateBitmap.cs" />
     <Compile Include="System\UShortPoint.cs" />
     <Compile Include="Workspaces\Workspace.cs" />
     <Compile Include="Spaces.Interaction\CardinalMovement.cs" />
@@ -160,6 +163,7 @@
     <Compile Include="Spaces\Space.cs" />
     <Compile Include="Workspaces\WorkspaceItemsDirectory.cs" />
     <Compile Include="Workspaces\WorkspaceItemsFile.cs" />
+    <Compile Include="Workspaces\WorkspaceSimulationResults.cs" />
     <Compile Include="Workspaces\WorkspaceSpaces.cs" />
     <EmbeddedResource Include="Forms\LabForm.resx">
       <DependentUpon>LabForm.cs</DependentUpon>
@@ -213,7 +217,9 @@
     <None Include="Resources\Empty-Small.png" />
     <None Include="Resources\Store-Medium.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="Resources\Empty-Small-16Agents.png" />
+  </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Bottleneck-Small-1.png" />
   </ItemGroup>

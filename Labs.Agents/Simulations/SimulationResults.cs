@@ -1,24 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace Labs.Agents
 {
     public class SimulationResults : INamed
     {
-        public DateTime Date;
-        public string Agent;
-        public string Environment;
-        public int Length => Series.First().Value.Count;
+        public SimulationResultsDescription Description;
         public Dictionary<string, List<double>> Series = new Dictionary<string, List<double>>();
+        public string Name => Description.Name;
 
         public SimulationResults(string agent, string environment)
         {
-            Date = DateTime.Now;
-            Agent = agent;
-            Environment = environment;
+            Description = new SimulationResultsDescription(agent, environment);
         }
 
-        string INamed.Name => $"{Agent}_{Environment}_{Date:yyyyMMdd-HHmmss}";
+        public SimulationResults(SimulationResultsDescription description, Dictionary<string, List<double>> series)
+        {
+            Description = description;
+            Series = series;
+        }
     }
 }

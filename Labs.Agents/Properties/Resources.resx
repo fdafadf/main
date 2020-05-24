@@ -124,6 +124,9 @@
   <data name="Empty_Small" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Empty-Small.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Empty_Small_16Agents" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Empty-Small-16Agents.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="Store_Medium" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Store-Medium.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>

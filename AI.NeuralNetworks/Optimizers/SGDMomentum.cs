@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.IO;
+using System.Linq;
 
 namespace AI.NeuralNetworks
 {
@@ -24,6 +25,13 @@ namespace AI.NeuralNetworks
             previousWeights = network.Layers.Select(layer => layer.Neurons.Select(neuron => neuron.Weights.Clone() as double[]).ToArray()).ToArray();
         }
 
+#if OPTIMIZER_DIAGNOSTICS
+        public SGDMomentum(Network network, double learningRate, double momentum, TextWriter writer) : base(network, learningRate, writer)
+        {
+            previousWeights = network.Layers.Select(layer => layer.Neurons.Select(neuron => neuron.Weights.Clone() as double[]).ToArray()).ToArray();
+        }
+#endif
+
         protected override void UpdateLayerWeights(int layerIndex, int batchSize)
         {
             Neuron[] layerNeurons = Network.Layers[layerIndex].Neurons;
@@ -47,6 +55,16 @@ namespace AI.NeuralNetworks
                 double previousWeight2 = weights[weights.Length - 1];
                 weights[weights.Length - 1] -= LearningRate * layerGradient[weights.Length - 1] - Momentum * (weights[weights.Length - 1] - neuronPreviousWeights[weights.Length - 1]);
                 neuronPreviousWeights[weights.Length - 1] = previousWeight2;
+
+#if OPTIMIZER_DIAGNOSTICS
+                for (int i = 0; i < weights.Length; i++)
+                {
+                    if (double.IsNaN(weights[i]))
+                    {
+                        UpdateDiag_NaNs++;
+                    }
+                }
+#endif
 
                 //for (int i = 0; i < weights.Length; i++)
                 //{

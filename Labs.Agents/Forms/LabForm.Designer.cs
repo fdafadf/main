@@ -30,7 +30,7 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LabForm));
             this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.tabPageSpaces = new System.Windows.Forms.TabPage();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.listViewEnvironments = new System.Windows.Forms.ListView();
@@ -44,7 +44,7 @@
             this.menuStrip2 = new System.Windows.Forms.MenuStrip();
             this.menuItemNewEnvironment = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItemOpenMapDirectory = new System.Windows.Forms.ToolStripMenuItem();
-            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.tabPageAgents = new System.Windows.Forms.TabPage();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.agentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -53,10 +53,9 @@
             this.columnHeader9 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader13 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader10 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.tabPageSimulationTemplates = new System.Windows.Forms.TabPage();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
-            this.listViewSimulationDefinitions = new System.Windows.Forms.ListView();
-            this.columnHeader12 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.listViewSimulationTemplates = new System.Windows.Forms.ListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader11 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -67,14 +66,15 @@
             this.tabPageSimulationResults = new System.Windows.Forms.TabPage();
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.menuItemShowSimulationResults = new System.Windows.Forms.ToolStripButton();
             this.listViewSimulationResults = new System.Windows.Forms.ListView();
             this.columnHeader14 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader16 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader15 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.menuItemShowSimulationResults = new System.Windows.Forms.ToolStripButton();
             this.columnHeader17 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader12 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tabControl1.SuspendLayout();
-            this.tabPage1.SuspendLayout();
+            this.tabPageSpaces.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -82,10 +82,10 @@
             this.splitContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSpacePreview)).BeginInit();
             this.menuStrip2.SuspendLayout();
-            this.tabPage3.SuspendLayout();
+            this.tabPageAgents.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.menuStrip1.SuspendLayout();
-            this.tabPage2.SuspendLayout();
+            this.tabPageSimulationTemplates.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
             this.menuStrip3.SuspendLayout();
             this.tabPageSimulationResults.SuspendLayout();
@@ -95,9 +95,9 @@
             // 
             // tabControl1
             // 
-            this.tabControl1.Controls.Add(this.tabPage1);
-            this.tabControl1.Controls.Add(this.tabPage3);
-            this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Controls.Add(this.tabPageSpaces);
+            this.tabControl1.Controls.Add(this.tabPageAgents);
+            this.tabControl1.Controls.Add(this.tabPageSimulationTemplates);
             this.tabControl1.Controls.Add(this.tabPageSimulationResults);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
@@ -106,15 +106,15 @@
             this.tabControl1.Size = new System.Drawing.Size(723, 396);
             this.tabControl1.TabIndex = 3;
             // 
-            // tabPage1
+            // tabPageSpaces
             // 
-            this.tabPage1.Controls.Add(this.tableLayoutPanel1);
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Size = new System.Drawing.Size(715, 370);
-            this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "Environments";
-            this.tabPage1.UseVisualStyleBackColor = true;
+            this.tabPageSpaces.Controls.Add(this.tableLayoutPanel1);
+            this.tabPageSpaces.Location = new System.Drawing.Point(4, 22);
+            this.tabPageSpaces.Name = "tabPageSpaces";
+            this.tabPageSpaces.Size = new System.Drawing.Size(715, 370);
+            this.tabPageSpaces.TabIndex = 0;
+            this.tabPageSpaces.Text = "Environments";
+            this.tabPageSpaces.UseVisualStyleBackColor = true;
             // 
             // tableLayoutPanel1
             // 
@@ -228,15 +228,15 @@
             this.menuItemOpenMapDirectory.Text = "&Open Map Directory";
             this.menuItemOpenMapDirectory.Click += new System.EventHandler(this.menuItemOpenMapDirectory_Click);
             // 
-            // tabPage3
+            // tabPageAgents
             // 
-            this.tabPage3.Controls.Add(this.tableLayoutPanel2);
-            this.tabPage3.Location = new System.Drawing.Point(4, 22);
-            this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(715, 370);
-            this.tabPage3.TabIndex = 2;
-            this.tabPage3.Text = "Agents";
-            this.tabPage3.UseVisualStyleBackColor = true;
+            this.tabPageAgents.Controls.Add(this.tableLayoutPanel2);
+            this.tabPageAgents.Location = new System.Drawing.Point(4, 22);
+            this.tabPageAgents.Name = "tabPageAgents";
+            this.tabPageAgents.Size = new System.Drawing.Size(715, 370);
+            this.tabPageAgents.TabIndex = 2;
+            this.tabPageAgents.Text = "Agents";
+            this.tabPageAgents.UseVisualStyleBackColor = true;
             // 
             // tableLayoutPanel2
             // 
@@ -279,7 +279,7 @@
             this.menuItemNewAgent.Size = new System.Drawing.Size(98, 22);
             this.menuItemNewAgent.Text = "&New";
             // 
-            // listViewAgenTPlugins
+            // listViewAgents
             // 
             this.listViewAgents.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader9,
@@ -289,7 +289,7 @@
             this.listViewAgents.FullRowSelect = true;
             this.listViewAgents.HideSelection = false;
             this.listViewAgents.Location = new System.Drawing.Point(3, 27);
-            this.listViewAgents.Name = "listViewAgenTPlugins";
+            this.listViewAgents.Name = "listViewAgents";
             this.listViewAgents.Size = new System.Drawing.Size(709, 340);
             this.listViewAgents.TabIndex = 0;
             this.listViewAgents.UseCompatibleStateImageBehavior = false;
@@ -310,21 +310,21 @@
             this.columnHeader10.Text = "Description";
             this.columnHeader10.Width = 136;
             // 
-            // tabPage2
+            // tabPageSimulationTemplates
             // 
-            this.tabPage2.Controls.Add(this.tableLayoutPanel3);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Size = new System.Drawing.Size(715, 370);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Simulation Definitions";
-            this.tabPage2.UseVisualStyleBackColor = true;
+            this.tabPageSimulationTemplates.Controls.Add(this.tableLayoutPanel3);
+            this.tabPageSimulationTemplates.Location = new System.Drawing.Point(4, 22);
+            this.tabPageSimulationTemplates.Name = "tabPageSimulationTemplates";
+            this.tabPageSimulationTemplates.Size = new System.Drawing.Size(715, 370);
+            this.tabPageSimulationTemplates.TabIndex = 1;
+            this.tabPageSimulationTemplates.Text = "Simulation Templates";
+            this.tabPageSimulationTemplates.UseVisualStyleBackColor = true;
             // 
             // tableLayoutPanel3
             // 
             this.tableLayoutPanel3.ColumnCount = 1;
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel3.Controls.Add(this.listViewSimulationDefinitions, 0, 1);
+            this.tableLayoutPanel3.Controls.Add(this.listViewSimulationTemplates, 0, 1);
             this.tableLayoutPanel3.Controls.Add(this.menuStrip3, 0, 0);
             this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel3.Location = new System.Drawing.Point(0, 0);
@@ -337,25 +337,20 @@
             // 
             // listViewSimulationDefinitions
             // 
-            this.listViewSimulationDefinitions.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader12,
+            this.listViewSimulationTemplates.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader1,
             this.columnHeader2,
+            this.columnHeader12,
             this.columnHeader11});
-            this.listViewSimulationDefinitions.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listViewSimulationDefinitions.FullRowSelect = true;
-            this.listViewSimulationDefinitions.HideSelection = false;
-            this.listViewSimulationDefinitions.Location = new System.Drawing.Point(3, 30);
-            this.listViewSimulationDefinitions.Name = "listViewSimulationDefinitions";
-            this.listViewSimulationDefinitions.Size = new System.Drawing.Size(709, 337);
-            this.listViewSimulationDefinitions.TabIndex = 2;
-            this.listViewSimulationDefinitions.UseCompatibleStateImageBehavior = false;
-            this.listViewSimulationDefinitions.View = System.Windows.Forms.View.Details;
-            // 
-            // columnHeader12
-            // 
-            this.columnHeader12.Text = "Name";
-            this.columnHeader12.Width = 82;
+            this.listViewSimulationTemplates.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listViewSimulationTemplates.FullRowSelect = true;
+            this.listViewSimulationTemplates.HideSelection = false;
+            this.listViewSimulationTemplates.Location = new System.Drawing.Point(3, 30);
+            this.listViewSimulationTemplates.Name = "listViewSimulationDefinitions";
+            this.listViewSimulationTemplates.Size = new System.Drawing.Size(709, 337);
+            this.listViewSimulationTemplates.TabIndex = 2;
+            this.listViewSimulationTemplates.UseCompatibleStateImageBehavior = false;
+            this.listViewSimulationTemplates.View = System.Windows.Forms.View.Details;
             // 
             // columnHeader1
             // 
@@ -388,13 +383,13 @@
             this.menuItemSimulation.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menuNewSimulation});
             this.menuItemSimulation.Name = "menuItemSimulation";
-            this.menuItemSimulation.Size = new System.Drawing.Size(76, 23);
-            this.menuItemSimulation.Text = "&Simulation";
+            this.menuItemSimulation.Size = new System.Drawing.Size(127, 23);
+            this.menuItemSimulation.Text = "&Simulation Template";
             // 
             // menuNewSimulation
             // 
             this.menuNewSimulation.Name = "menuNewSimulation";
-            this.menuNewSimulation.Size = new System.Drawing.Size(98, 22);
+            this.menuNewSimulation.Size = new System.Drawing.Size(180, 22);
             this.menuNewSimulation.Text = "&New";
             this.menuNewSimulation.Click += new System.EventHandler(this.menuNewSimulation_Click);
             // 
@@ -438,6 +433,16 @@
             this.toolStrip1.TabIndex = 0;
             this.toolStrip1.Text = "toolStrip1";
             // 
+            // menuItemShowSimulationResults
+            // 
+            this.menuItemShowSimulationResults.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.menuItemShowSimulationResults.Image = ((System.Drawing.Image)(resources.GetObject("menuItemShowSimulationResults.Image")));
+            this.menuItemShowSimulationResults.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.menuItemShowSimulationResults.Name = "menuItemShowSimulationResults";
+            this.menuItemShowSimulationResults.Size = new System.Drawing.Size(40, 22);
+            this.menuItemShowSimulationResults.Text = "Show";
+            this.menuItemShowSimulationResults.Click += new System.EventHandler(this.menuItemShowSimulationResults_Click);
+            // 
             // listViewSimulationResults
             // 
             this.listViewSimulationResults.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
@@ -470,19 +475,13 @@
             this.columnHeader15.Text = "Simulation";
             this.columnHeader15.Width = 93;
             // 
-            // menuItemShowSimulationResults
-            // 
-            this.menuItemShowSimulationResults.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.menuItemShowSimulationResults.Image = ((System.Drawing.Image)(resources.GetObject("menuItemShowSimulationResults.Image")));
-            this.menuItemShowSimulationResults.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.menuItemShowSimulationResults.Name = "menuItemShowSimulationResults";
-            this.menuItemShowSimulationResults.Size = new System.Drawing.Size(40, 22);
-            this.menuItemShowSimulationResults.Text = "Show";
-            this.menuItemShowSimulationResults.Click += new System.EventHandler(this.menuItemShowSimulationResults_Click);
-            // 
             // columnHeader17
             // 
             this.columnHeader17.Text = "Length";
+            // 
+            // columnHeader12
+            // 
+            this.columnHeader12.Text = "Iterations";
             // 
             // LabForm
             // 
@@ -497,7 +496,7 @@
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.Form1_Load);
             this.tabControl1.ResumeLayout(false);
-            this.tabPage1.ResumeLayout(false);
+            this.tabPageSpaces.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             this.splitContainer1.Panel1.ResumeLayout(false);
@@ -508,12 +507,12 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSpacePreview)).EndInit();
             this.menuStrip2.ResumeLayout(false);
             this.menuStrip2.PerformLayout();
-            this.tabPage3.ResumeLayout(false);
+            this.tabPageAgents.ResumeLayout(false);
             this.tableLayoutPanel2.ResumeLayout(false);
             this.tableLayoutPanel2.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
-            this.tabPage2.ResumeLayout(false);
+            this.tabPageSimulationTemplates.ResumeLayout(false);
             this.tableLayoutPanel3.ResumeLayout(false);
             this.tableLayoutPanel3.PerformLayout();
             this.menuStrip3.ResumeLayout(false);
@@ -529,12 +528,12 @@
 
         #endregion
         private System.Windows.Forms.TabControl tabControl1;
-        private System.Windows.Forms.TabPage tabPage1;
-        private System.Windows.Forms.TabPage tabPage2;
-        private System.Windows.Forms.ListView listViewSimulationDefinitions;
+        private System.Windows.Forms.TabPage tabPageSpaces;
+        private System.Windows.Forms.TabPage tabPageSimulationTemplates;
+        private System.Windows.Forms.ListView listViewSimulationTemplates;
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.ColumnHeader columnHeader2;
-        private System.Windows.Forms.TabPage tabPage3;
+        private System.Windows.Forms.TabPage tabPageAgents;
         private System.Windows.Forms.TabPage tabPageSimulationResults;
         private System.Windows.Forms.ListView listViewAgents;
         private System.Windows.Forms.ColumnHeader columnHeader9;
@@ -562,7 +561,6 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem menuNewSimulation;
         private System.Windows.Forms.ToolStripMenuItem menuItemOpenMapDirectory;
-        private System.Windows.Forms.ColumnHeader columnHeader12;
         private System.Windows.Forms.ColumnHeader columnHeader13;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;
         private System.Windows.Forms.ToolStrip toolStrip1;
@@ -572,5 +570,6 @@
         private System.Windows.Forms.ColumnHeader columnHeader15;
         private System.Windows.Forms.ToolStripButton menuItemShowSimulationResults;
         private System.Windows.Forms.ColumnHeader columnHeader17;
+        private System.Windows.Forms.ColumnHeader columnHeader12;
     }
 }

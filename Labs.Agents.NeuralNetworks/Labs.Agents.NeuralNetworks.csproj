@@ -67,9 +67,9 @@
     <Compile Include="AgentNetworkDefinition.cs" />
     <Compile Include="AgentNetworkInputCoder.cs" />
     <Compile Include="MarkovHistoryItem.cs" />
-    <Compile Include="NeuralAgentDriver.cs" />
-    <Compile Include="NeuralAgentDriverDefinition.cs" />
-    <Compile Include="NeuralAgentLabFormExtension.cs" />
+    <Compile Include="NeuralSimulationPlugin.cs" />
+    <Compile Include="NeuralSimulationPluginFactory.cs" />
+    <Compile Include="NeuralLabFormExtension.cs" />
     <Compile Include="NeuralAgentFactory.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>

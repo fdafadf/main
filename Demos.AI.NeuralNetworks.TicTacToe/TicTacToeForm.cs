@@ -150,7 +150,8 @@ namespace Demos.TicTacToe
                     else
                     {
                         boardControl.BoardState = nextState;
-                        currentState = nextState; MovePlayed();
+                        currentState = nextState; 
+                        MovePlayed();
                     }
                 }
             }
@@ -182,7 +183,7 @@ namespace Demos.TicTacToe
 
         private void Training(TrainingSettings settings)
         {
-            var trainingData = TicTacToeValueLoader.LoadAllUniqueStates(Storage.Instance);
+            var trainingData = TicTacToeValueLoader.LoadAllUniqueStates(Storage.Instance, TicTacToeValueNetwork.DefaultInputTransform);
             var trainer = new TicTacToeValueNetworkTrainer(trainingData, 0)
             {
                 HiddenLayerSizes = settings.Layers,

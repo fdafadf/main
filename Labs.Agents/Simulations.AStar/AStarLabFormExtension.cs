@@ -21,7 +21,7 @@ namespace Labs.Agents.Simulations.AStar
             item.SubItems.Add("A-Star");
             item.SubItems.Add("");
             item.Tag = pluginFactory;
-            LabForm.Agents.Items.Add(item);
+            LabForm.Agents.AddWithAutoResize(item);
         }
     }
 }

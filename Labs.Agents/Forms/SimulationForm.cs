@@ -29,7 +29,11 @@ namespace Labs.Agents.Forms
         protected override bool IterateSimulation()
         {
             bool result = base.IterateSimulation();
-            this.InvokeAction(environmentControl.Refresh);
+            this.InvokeAction(() => 
+            {
+                simulationStatusLabel.Text = Simulation.ToString();
+                environmentControl.Refresh();
+            });
             return result;
         }
     }

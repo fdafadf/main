@@ -2,21 +2,24 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Forms;
 
 namespace Labs.Agents.NeuralNetworks
 {
-    public class NeuralAgentDriver : SimulationPlugin<DestructibleInteractiveSpace<CardinalMovementSpace<NeuralAgent>, NeuralAgent>, NeuralAgent>
+    public class NeuralSimulationPlugin : SimulationPlugin<DestructibleInteractiveSpace<CardinalMovementSpace<NeuralAgent>, NeuralAgent>, NeuralAgent>
     {
         public Random Random;
         public AgentNetwork Network;
         public bool TrainingMode => TrainingConfiguration != null;
         AgentNetworkTrainingConfiguration TrainingConfiguration;
+        AgentNetworkFile NetworkFile;
         public List<MarkovHistoryItem> MarkovHistory = new List<MarkovHistoryItem>();
 
-        public NeuralAgentDriver(AgentNetwork network, AgentNetworkTrainingConfiguration trainingConfiguration, int seed) : base(new NeuralAgentFactory())
+        public NeuralSimulationPlugin(AgentNetworkFile networkFile, AgentNetworkTrainingConfiguration trainingConfiguration, int seed) : base(new NeuralAgentFactory())
         {
             Random = new Random(seed);
-            Network = network;
+            NetworkFile = networkFile;
+            Network = NetworkFile.Load();
             TrainingConfiguration = trainingConfiguration;
         }
 
@@ -26,6 +29,7 @@ namespace Labs.Agents.NeuralNetworks
             {
                 if (agent.Interaction.ActionResult != InteractionResult.Suspended)
                 {
+                    //Console.WriteLine($"ActionResult: {agent.Interaction.ActionResult}");
                     var encodedState = Network.CreateInput(agent, CardinalMovement.Nothing);
                     double reward;
 
@@ -51,6 +55,12 @@ namespace Labs.Agents.NeuralNetworks
                         }
                     }
 
+                    if (MarkovHistory.Count < 10)
+                    {
+                        Console.WriteLine($"{MarkovHistory.Count}: {Network.Predict(agent.NetworkLastInput)}");
+                    }
+
+                    //Console.WriteLine($"Reward: {reward}");
                     var historyItem = new MarkovHistoryItem(agent.NetworkLastInput, encodedState, reward);
                     MarkovHistory.Add(historyItem);
                 }
@@ -63,45 +73,64 @@ namespace Labs.Agents.NeuralNetworks
             {
                 if (MarkovHistory.Count > TrainingConfiguration.FirstTrainingIteration)
                 {
-                    Fit(MarkovHistory.Subset(TrainingConfiguration.HistorySubsetSize, Random), Random);
+                    Network.Fit(MarkovHistory.Subset(TrainingConfiguration.HistorySubsetSize, Random), TrainingConfiguration, Random);
                 }
             }
         }
 
         public override void OnIterationStarted()
         {
+            var undestroyedAgents = Agents.Where(agent => agent.Fitness.IsDestroyed == false);
+
             if (TrainingMode)
             {
-                foreach (var agent in Agents)
+                foreach (NeuralAgent agent in undestroyedAgents)
                 {
                     if (Random.NextDouble() < TrainingConfiguration.Epsilon)
                     {
                         agent.Interaction.Action = Random.Next(CardinalMovement.All);
                         agent.NetworkLastInput = Network.CreateInput(agent, agent.Interaction.Action);
+                        //Console.WriteLine($"Action(Random): {agent.Interaction.Action}");
                     }
                     else
                     {
                         var prediction = Network.Predict(agent);
                         agent.NetworkLastInput = prediction.Input;
                         agent.Interaction.Action = prediction.Action;
+                        //Console.WriteLine($"Action(Predict): {agent.Interaction.Action}");
                     }
                 }
             }
             else
             {
-                foreach (var agent in Agents)
+                foreach (NeuralAgent agent in undestroyedAgents)
                 {
-                    agent.Interaction.Action = Network.Predict(agent).Action;
+                    var prediction = Network.Predict(agent);
+                    agent.Interaction.Action = prediction.Action;
+                    agent.NetworkLastInput = prediction.Input;
                 }
             }
         }
 
-        private void Fit(IEnumerable<MarkovHistoryItem> batch, Random random)
+        public override void OnSimulationCompleted()
         {
-            var optimizer = new SGDMomentum(Network.Network, TrainingConfiguration.LearningRate, TrainingConfiguration.Momentum);
-            var trainer = new Trainer(optimizer, random);
-            var nextQ = batch.Select(item => new Projection(item.Input, new double[] { item.Reward + TrainingConfiguration.Gamma * Network.Predict(item.State).Value })).ToArray();
-            trainer.Train(nextQ, TrainingConfiguration.EpochesPerIteration, TrainingConfiguration.BatchSize);
+            if (TrainingMode)
+            {
+                if (MessageBox.Show("Do you want to update neural network?", "Training", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                {
+                    NetworkFile.Save(Network);
+                }
+            }
+        }
+
+        public override void OnSimulationPaused()
+        {
+            int index = 0;
+
+            foreach (var historyItem in MarkovHistory.Take(10))
+            {
+                Console.WriteLine($"{index++}: {Network.Predict(historyItem.Input)}");
+            }
         }
     }
 }

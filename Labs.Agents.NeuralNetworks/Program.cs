@@ -22,7 +22,7 @@ namespace Labs.Agents.NeuralNetworks
             var workspace = Workspace.Instance;
             var form = new LabForm();
             form.Workspace = workspace;
-            var extension1 = new NeuralAgentLabFormExtension(form, workspace);
+            var extension1 = new NeuralLabFormExtension(form, workspace);
             var extension2 = new DijkstraLabFormExtension(form, workspace);
             var extension3 = new AStarLabFormExtension(form, workspace);
             Application.Run(form);

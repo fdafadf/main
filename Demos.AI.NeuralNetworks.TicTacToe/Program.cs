@@ -1,4 +1,5 @@
-﻿using AI.TicTacToe;
+﻿using AI.NeuralNetworks.TicTacToe;
+using AI.TicTacToe;
 using Core.NetFramework;
 using System;
 using System.Windows.Forms;
@@ -13,7 +14,7 @@ namespace Demos.TicTacToe
         [STAThread]
         static void Main()
         {
-            TicTacToeValueLoader.LoadAllUniqueStates(Storage.Instance);
+            TicTacToeValueLoader.LoadAllUniqueStates(Storage.Instance, TicTacToeValueNetwork.DefaultInputTransform);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new TicTacToeForm());

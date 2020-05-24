@@ -11,7 +11,7 @@ namespace AI.TicTacToe
     {
         private static LabeledState<GameState, TicTacToeValue>[] AllUniqueStates;
 
-        public static LabeledState<GameState, TicTacToeValue>[] LoadAllUniqueStates(IStorage storage)
+        public static LabeledState<GameState, TicTacToeValue>[] LoadAllUniqueStates(IStorage storage, Func<GameState, double[]> inputTransform)
         {
             if (AllUniqueStates == null)
             {
@@ -23,7 +23,7 @@ namespace AI.TicTacToe
                 }
                 catch (Exception)
                 {
-                    var evaluator = new TicTacToeValueEvaluator(TicTacToeLabeledStateLoader.InputTransforms.Bipolar);
+                    var evaluator = new TicTacToeValueEvaluator(inputTransform);
                     var generator = TicTacToeLabeledStateGenerator<TicTacToeValue>.Instance;
                     AllUniqueStates = generator.GetAllUniqueStates(evaluator).ToArray();
 

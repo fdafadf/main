@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,6 +17,7 @@ namespace Labs.Agents
         {
             JsonSerializer serializer = new JsonSerializer();
             serializer.TypeNameHandling = TypeNameHandling.All;
+            serializer.Converters.Add(new StringEnumConverter());
 
             using (var stream = self.OpenRead())
             {
@@ -29,6 +31,7 @@ namespace Labs.Agents
             JsonSerializer serializer = new JsonSerializer();
             serializer.TypeNameHandling = TypeNameHandling.All;
             serializer.Formatting = Formatting.Indented;
+            serializer.Converters.Add(new StringEnumConverter());
 
             using (var stream = self.OpenWrite())
             {
@@ -330,6 +333,13 @@ namespace Labs.Agents
             {
                 return new FileInfo[0];
             }
+        }
+
+        public static void AddWithAutoResize(this ListView self, ListViewItem item)
+        {
+            self.Items.Add(item);
+            self.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+            self.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
         }
 
         public static void AddContextAction(this ListView self, string name, Action<ListViewItem> action)

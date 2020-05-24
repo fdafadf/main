@@ -23,19 +23,40 @@ namespace Labs.Agents
 
             using (Graphics bufferGraphics = Graphics.FromImage(obstacles))
             {
-                for (int y = 0; y < height; y++)
-                {
-                    for (int x = 0; x < width; x++)
-                    {
-                        if (map(x, y))
-                        {
-                            bufferGraphics.FillRectangle(Brushes.DarkGray, x * scale, y * scale, scale, scale);
-                        }
-                    }
-                }
+                PaintMap(bufferGraphics, Brushes.DarkGray, width, height, scale, map);
             }
 
             return obstacles;
+        }
+
+        public static Bitmap CreatePreviewImage(SpaceTemplate spaceTemplate)
+        {
+            int width = spaceTemplate.Width;
+            int height = spaceTemplate.Height;
+            int scale = 4;
+            Bitmap obstacles = new Bitmap(width * scale, height * scale);
+
+            using (Graphics bufferGraphics = Graphics.FromImage(obstacles))
+            {
+                PaintMap(bufferGraphics, Brushes.DarkGray, width, height, scale, (x, y) => spaceTemplate.Obstacles[x, y]);
+                PaintMap(bufferGraphics, Brushes.Red, width, height, scale, (x, y) => spaceTemplate.AgentMap[x, y]);
+            }
+
+            return obstacles;
+        }
+
+        private static void PaintMap(Graphics graphics, Brush brush, int width, int height, int scale, Func<int, int, bool> map)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    if (map(x, y))
+                    {
+                        graphics.FillRectangle(brush, x * scale, y * scale, scale, scale);
+                    }
+                }
+            }
         }
 
         public void PaintObstacles(Graphics graphics)

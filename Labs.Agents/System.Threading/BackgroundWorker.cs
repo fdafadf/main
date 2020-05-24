@@ -14,7 +14,7 @@ namespace Labs.Agents
         CancellationTokenSource CancellationSource;
         TaskCompletionSource<object> CompletionSource;
         EventWaitHandle PauseHandle = new EventWaitHandle(false, EventResetMode.ManualReset);
-        int Interval = 100;
+        public int Interval = 100;
 
         public BackgroundWorker(Func<bool> backgroundAction)
         {

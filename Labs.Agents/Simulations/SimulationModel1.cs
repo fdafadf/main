@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 
@@ -14,31 +15,34 @@ namespace Labs.Agents
         public RandomRenewableGoals<TAgent> Goals;
         public SimulationResults Results;
         public List<TAgent> Agents = new List<TAgent>();
-        TPlugin Plugin;
-        DateTime StartTime;
+        int Iteration;
+        int Iterations;
+        internal TPlugin Plugin;
+        AgentDestructionModel AgentDestructionModel;
         List<double> ConsumedTime = new List<double>();
+        Stopwatch Stopwatch = new Stopwatch();
 
-        public SimulationModel1(ISpaceTemplateFactory spaceDefinition, TPlugin plugin, string pluginName, AgentsCollisionModel agentsCollisionModel)
+        public SimulationModel1(ISpaceTemplateFactory spaceDefinition, TPlugin plugin, string pluginName, int iterations, AgentsCollisionModel agentsCollisionModel, AgentDestructionModel agentDestructionModel)
         {
             var spaceTemplate = spaceDefinition.CreateSpaceTemplate();
             var cardinalSpace = new CardinalMovementSpace<TAgent>(spaceTemplate, agentsCollisionModel);
             Space = new DestructibleInteractiveSpace<CardinalMovementSpace<TAgent>, TAgent>(cardinalSpace);
             Agents.AddRange(spaceTemplate.AgentMap.SelectTrue((x, y) => plugin.CreateAgent(Space, x, y)));
             Goals = new RandomRenewableGoals<TAgent>(Space.InteractiveSpace, new Random(0));
-            Goals.Update(Agents);
+            Goals.Initialize(Agents);
             Results = new SimulationResults(pluginName, spaceDefinition.Name);
             Results.Series.Add("Reached Goals", Goals.ReachedGoals);
             Results.Series.Add("Collisions", Space.Collisions);
             Results.Series.Add("ConsumedTime", ConsumedTime);
             Plugin = plugin;
+            Iterations = iterations;
+            AgentDestructionModel = agentDestructionModel;
         }
 
         public bool Iterate()
         {
-            if (StartTime == default)
-            {
-                StartTime = DateTime.Now;
-            }
+            Iteration++;
+            Stopwatch.Start();
 
             Plugin.OnIterationStarted();
             Space.Interact(Agents);
@@ -48,13 +52,37 @@ namespace Labs.Agents
 
             for (int i = 0; i < destroyed; i++)
             {
-                var field = Random.GetUnusedField(Space.InteractiveSpace);
-                Agents.Add(Plugin.CreateAgent(Space, field.X, field.Y));
+                if (AgentDestructionModel.CreateNew)
+                {
+                    var field = Random.GetUnusedField(Space.InteractiveSpace);
+                    Agents.Add(Plugin.CreateAgent(Space, field.X, field.Y));
+                }
+            }
+
+            if (AgentDestructionModel.RemoveDestoryed)
+            {
+                Agents.RemoveAll(agent => agent.Fitness.IsDestroyed);
             }
 
             Plugin.OnIterationCompleted();
-            ConsumedTime.Add((DateTime.Now - StartTime).TotalSeconds);
-            return true;
+            Stopwatch.Stop();
+            ConsumedTime.Add(Stopwatch.Elapsed.TotalSeconds);
+            return Iteration < Iterations;
+        }
+
+        public void Complete()
+        {
+            Plugin.OnSimulationCompleted();
+        }
+
+        public void Pause()
+        {
+            Plugin.OnSimulationPaused();
+        }
+
+        public override string ToString()
+        {
+            return $"Iteration: {Iteration}/{Iterations} Reached Goals: {Goals.TotalReachedGoals} Collisions: {Space.TotalCollisions}";
         }
     }
 
@@ -71,7 +99,7 @@ namespace Labs.Agents
             Random = random;
         }
 
-        public void Update(IEnumerable<TAgent> agents)
+        public void Initialize(IEnumerable<TAgent> agents)
         {
             foreach (var agent in agents)
             {
@@ -85,7 +113,11 @@ namespace Labs.Agents
                     agent.Goal.Position = Random.GetUnusedField(Space);
                 }
             }
+        }
 
+        public void Update(IEnumerable<TAgent> agents)
+        {
+            Initialize(agents);
             ReachedGoals.Add(TotalReachedGoals);
         }
     }

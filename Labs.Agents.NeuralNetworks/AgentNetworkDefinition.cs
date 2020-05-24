@@ -8,26 +8,41 @@ namespace Labs.Agents.NeuralNetworks
 {
     public class AgentNetworkDefinition
     {
-        public string Name { get; set; }
+        public const FunctionName DefaultActivationFunction = FunctionName.LeakyReLU;
+
         public int ViewRadius { get; set; }
         [TypeConverter(typeof(CsvTypeConverter))]
         public List<NetworkLayerDefinition> Layers { get; set; }
+        public FunctionName LastLayerActivationFunction { get; set; } = DefaultActivationFunction;
+        string name;
 
         public AgentNetworkDefinition(string name, int viewRadius, params int[] layersSizes)
         {
-            Name = name;
+            this.name = name;
             ViewRadius = viewRadius;
-            Layers = layersSizes.Select(layerSize => new NetworkLayerDefinition(FunctionName.ReLU, layerSize)).ToList();
+            Layers = layersSizes.Select(layerSize => new NetworkLayerDefinition(DefaultActivationFunction, layerSize)).ToList();
         }
 
         public AgentNetworkDefinition()
         {
             ViewRadius = 5;
             Layers = new List<NetworkLayerDefinition>();
-            Layers.Add(new NetworkLayerDefinition(FunctionName.ReLU, 114));
-            Layers.Add(new NetworkLayerDefinition(FunctionName.ReLU, 228));
-            Layers.Add(new NetworkLayerDefinition(FunctionName.ReLU, 114));
-            Layers.Add(new NetworkLayerDefinition(FunctionName.ReLU, 57));
+            Layers.Add(new NetworkLayerDefinition(DefaultActivationFunction, 114));
+            Layers.Add(new NetworkLayerDefinition(DefaultActivationFunction, 228));
+            Layers.Add(new NetworkLayerDefinition(DefaultActivationFunction, 114));
+            Layers.Add(new NetworkLayerDefinition(DefaultActivationFunction, 57));
+        }
+
+        public string Name 
+        {
+            get
+            {
+                return name ?? ToString();
+            }
+            set
+            {
+                name = value;
+            }
         }
 
         public override string ToString()

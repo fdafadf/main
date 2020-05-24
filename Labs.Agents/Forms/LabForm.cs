@@ -11,7 +11,7 @@ namespace Labs.Agents.Forms
         public MenuStrip MenuAgents => menuStrip1;
         public ToolStripMenuItem MenuNewSimulation => menuNewSimulation;
         public ToolStripMenuItem MenuNewAgent => menuItemNewAgent;
-        public ListView Simulations => listViewSimulationDefinitions;
+        public ListView Simulations => listViewSimulationTemplates;
         public ListView Agents => listViewAgents;
         public Workspace Workspace;
         protected SpaceTemplateGeneratorForm EnvironmentGeneratorForm = new SpaceTemplateGeneratorForm();
@@ -22,15 +22,18 @@ namespace Labs.Agents.Forms
             tabControl1.SelectedIndex = 2;
             listViewEnvironments.AddContextAction("&Remove", RemoveEnvironment);
             listViewAgents.AddContextAction("&Remove", RemoveAgent);
-            listViewSimulationDefinitions.AddContextAction("&Run", RunSimulation);
-            listViewSimulationDefinitions.AddContextAction("&Remove", RemoveSimulationDefinition);
+            listViewSimulationTemplates.AddContextAction("&Run", RunSimulation);
+            //listViewSimulationDefinitions.AddContextAction("&Edit", EditSimulation);
+            listViewSimulationTemplates.AddContextAction("&Remove", RemoveSimulationTemplate);
             listViewSimulationResults.AddContextAction("&Remove", RemoveSimulationResults);
+            listViewSimulationTemplates.DoubleClick += listViewSimulationDefinitions_DoubleClick;
+            listViewSimulationResults.DoubleClick += menuItemShowSimulationResults_Click;
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            Workspace.Spaces.ForEach(this.Add);
-            Workspace.Simulations.ForEach(Add);
+            Workspace.Spaces.ForEach(Add);
+            Workspace.SimulationTemplates.ForEach(Add);
             Workspace.SimulationResults.ForEach(Add);
         }
 
@@ -52,50 +55,81 @@ namespace Labs.Agents.Forms
 
         private void RemoveSimulationResults(ListViewItem item)
         {
-            if (Workspace.SimulationResults.Remove(item.Tag as SimulationResults))
+            if (Workspace.SimulationResults.Remove(GetSimulationResultsDescription(item)))
             {
                 listViewSimulationResults.Items.Remove(item);
             }
         }
 
-        private void RemoveSimulationDefinition(ListViewItem item)
+        private void RemoveSimulationTemplate(ListViewItem item)
         {
-            if (Workspace.Simulations.Remove(item.Tag as SimulationFactory))
+            if (item.Tag is SimulationTemplate template)
             {
-                listViewSimulationDefinitions.Items.Remove(item);
+                if (Workspace.SimulationTemplates.Remove(template.Definition))
+                {
+                    listViewSimulationTemplates.Items.Remove(item);
+                }
             }
         }
 
         private void RunSimulation(ListViewItem item)
         {
-            if (item.Tag is SimulationFactory definition)
+            if (item.Tag is SimulationTemplate template)
             {
-                var results = definition.CreateSimulationForm().Show();
-                Workspace.SimulationResults.Add(results);
-                Add(results);
+                var results = template.CreateSimulationForm().Show();
+
+                if (results.Series.First().Value.Count > 0)
+                {
+                    Workspace.SimulationResults.Add(results);
+                    Add(results, true);
+                }
             }
         }
 
-        private void Add(SimulationResults simulationResults)
+        private void EditSimulation(ListViewItem item)
+        {
+            if (item.Tag is SimulationTemplateDefinition template)
+            {
+                using (var gridForm = new PropertyGridForm("Edit Simulation"))
+                {
+                    gridForm.PropertyGrid.SelectedObject = template;
+
+                    if (gridForm.ShowDialog() == DialogResult.OK)
+                    {
+                    }
+                }
+            }
+        }
+
+        private void Add(SimulationResultsDescription simulationResults) => Add(simulationResults, simulationResults, false);
+        private void Add(SimulationResults simulationResults) => Add(simulationResults.Description, simulationResults, false);
+        private void Add(SimulationResults simulationResults, bool focus) => Add(simulationResults.Description, simulationResults, focus);
+
+        private void Add(SimulationResultsDescription simulationResults, object tag, bool focus)
         {
             var item = new ListViewItem(simulationResults.Date.ToString());
             item.SubItems.Add(simulationResults.Agent);
             item.SubItems.Add(simulationResults.Environment);
             item.SubItems.Add(simulationResults.Length.ToString()); 
-            item.Tag = simulationResults;
-            listViewSimulationResults.Items.Add(item);
-            listViewSimulationResults.Focus();
-            item.Selected = true;
-            tabControl1.SelectedTab = tabPageSimulationResults;
+            item.Tag = tag;
+            listViewSimulationResults.AddWithAutoResize(item);
+
+            if (focus)
+            {
+                listViewSimulationResults.Focus();
+                listViewSimulationResults.SelectedItems.Clear();
+                item.Selected = true;
+                tabControl1.SelectedTab = tabPageSimulationResults;
+            }
         }
 
         private void Add(ISpaceTemplateFactory spaceDefinition)
         {
-            if (spaceDefinition is SpaceTemplateGeneratingDefinition generated)
+            if (spaceDefinition is SpaceTemplateGeneratorDefinition generated)
             {
                 Add(generated);
             }
-            else if (spaceDefinition is SpaceTemplateBitmapDefinition map)
+            else if (spaceDefinition is SpaceTemplateBitmap map)
             {
                 Add(map);
             }
@@ -103,12 +137,9 @@ namespace Labs.Agents.Forms
             {
                 throw new Exception();
             }
-
-            listViewEnvironments.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
-            listViewEnvironments.Columns[0].AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
         }
 
-        private void Add(SpaceTemplateBitmapDefinition spaceDefinition)
+        private void Add(SpaceTemplateBitmap spaceDefinition)
         {
             var item = new ListViewItem(spaceDefinition.Name);
             var template = spaceDefinition.CreateSpaceTemplate();
@@ -118,10 +149,10 @@ namespace Labs.Agents.Forms
             item.SubItems.Add(template.NumberOfAgents.ToString());
             item.SubItems.Add(string.Empty);
             item.Tag = spaceDefinition;
-            listViewEnvironments.Items.Add(item);
+            listViewEnvironments.AddWithAutoResize(item);
         }
 
-        private void Add(SpaceTemplateGeneratingDefinition spaceDefinition)
+        private void Add(SpaceTemplateGeneratorDefinition spaceDefinition)
         {
             var item = new ListViewItem(spaceDefinition.Name);
             item.SubItems.Add(spaceDefinition.GeneratorProperties.Width.ToString());
@@ -130,7 +161,30 @@ namespace Labs.Agents.Forms
             item.SubItems.Add(spaceDefinition.GeneratorProperties.NumberOfAgents.ToString());
             item.SubItems.Add(spaceDefinition.GeneratorProperties.NumberOfObstacles.ToString());
             item.Tag = spaceDefinition;
-            listViewEnvironments.Items.Add(item);
+            listViewEnvironments.AddWithAutoResize(item);
+        }
+
+        private void Add(SimulationTemplateDefinition simulationTemplateDefinition)
+        {
+            Add(new SimulationTemplate(simulationTemplateDefinition));
+        }
+
+        private void Add(SimulationTemplate simulationTemplate)
+        {
+            var item = new ListViewItem(simulationTemplate.Definition.Space);
+            item.SubItems.Add(simulationTemplate.Definition.SimulationPlugin);
+            item.SubItems.Add(simulationTemplate.Definition.Iterations.ToString());
+            item.SubItems.Add(simulationTemplate.ToString());
+            item.Tag = simulationTemplate;
+            listViewSimulationTemplates.AddWithAutoResize(item);
+        }
+
+        private void listViewSimulationDefinitions_DoubleClick(object sender, EventArgs e)
+        {
+            if (listViewSimulationTemplates.SelectedItems.Count == 1)
+            {
+                RunSimulation(listViewSimulationTemplates.SelectedItems[0]);
+            }
         }
 
         private void listViewEnvironments_SelectedIndexChanged(object sender, EventArgs e)
@@ -143,7 +197,7 @@ namespace Labs.Agents.Forms
                 var oldImage = pictureBoxSpacePreview.Image;
                 pictureBoxSpacePreview.Image = null;
                 oldImage?.Dispose();
-                pictureBoxSpacePreview.Image = Painter.CreateObstaclesBitmap(spaceTemplate.Width, spaceTemplate.Height, 2, (x, y) => spaceTemplate.Obstacles[x, y]);
+                pictureBoxSpacePreview.Image = Painter.CreatePreviewImage(spaceTemplate);
             }
         }
 
@@ -151,7 +205,7 @@ namespace Labs.Agents.Forms
         {
             if (EnvironmentGeneratorForm.ShowDialog() == DialogResult.OK)
             {
-                var spaceDefinition = new SpaceTemplateGeneratingDefinition(EnvironmentGeneratorForm.Properties);
+                var spaceDefinition = new SpaceTemplateGeneratorDefinition(EnvironmentGeneratorForm.Properties);
                 Workspace.Spaces.Add(spaceDefinition);
                 Add(spaceDefinition);
             }
@@ -180,34 +234,50 @@ namespace Labs.Agents.Forms
 
         private void menuNewSimulation_Click(object sender, EventArgs e)
         {
-            var form2 = new PropertyGridForm("New Simulation");
-            var simulationDefinition = new SimulationFactory(Workspace);
-            form2.PropertyGrid.SelectedObject = simulationDefinition;
-
-            if (form2.ShowDialog() == DialogResult.OK)
+            using (var gridForm = new PropertyGridForm("New Simulation"))
             {
-                Workspace.Simulations.Add(simulationDefinition);
-                Add(simulationDefinition);
+                var simulationDefinition = new SimulationTemplateDefinition(Workspace);
+                gridForm.PropertyGrid.SelectedObject = simulationDefinition;
+                gridForm.OKAction = () =>
+                {
+                    Workspace.SimulationTemplates.Add(simulationDefinition);
+                    Add(simulationDefinition);
+                };
+                gridForm.ShowDialog();
             }
-        }
-
-        private void Add(SimulationFactory simulationDefinition)
-        {
-            var item = new ListViewItem(simulationDefinition.Name);
-            item.SubItems.Add(simulationDefinition.Space);
-            item.SubItems.Add(simulationDefinition.SimulationPlugin);
-            item.SubItems.Add(simulationDefinition.Iterations.ToString());
-            item.Tag = simulationDefinition;
-            listViewSimulationDefinitions.Items.Add(item);
         }
 
         private void menuItemShowSimulationResults_Click(object sender, EventArgs e)
         {
             if (listViewSimulationResults.SelectedItems.Count > 0)
             {
-                var results = listViewSimulationResults.SelectedItems.OfType<ListViewItem>().Select(item => item.Tag as SimulationResults);
+                var results = listViewSimulationResults.SelectedItems.OfType<ListViewItem>().Select(GetSimulationResults);
                 var form = new ChartForm("Simulation Results", results);
                 form.Show();
+            }
+        }
+
+        private SimulationResults GetSimulationResults(ListViewItem item)
+        {
+            if (item.Tag is SimulationResultsDescription description)
+            {
+                return Workspace.SimulationResults.Get(description);
+            }
+            else
+            {
+                return item.Tag as SimulationResults;
+            }
+        }
+
+        private SimulationResultsDescription GetSimulationResultsDescription(ListViewItem item)
+        {
+            if (item.Tag is SimulationResults simulationResults)
+            {
+                return simulationResults.Description;
+            }
+            else
+            {
+                return item.Tag as SimulationResultsDescription;
             }
         }
     }

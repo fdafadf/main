@@ -12,5 +12,10 @@
             Value = value;
             Input = input;
         }
+
+        public override string ToString()
+        {
+            return $"{Action} {Value}";
+        }
     }
 }

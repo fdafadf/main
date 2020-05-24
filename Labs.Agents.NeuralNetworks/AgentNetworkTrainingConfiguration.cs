@@ -11,7 +11,6 @@
         public int EpochesPerIteration { get; set; } = 1;
         public int BatchSize { get; set; } = 8;
 
-
         public override string ToString()
         {
             return $"𝛼: {LearningRate}, 𝑚: {Momentum}, 𝜀: {Epsilon}, 𝛾: {Gamma}, batch: {HistorySubsetSize}";

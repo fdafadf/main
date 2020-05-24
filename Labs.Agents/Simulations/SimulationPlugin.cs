@@ -8,6 +8,8 @@ namespace Labs.Agents
         public abstract void OnInteractionCompleted();
         public abstract void OnIterationCompleted();
         public abstract void OnIterationStarted();
+        public abstract void OnSimulationCompleted();
+        public abstract void OnSimulationPaused();
         public abstract Type AgentType { get; }
     }
 

@@ -1,8 +1,7 @@
 ﻿namespace Labs.Agents
 {
-    public interface ISimulationPluginFactory
+    public interface ISimulationPluginFactory : INamed
     {
-        string Name { get; set; }
         SimulationPlugin CreatePlugin();
     }
 }

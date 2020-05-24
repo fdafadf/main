@@ -54,7 +54,7 @@ namespace Labs.Agents.Simulations.Dijkstra
             int height = space.Height;
             Dictionary<UShortPoint, int> distances = new Dictionary<UShortPoint, int>();
             Dictionary<UShortPoint, CardinalMovement> predecessors = new Dictionary<UShortPoint, CardinalMovement>();
-            List<UShortPoint> unvisited = new List<UShortPoint>();
+            HashSet<UShortPoint> unvisited = new HashSet<UShortPoint>();
 
             UShortPoint removeUnvisitedMin()
             {
@@ -91,6 +91,7 @@ namespace Labs.Agents.Simulations.Dijkstra
                 }
             }
 
+            UShortPoint goalPosition = new UShortPoint((ushort)Goal.Position.X, (ushort)Goal.Position.Y);
             UShortPoint startPosition = new UShortPoint((ushort)Anchor.Field.X, (ushort)Anchor.Field.Y);
             distances[startPosition] = 0;
 
@@ -98,6 +99,11 @@ namespace Labs.Agents.Simulations.Dijkstra
             {
                 UShortPoint currentMin = removeUnvisitedMin();
                 int currentDistance = distances[currentMin];
+
+                if (currentMin == goalPosition)
+                {
+                    break;
+                }
 
                 foreach (CardinalMovement move in CardinalMovement.All)
                 {
@@ -117,8 +123,6 @@ namespace Labs.Agents.Simulations.Dijkstra
                     }
                 }
             }
-
-            UShortPoint goalPosition = new UShortPoint((ushort)Goal.Position.X, (ushort)Goal.Position.Y);
 
             while (goalPosition.Equals(startPosition) == false)
             {

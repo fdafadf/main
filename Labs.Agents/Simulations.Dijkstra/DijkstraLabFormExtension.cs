@@ -21,7 +21,7 @@ namespace Labs.Agents.Simulations.Dijkstra
             item.SubItems.Add("Dijkstra");
             item.SubItems.Add("");
             item.Tag = driverDefinition;
-            LabForm.Agents.Items.Add(item);
+            LabForm.Agents.AddWithAutoResize(item);
         }
     }
 }

@@ -2,11 +2,11 @@
 
 namespace Labs.Agents
 {
-    public class SpaceTemplateBitmapDefinition : ISpaceTemplateFactory
+    public class SpaceTemplateBitmap : ISpaceTemplateFactory
     {
         public string Name { get; set; }
 
-        public SpaceTemplateBitmapDefinition(string name)
+        public SpaceTemplateBitmap(string name)
         {
             Name = name;
         }

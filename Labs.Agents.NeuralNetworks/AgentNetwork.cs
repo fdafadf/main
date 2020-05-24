@@ -1,4 +1,5 @@
 ﻿using AI.NeuralNetworks;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -25,6 +26,17 @@ namespace Labs.Agents.NeuralNetworks
                 var layers = NetworkSerializer.LoadLayers(new BinaryReader(stream));
                 var viewRadius = AgentNetworkInputCoder.EncodedSizeToViewRadius(layers.First().Neurons.First().Weights.Length - 1);
                 InputCoder = new AgentNetworkInputCoder(viewRadius);
+
+                if (layers.Last().Neurons.Length != 1)
+                {
+                    throw new ArgumentException("Invalid neural network shape.");
+                }
+
+                if (layers.First().Neurons.First().Weights.Length - 1 != InputCoder.EncodedSize)
+                {
+                    throw new ArgumentException("Invalid neural network shape.");
+                }
+
                 Network = new Network(layers);
             }
         }
@@ -32,7 +44,9 @@ namespace Labs.Agents.NeuralNetworks
         public AgentNetwork(AgentNetworkDefinition definition, ILayerInitializer initializer)
         {
             InputCoder = new AgentNetworkInputCoder(definition.ViewRadius);
-            Network = NetworkBuilder.Build(new NetworkDefinition(InputCoder.EncodedSize, definition.Layers), initializer);
+            var lastLayer = new NetworkLayerDefinition(definition.LastLayerActivationFunction, 1);
+            var networkDefinition = new NetworkDefinition(InputCoder.EncodedSize, definition.Layers.Concat(new[] { lastLayer }));
+            Network = NetworkBuilder.Build(networkDefinition, initializer);
         }
 
         public AgentNetworkPrediction Predict(NeuralAgent agent)
@@ -58,7 +72,8 @@ namespace Labs.Agents.NeuralNetworks
 
                 if (All % 1000000 == 0)
                 {
-                    System.Diagnostics.Debugger.Break();
+                    Console.WriteLine($"{Zeros}/{All}");
+                    //System.Diagnostics.Debugger.Break();
                 }
 
                 if (predictedValue > bestValue)
@@ -77,6 +92,14 @@ namespace Labs.Agents.NeuralNetworks
             var input = InputCoder.Encode(agent);
             InputCoder.EncodeAction(input, action);
             return input;
+        }
+
+        public void Fit(IEnumerable<MarkovHistoryItem> batch, AgentNetworkTrainingConfiguration configuration, Random random)
+        {
+            var optimizer = new SGDMomentum(Network, configuration.LearningRate, configuration.Momentum, Console.Out);
+            var trainer = new Trainer(optimizer, random);
+            var nextQ = batch.Select(item => new Projection(item.Input, new double[] { item.Reward + configuration.Gamma * Predict(item.State).Value })).ToArray();
+            trainer.Train(nextQ, configuration.EpochesPerIteration, configuration.BatchSize);
         }
 
         public void Save(FileInfo fileInfo)

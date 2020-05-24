@@ -83,6 +83,16 @@ namespace Labs.Agents.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Empty_Small_16Agents {
+            get {
+                object obj = ResourceManager.GetObject("Empty_Small_16Agents", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Store_Medium {
             get {
                 object obj = ResourceManager.GetObject("Store_Medium", resourceCulture);

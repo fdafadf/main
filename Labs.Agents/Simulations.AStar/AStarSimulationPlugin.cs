@@ -21,5 +21,13 @@
                 agent.CalculateInteraction();
             }
         }
+
+        public override void OnSimulationCompleted()
+        {
+        }
+
+        public override void OnSimulationPaused()
+        {
+        }
     }
 }

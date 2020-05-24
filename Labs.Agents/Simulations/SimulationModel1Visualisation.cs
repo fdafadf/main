@@ -1,4 +1,5 @@
 ﻿using Labs.Agents.Forms;
+using System.Linq;
 
 namespace Labs.Agents
 {
@@ -8,10 +9,12 @@ namespace Labs.Agents
     {
         public SimulationModel1<TPlugin, TAgent> Simulation { get; }
         ISimulation ISimulationViualisation.Simulation => Simulation;
+        int AnimationInterval;
 
-        public SimulationModel1Visualisation(SimulationModel1<TPlugin, TAgent> simulation)
+        public SimulationModel1Visualisation(SimulationModel1<TPlugin, TAgent> simulation, int animationInterval)
         {
             Simulation = simulation;
+            AnimationInterval = animationInterval;
         }
 
         public SimulationResults Show()
@@ -21,10 +24,11 @@ namespace Labs.Agents
             var form = new SimulationForm();
             form.EnvironmentControl = environmentPanel;
             form.Simulation = Simulation;
+            form.SimulationWorker.Interval = AnimationInterval;
             environmentPanel.Paint += (s, e) => {
                 painter.PaintObstacles(e.Graphics);
                 painter.PaintAgents(e.Graphics, Simulation.Agents);
-                painter.PaintGoals(e.Graphics, Simulation.Agents);
+                painter.PaintGoals(e.Graphics, Simulation.Agents.Where(agent => agent.Fitness.IsDestroyed == false));
             };
             form.ShowDialog();
             return Simulation.Results;

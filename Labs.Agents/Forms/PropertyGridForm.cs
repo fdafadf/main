@@ -7,6 +7,7 @@ namespace Labs.Agents.Forms
     public partial class PropertyGridForm : Form
     {
         public PropertyGrid PropertyGrid => propertyGrid1;
+        public Action OKAction;
 
         public PropertyGridForm()
         {
@@ -27,6 +28,7 @@ namespace Labs.Agents.Forms
                     try
                     {
                         validatable.Validate();
+                        OKAction?.Invoke();
                     }
                     catch (Exception exception)
                     {

@@ -7,7 +7,7 @@ namespace Labs.Agents.Forms
     public class SimulationWorkerForm : Form
     {
         public ISimulation Simulation;
-        protected BackgroundWorker SimulationWorker;
+        public BackgroundWorker SimulationWorker { get; }
         private ToolStrip MainMenuControl;
         private ToolStripButton PauseButton;
         private ToolStripButton ResumeButton;
@@ -19,22 +19,18 @@ namespace Labs.Agents.Forms
             SimulationWorker.Resumed += OnResumed;
         }
 
-        int Iterations;
-
         protected virtual bool IterateSimulation()
         {
-            Iterations++;
-            var result = Simulation.Iterate();
-            //this.InvokeAction(() => {
-            //simulationStatusLabel.Text = $"Iteration: {Iterations} Reached Goals: Simulation.Goals.TotalReachedGoals";
-
-            //});
-            return result;
+            return Simulation.Iterate();
         }
 
         protected override void OnClosing(CancelEventArgs e)
         {
-            if (SimulationWorker.IsCompleted == false)
+            if (SimulationWorker.IsCompleted)
+            {
+                Simulation.Complete();
+            }
+            else
             {
                 e.Cancel = true;
                 SimulationWorker.Stop().ContinueWith(task => this.InvokeAction(Close));
@@ -69,6 +65,7 @@ namespace Labs.Agents.Forms
 
         protected virtual void OnPaused()
         {
+            Simulation?.Pause();
             this.InvokeAction(() =>
             {
                 ResumeButton.Enabled = true;
@@ -94,7 +91,6 @@ namespace Labs.Agents.Forms
             this.ClientSize = new System.Drawing.Size(284, 261);
             this.Name = "SimulationForm";
             this.ResumeLayout(false);
-
         }
     }
 }

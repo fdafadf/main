@@ -49,8 +49,8 @@ namespace Labs.Agents
             if (createSpacesFile)
             {
                 Items = new List<ISpaceTemplateFactory>();
-                Add(new SpaceTemplateGeneratingDefinition(new SpaceTemplateGeneratorProperties("Generated Example 1")));
-                Add(new SpaceTemplateGeneratingDefinition(new SpaceTemplateGeneratorProperties("Generated Example 2") { Seed = 1 }));
+                Add(new SpaceTemplateGeneratorDefinition(new SpaceTemplateGeneratorProperties("Generated Example 1")));
+                Add(new SpaceTemplateGeneratorDefinition(new SpaceTemplateGeneratorProperties("Generated Example 2") { Seed = 1 }));
             }
 
             if (spacesDirectory.Exists == false)
@@ -73,7 +73,7 @@ namespace Labs.Agents
 
             foreach (var environmentMapFile in spacesDirectory.EnumerateFiles("*.png"))
             {
-                Items.Add(new SpaceTemplateBitmapDefinition(environmentMapFile.Name));
+                Items.Add(new SpaceTemplateBitmap(environmentMapFile.Name));
             }
         }
 
@@ -88,7 +88,7 @@ namespace Labs.Agents
 
             if (removed)
             {
-                SpacesFile.Serialize(Items.Where(s => s is SpaceTemplateBitmapDefinition == false).ToList());
+                SpacesFile.Serialize(Items.Where(s => s is SpaceTemplateBitmap == false).ToList());
             }
 
             return removed;
@@ -102,7 +102,7 @@ namespace Labs.Agents
         public void Add(ISpaceTemplateFactory space)
         {
             Items.Add(space);
-            SpacesFile.Serialize(Items.Where(s => s is SpaceTemplateBitmapDefinition == false).ToList());
+            SpacesFile.Serialize(Items.Where(s => s is SpaceTemplateBitmap == false).ToList());
         }
 
         public IEnumerator<ISpaceTemplateFactory> GetEnumerator()

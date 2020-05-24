@@ -6,9 +6,9 @@ using System.Windows.Forms;
 
 namespace Labs.Agents.NeuralNetworks
 {
-    public class NeuralAgentLabFormExtension : LabFormExtension<NeuralAgentDriverDefinition>
+    public class NeuralLabFormExtension : LabFormExtension<NeuralSimulationPluginFactory>
     {
-        public NeuralAgentLabFormExtension(ILabForm labForm, Workspace workspace) : base(labForm, workspace)
+        public NeuralLabFormExtension(ILabForm labForm, Workspace workspace) : base(labForm, workspace)
         {
             AddNewAgentMenuItem("&Neural Agent", menuItemNewAgentOnClick);
 
@@ -36,20 +36,20 @@ namespace Labs.Agents.NeuralNetworks
         {
             using (var form = new PropertyGridForm("New Agent"))
             {
-                var driverDefinition = new NeuralAgentDriverDefinition(string.Empty, string.Empty, 0);
+                var pluginFactory = new NeuralSimulationPluginFactory(string.Empty, string.Empty, 0);
                 form.PropertyGrid.GetToolStrip().AddButton("New Network", ShowNewNetworkDialog);
-                form.PropertyGrid.SelectedObject = driverDefinition;
+                form.PropertyGrid.SelectedObject = pluginFactory;
                 form.FormClosing += (s, closingEvent) =>
                 {
                     if (form.DialogResult == DialogResult.OK)
                     {
                         try
                         {
-                            Assert.NotNullOrWhiteSpace(driverDefinition.Name, "Property Name is required.");
-                            Assert.NotNullOrWhiteSpace(driverDefinition.Network, "Property Network is required.");
-                            Assert.Unique(driverDefinition.Name, Workspace.Instance.SimulationPlugins.Select(driver => driver.Name), "Name already exists.");
-                            Workspace.Instance.SimulationPlugins.Add(driverDefinition);
-                            Add(driverDefinition);
+                            Assert.NotNullOrWhiteSpace(pluginFactory.Name, "Property Name is required.");
+                            Assert.NotNullOrWhiteSpace(pluginFactory.Network, "Property Network is required.");
+                            Assert.Unique(pluginFactory.Name, Workspace.Instance.SimulationPlugins.Select(driver => driver.Name), "Name already exists.");
+                            Workspace.Instance.SimulationPlugins.Add(pluginFactory);
+                            Add(pluginFactory);
                         }
                         catch (Exception exception)
                         {
@@ -66,7 +66,7 @@ namespace Labs.Agents.NeuralNetworks
         {
             using (var form = new PropertyGridForm("New Network"))
             {
-                var networkDefinition = new AgentNetworkDefinition(string.Empty, 2, 26, 12);
+                var networkDefinition = new AgentNetworkDefinition(null, 2, 26, 12);
                 form.PropertyGrid.SelectedObject = networkDefinition;
                 form.FormClosing += (s, closingEvent) =>
                 {
@@ -88,13 +88,13 @@ namespace Labs.Agents.NeuralNetworks
             }
         }
 
-        protected override void Add(NeuralAgentDriverDefinition driverDefinition)
+        protected override void Add(NeuralSimulationPluginFactory pluginFactory)
         {
-            var item = new ListViewItem(driverDefinition.Name);
+            var item = new ListViewItem(pluginFactory.Name);
             item.SubItems.Add("Neural");
-            item.SubItems.Add(driverDefinition.Description);
-            item.Tag = driverDefinition;
-            LabForm.Agents.Items.Add(item);
+            item.SubItems.Add(pluginFactory.ToString());
+            item.Tag = pluginFactory;
+            LabForm.Agents.AddWithAutoResize(item);
         }
     }
 }

@@ -6,10 +6,10 @@ namespace Labs.Agents
 {
     public class Workspace
     {
-        public WorkspaceItemsFile<SimulationFactory> Simulations { get; private set; }
-        public WorkspaceItemsFile<ISimulationPluginFactory> SimulationPlugins { get; private set; }
+        public WorkspaceItemsDirectory<SimulationTemplateDefinition> SimulationTemplates { get; private set; }
+        public WorkspaceItemsDirectory<ISimulationPluginFactory> SimulationPlugins { get; private set; }
         public WorkspaceSpaces Spaces { get; private set; }
-        public WorkspaceItemsDirectory<SimulationResults> SimulationResults { get; private set; }
+        public WorkspaceSimulationResults SimulationResults { get; private set; }
 
         public T GetSimulationPluginFactory<T>(string name) where T : ISimulationPluginFactory
         {
@@ -18,7 +18,7 @@ namespace Labs.Agents
 
         public ISimulationPluginFactory GetSimulationPluginFactory(string name)
         {
-            var result = SimulationPlugins.FirstOrDefault(driver => driver.Name == name);
+            var result = SimulationPlugins.FirstOrDefault(plugin => plugin.Name == name);
 
             if (result == null)
             {
@@ -31,15 +31,9 @@ namespace Labs.Agents
         protected void Load()
         {
             Spaces = new WorkspaceSpaces(Settings.ProductDirectory.GetFile("Spaces.json"), Settings.SpacesDirectory);
-            SimulationPlugins = new WorkspaceItemsFile<ISimulationPluginFactory>(Settings.ProductDirectory.GetFile("SimulationPlugins.json"));
-            Simulations = new WorkspaceItemsFile<SimulationFactory>(Settings.ProductDirectory.GetFile("Simulations.json"));
-            SimulationResults = new WorkspaceItemsDirectory<SimulationResults>(Settings.ProductDirectory.GetDirectory("SimulationResults"));
-            FieldInfo workspaceProperty = typeof(SimulationFactory).GetField("Workspace", BindingFlags.NonPublic | BindingFlags.Instance);
-
-            foreach (var simulation in Simulations)
-            {
-                workspaceProperty.SetValue(simulation, this);
-            }
+            SimulationPlugins = new WorkspaceItemsDirectory<ISimulationPluginFactory>(this, Settings.ProductDirectory.GetDirectory("Agents"));
+            SimulationTemplates = new WorkspaceItemsDirectory<SimulationTemplateDefinition>(this, Settings.ProductDirectory.GetDirectory("SimulationTemplates"));
+            SimulationResults = new WorkspaceSimulationResults(this, Settings.ProductDirectory.GetDirectory("SimulationResults"));
         }
     }
 }

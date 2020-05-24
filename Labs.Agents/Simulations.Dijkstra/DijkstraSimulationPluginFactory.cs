@@ -9,5 +9,10 @@
         {
             return new DijkstraSimulationPlugin();
         }
+
+        public override string ToString()
+        {
+            return string.Empty;
+        }
     }
 }

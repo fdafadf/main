@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace Labs.Agents
 {
@@ -32,7 +33,7 @@ namespace Labs.Agents
                 for (int x = 0; x < Width; x++)
                 {
                     fields[x, y].RemoveAnchors();
-                    fields[x, y].IsDestroyed = false;
+                    //fields[x, y].IsDestroyed = false;
                 }
             }
 
@@ -65,6 +66,14 @@ namespace Labs.Agents
                     }
                 }
             }
+
+            for (int y = 0; y < Height; y++)
+            {
+                for (int x = 0; x < Width; x++)
+                {
+                    fields[x, y].IsDestroyed = false;
+                }
+            }
         }
 
         private void UndoInteraction(ISpaceField spaceField)
@@ -73,7 +82,7 @@ namespace Labs.Agents
 
             if (field.IsAgent)
             {
-                foreach (var agent in field.Agents)
+                foreach (var agent in field.Agents.ToArray())
                 {
                     var interaction = agent.Interaction;
 
