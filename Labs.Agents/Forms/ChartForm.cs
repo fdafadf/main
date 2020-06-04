@@ -1,4 +1,5 @@
 ﻿using AI.NeuralNetworks;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -13,7 +14,7 @@ namespace Labs.Agents.Forms
     public partial class ChartForm : Form
     {
         TabControl TabControl;
-        Chart Chart;
+        public Chart Chart { get; private set; }
 
         public ChartForm()
         {
@@ -25,13 +26,13 @@ namespace Labs.Agents.Forms
         {
             InitializeComponent();
             InitializeChart();
-            Text = title;
+            base.Text = title;
         }
 
         public ChartForm(string title, IEnumerable<SimulationResults> results)
         {
             InitializeComponent();
-            Text = title;
+            base.Text = title;
             TabControl = new TabControl();
             TabControl.SuspendLayout();
             TabControl.Location = new Point(529, 234);
@@ -57,15 +58,16 @@ namespace Labs.Agents.Forms
 
         private void InitializeChart()
         {
-            Chart = new Chart();
-            ((ISupportInitialize)Chart).BeginInit();
-            Chart.Location = new Point(21, 12);
-            Chart.Name = "chart";
-            Chart.Size = new Size(577, 293);
-            Chart.TabIndex = 0;
-            Chart.Text = "chart1";
-            Controls.Add(Chart);
-            ((ISupportInitialize)Chart).EndInit();
+            Chart = EnsureChart(this);
+            //    new Chart();
+            //((ISupportInitialize)Chart).BeginInit();
+            //Chart.Location = new Point(21, 12);
+            //Chart.Name = "chart";
+            //Chart.Size = new Size(577, 293);
+            //Chart.TabIndex = 0;
+            //Chart.Text = "chart1";
+            //Controls.Add(Chart);
+            //((ISupportInitialize)Chart).EndInit();
         }
 
         private TabPage EnsureTabPage(string name)
@@ -125,6 +127,19 @@ namespace Labs.Agents.Forms
                     Add($"{monitors.Current} - {optimizer}", monitors.Current.CollectedData, series.Color);
                 }
             }
+        }
+
+        public void AddPoint(string name, double value)
+        {
+            var serie = Chart.Series.FindByName(name) ?? Add(name);
+            serie.Points.Add(value);
+        }
+
+        public Series Add(string name)
+        {
+            Series series = Chart.Series.Add(name);
+            series.ChartType = SeriesChartType.Line;
+            return series;
         }
 
         public Series Add(string name, IEnumerable<double> values, Color? color = null)

@@ -12,8 +12,12 @@ namespace Labs.Agents.NeuralNetworks
         public AgentNetwork Network;
         public bool TrainingMode => TrainingConfiguration != null;
         AgentNetworkTrainingConfiguration TrainingConfiguration;
-        AgentNetworkFile NetworkFile;
+        public AgentNetworkFile NetworkFile;
         public List<MarkovHistoryItem> MarkovHistory = new List<MarkovHistoryItem>();
+        public double TotalReward;
+        public int[] Predictions = new int[CardinalMovement.All.Length];
+        public int Collisions;
+        List<double> TotalRewardSerie = new List<double>();
 
         public NeuralSimulationPlugin(AgentNetworkFile networkFile, AgentNetworkTrainingConfiguration trainingConfiguration, int seed) : base(new NeuralAgentFactory())
         {
@@ -23,24 +27,29 @@ namespace Labs.Agents.NeuralNetworks
             TrainingConfiguration = trainingConfiguration;
         }
 
-        public override void OnInteractionCompleted()
+        public override void OnSimulationStarted(ISimulation simulation)
         {
-            foreach (var agent in Agents)
+            simulation.Results.Series.Add("Total Reward", TotalRewardSerie);
+        }
+
+        public override void OnInteractionCompleted(IEnumerable<NeuralAgent> agents)
+        {
+            foreach (var agent in agents)
             {
                 if (agent.Interaction.ActionResult != InteractionResult.Suspended)
                 {
-                    //Console.WriteLine($"ActionResult: {agent.Interaction.ActionResult}");
                     var encodedState = Network.CreateInput(agent, CardinalMovement.Nothing);
                     double reward;
 
                     if (agent.IsGoalReached())
                     {
-                        reward = 1;
+                        reward = 2;
                     }
                     else
                     {
                         if (agent.Interaction.ActionResult == InteractionResult.Collision)
                         {
+                            Collisions++;
                             reward = -2;
                         }
                         else if (agent.Interaction.Action == CardinalMovement.Nothing)
@@ -55,19 +64,15 @@ namespace Labs.Agents.NeuralNetworks
                         }
                     }
 
-                    if (MarkovHistory.Count < 10)
-                    {
-                        Console.WriteLine($"{MarkovHistory.Count}: {Network.Predict(agent.NetworkLastInput)}");
-                    }
-
-                    //Console.WriteLine($"Reward: {reward}");
+                    TotalReward += reward;
+                    TotalRewardSerie.Add(TotalReward);
                     var historyItem = new MarkovHistoryItem(agent.NetworkLastInput, encodedState, reward);
                     MarkovHistory.Add(historyItem);
                 }
             }
         }
 
-        public override void OnIterationCompleted()
+        public override void OnIterationCompleted(IEnumerable<NeuralAgent> agents)
         {
             if (TrainingMode)
             {
@@ -78,9 +83,9 @@ namespace Labs.Agents.NeuralNetworks
             }
         }
 
-        public override void OnIterationStarted()
+        public override void OnIterationStarted(IEnumerable<NeuralAgent> agents)
         {
-            var undestroyedAgents = Agents.Where(agent => agent.Fitness.IsDestroyed == false);
+            var undestroyedAgents = agents.Where(agent => agent.Fitness.IsDestroyed == false);
 
             if (TrainingMode)
             {
@@ -90,14 +95,12 @@ namespace Labs.Agents.NeuralNetworks
                     {
                         agent.Interaction.Action = Random.Next(CardinalMovement.All);
                         agent.NetworkLastInput = Network.CreateInput(agent, agent.Interaction.Action);
-                        //Console.WriteLine($"Action(Random): {agent.Interaction.Action}");
                     }
                     else
                     {
                         var prediction = Network.Predict(agent);
                         agent.NetworkLastInput = prediction.Input;
                         agent.Interaction.Action = prediction.Action;
-                        //Console.WriteLine($"Action(Predict): {agent.Interaction.Action}");
                     }
                 }
             }
@@ -108,6 +111,7 @@ namespace Labs.Agents.NeuralNetworks
                     var prediction = Network.Predict(agent);
                     agent.Interaction.Action = prediction.Action;
                     agent.NetworkLastInput = prediction.Input;
+                    Predictions[prediction.Action.Index]++;
                 }
             }
         }

@@ -25,7 +25,7 @@ namespace AI.NeuralNetworks
             previousWeights = network.Layers.Select(layer => layer.Neurons.Select(neuron => neuron.Weights.Clone() as double[]).ToArray()).ToArray();
         }
 
-#if OPTIMIZER_DIAGNOSTICS
+#if DIAGNOSTICS2
         public SGDMomentum(Network network, double learningRate, double momentum, TextWriter writer) : base(network, learningRate, writer)
         {
             previousWeights = network.Layers.Select(layer => layer.Neurons.Select(neuron => neuron.Weights.Clone() as double[]).ToArray()).ToArray();
@@ -56,13 +56,21 @@ namespace AI.NeuralNetworks
                 weights[weights.Length - 1] -= LearningRate * layerGradient[weights.Length - 1] - Momentum * (weights[weights.Length - 1] - neuronPreviousWeights[weights.Length - 1]);
                 neuronPreviousWeights[weights.Length - 1] = previousWeight2;
 
-#if OPTIMIZER_DIAGNOSTICS
+#if DIAGNOSTICS
                 for (int i = 0; i < weights.Length; i++)
                 {
                     if (double.IsNaN(weights[i]))
                     {
-                        UpdateDiag_NaNs++;
+                        Diagnostics.Exploded++;
                     }
+                    else if (weights[i] == 0)
+                    {
+                        Diagnostics.Burned++;
+                    }
+                    //else if (double.IsInfinity(weights[i]))
+                    //{
+                    //    Diagnostics.Infinities++;
+                    //}
                 }
 #endif
 

@@ -19,5 +19,13 @@ namespace Labs.Agents
             Description = description;
             Series = series;
         }
+
+        public override string ToString()
+        {
+            double? reachedGoals = Series.ContainsKey("Reached Goals") ? (double?)Series["Reached Goals"].Last() : null;
+            double? totalReward = Series.ContainsKey("Total Reward") ? (double?)Series["Total Reward"].Last() : null;
+            double? collisions = Series.ContainsKey("Collisions") ? (double?)Series["Collisions"].Last() : null;
+            return $"ReachedGoals: {reachedGoals,3} TotalReward: {totalReward,14:f5} Collisions: {collisions,4}";
+        }
     }
 }

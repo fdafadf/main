@@ -1,5 +1,6 @@
 ﻿using Games.Utilities;
 using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
@@ -20,12 +21,12 @@ namespace Labs.Agents.Forms
         {
             InitializeComponent();
             tabControl1.SelectedIndex = 2;
-            listViewEnvironments.AddContextAction("&Remove", RemoveEnvironment);
-            listViewAgents.AddContextAction("&Remove", RemoveAgent);
-            listViewSimulationTemplates.AddContextAction("&Run", RunSimulation);
+            listViewEnvironments.AddContextMenuItem("&Remove", RemoveEnvironment);
+            listViewAgents.AddContextMenuItem("&Remove", RemoveAgent);
+            listViewSimulationTemplates.AddContextMenuItem("&Run", RunSimulation);
             //listViewSimulationDefinitions.AddContextAction("&Edit", EditSimulation);
-            listViewSimulationTemplates.AddContextAction("&Remove", RemoveSimulationTemplate);
-            listViewSimulationResults.AddContextAction("&Remove", RemoveSimulationResults);
+            listViewSimulationTemplates.AddContextMenuItem("&Remove", RemoveSimulationTemplate);
+            listViewSimulationResults.AddContextMenuItem("&Remove", RemoveSimulationResults);
             listViewSimulationTemplates.DoubleClick += listViewSimulationDefinitions_DoubleClick;
             listViewSimulationResults.DoubleClick += menuItemShowSimulationResults_Click;
         }
@@ -166,14 +167,26 @@ namespace Labs.Agents.Forms
 
         private void Add(SimulationTemplateDefinition simulationTemplateDefinition)
         {
-            Add(new SimulationTemplate(simulationTemplateDefinition));
+            try
+            {
+                Add(new SimulationTemplate(simulationTemplateDefinition));
+            }
+            catch (Exception exception)
+            {
+                string message = $"Do you want to remove template '{simulationTemplateDefinition.Name}'?\r\n\r\n{exception.Message}";
+
+                if (MessageBox.Show(message, "Simulation Template Loading Error", MessageBoxButtons.YesNo, MessageBoxIcon.Error) == DialogResult.Yes)
+                {
+                    Workspace.SimulationTemplates.Remove(simulationTemplateDefinition);
+                }
+            }
         }
 
         private void Add(SimulationTemplate simulationTemplate)
         {
             var item = new ListViewItem(simulationTemplate.Definition.Space);
             item.SubItems.Add(simulationTemplate.Definition.SimulationPlugin);
-            item.SubItems.Add(simulationTemplate.Definition.Iterations.ToString());
+            item.SubItems.Add(simulationTemplate.Definition.Model.IterationLimit.ToString());
             item.SubItems.Add(simulationTemplate.ToString());
             item.Tag = simulationTemplate;
             listViewSimulationTemplates.AddWithAutoResize(item);

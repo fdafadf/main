@@ -1,4 +1,7 @@
-﻿namespace Labs.Agents.Simulations.Dijkstra
+﻿using System.Collections;
+using System.Collections.Generic;
+
+namespace Labs.Agents.Simulations.Dijkstra
 {
     public class DijkstraSimulationPlugin : SimulationPlugin<DestructibleInteractiveSpace<CardinalMovementSpace<DijkstraAgent>, DijkstraAgent>, DijkstraAgent>
     {
@@ -6,28 +9,12 @@
         {
         }
 
-        public override void OnInteractionCompleted()
+        public override void OnIterationStarted(IEnumerable<DijkstraAgent> agents)
         {
-        }
-
-        public override void OnIterationCompleted()
-        {
-        }
-
-        public override void OnIterationStarted()
-        {
-            foreach (var agent in Agents)
+            foreach (var agent in agents)
             {
                 agent.CalculateInteraction();
             }
-        }
-
-        public override void OnSimulationCompleted()
-        {
-        }
-
-        public override void OnSimulationPaused()
-        {
         }
     }
 }

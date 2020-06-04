@@ -5,17 +5,26 @@ namespace Labs.Agents
 {
     public abstract class SimulationPlugin
     {
-        public abstract void OnInteractionCompleted();
-        public abstract void OnIterationCompleted();
-        public abstract void OnIterationStarted();
-        public abstract void OnSimulationCompleted();
-        public abstract void OnSimulationPaused();
+        public virtual void OnSimulationStarted(ISimulation simulation)
+        {
+        }
+
+        public virtual void OnSimulationCompleted()
+        {
+        }
+
+        public virtual void OnSimulationPaused()
+        {
+        }
+
         public abstract Type AgentType { get; }
+
+        //public abstract ISimulation CreateSimulation();
     }
 
     public abstract class SimulationPlugin<TSpace, TAgent> : SimulationPlugin
     {
-        public List<TAgent> Agents = new List<TAgent>();
+        //public List<TAgent> Agents = new List<TAgent>();
         IAgentFactory<TSpace, TAgent> AgentFactory;
 
         public SimulationPlugin(IAgentFactory<TSpace, TAgent> agentFactory)
@@ -26,10 +35,22 @@ namespace Labs.Agents
         public TAgent CreateAgent(TSpace space, int x, int y)
         {
             TAgent agent = AgentFactory.CreateAgent(space, x, y);
-            Agents.Add(agent);
+            //Agents.Add(agent);
             return agent;
         }
 
         public override Type AgentType => typeof(TAgent);
+
+        public virtual void OnInteractionCompleted(IEnumerable<TAgent> agents)
+        {
+        }
+
+        public virtual void OnIterationCompleted(IEnumerable<TAgent> agents)
+        {
+        }
+
+        public virtual void OnIterationStarted(IEnumerable<TAgent> agents)
+        {
+        }
     }
 }

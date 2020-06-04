@@ -57,6 +57,7 @@
     <Compile Include="Agents.Features\AgentAnchor.cs" />
     <Compile Include="Agents.Features\AgentGoal.cs" />
     <Compile Include="Agents.Features\AgentRotation.cs" />
+    <Compile Include="Forms\ListViewContextMenuItem.cs" />
     <Compile Include="Simulations.AStar\AStarLabFormExtension.cs" />
     <Compile Include="Simulations.AStar\AStarAgentFactory.cs" />
     <Compile Include="Simulations.AStar\AStarSimulationPluginFactory.cs" />
@@ -181,7 +182,7 @@
       <DependentUpon>SpaceTemplateGeneratorForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <SubType>Designer</SubType>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>

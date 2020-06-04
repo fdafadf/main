@@ -202,10 +202,13 @@ namespace Labs.Agents
         {
             if (self.InvokeRequired)
             {
-                self.Invoke((MethodInvoker)delegate
+                if (self.Disposing == false && self.IsDisposed == false)
                 {
-                    action();
-                });
+                    self.Invoke((MethodInvoker)delegate
+                    {
+                        action();
+                    });
+                }
             }
             else
             {
@@ -342,18 +345,29 @@ namespace Labs.Agents
             self.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
         }
 
-        public static void AddContextAction(this ListView self, string name, Action<ListViewItem> action)
+        public static void EnsureContextMenuStrip(this ListView self)
         {
             if (self.ContextMenuStrip == null)
             {
                 self.ContextMenuStrip = new ContextMenuStrip();
                 self.ContextMenuStrip.Opening += new CancelEventHandler(OnContextActionOpening);
             }
+        }
 
+        public static ListViewContextMenuItem AddContextMenuItem(this ListView self, string name, Action<ListViewItem> onClick)
+        {
+            return self.AddContextMenuItem(name, onClick, null);
+        }
+
+        public static ListViewContextMenuItem AddContextMenuItem(this ListView self, string name, Action<ListViewItem> onClick, Func<ListViewItem, bool> onClickCondition)
+        {
+            self.EnsureContextMenuStrip();
             var menuItem = new ToolStripMenuItem(name);
+            var menuItemTag = new ListViewContextMenuItem(menuItem, onClick, onClickCondition);
             menuItem.Click += new EventHandler(OnContextActionSelected);
-            menuItem.Tag = action;
+            menuItem.Tag = menuItemTag;
             self.ContextMenuStrip.Items.Add(menuItem);
+            return menuItemTag;
         }
 
         private static void OnContextActionSelected(object sender, EventArgs e)
@@ -368,6 +382,10 @@ namespace Labs.Agents
                         {
                             action(viewItem);
                         }
+                        else if (menuItem.Tag is ListViewContextMenuItem tag)
+                        {
+                            tag.OnClick(viewItem);
+                        }
                     }
                 }
             }
@@ -381,6 +399,16 @@ namespace Labs.Agents
                 {
                     if (listView.SelectedItems.Count == 1)
                     {
+                        var item = listView.SelectedItems[0];
+
+                        foreach (ToolStripMenuItem menuItem in menu.Items)
+                        {
+                            if (menuItem.Tag is ListViewContextMenuItem tag)
+                            {
+                                menuItem.Visible = tag.IsOnClickEnabled(item);
+                            }
+                        }
+
                         menu.Tag = listView.SelectedItems[0];
                         return;
                     }

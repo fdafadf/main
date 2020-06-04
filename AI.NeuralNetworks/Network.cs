@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace AI.NeuralNetworks
@@ -35,6 +36,14 @@ namespace AI.NeuralNetworks
         public override string ToString()
         {
             return string.Join(",", Layers.Select(layer => layer.Neurons.Length));
+        }
+
+        public void InitializeLayers(ILayerInitializer initializer)
+        {
+            foreach (var layer in Layers)
+            {
+                initializer.Initialize(layer);
+            }
         }
     }
 }

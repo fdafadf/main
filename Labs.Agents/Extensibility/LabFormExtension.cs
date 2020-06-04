@@ -26,5 +26,10 @@ namespace Labs.Agents
             menuItem.Click += new EventHandler(clickAction);
             LabForm.MenuNewAgent.DropDownItems.Add(menuItem);
         }
+
+        protected void AddAgentContextMenuItem(string text)
+        {
+            //LabForm.
+        }
     }
 }

@@ -7,28 +7,10 @@ using System.Linq;
 
 namespace Labs.Agents
 {
-    public class SimulationTemplateDefinition : IValidatable, INamed
+    public class SimulationModelConfiguration
     {
         [Category("General")]
-        public string Name { get; set; }
-        [Category("General")]
-        public int Iterations { get; set; } = 1000;
-        [Category("Movement")]
-        [TypeConverter(typeof(DropDownStringConverter))]
-        [DisplayName("System")]
-        public string MovementSystem { get; set; } = typeof(CardinalMovement).FullName;
-        [Category("Goal")]
-        [TypeConverter(typeof(DropDownStringConverter))]
-        [DisplayName("System")]
-        public string GoalSystem { get; set; } = "Random Renewable";
-        [Category("Space")]
-        [TypeConverter(typeof(DropDownStringConverter))]
-        [DisplayName("Name")]
-        public string Space { get; set; }
-        [Category("Agent")]
-        [TypeConverter(typeof(DropDownStringConverter))]
-        [DisplayName("Name")]
-        public string SimulationPlugin { get; set; }
+        public int IterationLimit { get; set; } = 1000;
         [Category("Agent")]
         [DisplayName("Collision Model")]
         public AgentsCollisionModel AgentsCollisionModel { get; set; }
@@ -36,9 +18,55 @@ namespace Labs.Agents
         [DisplayName("Destruction Behaviour")]
         [TypeConverter(typeof(ExpandableObjectConverter))]
         public AgentDestructionModel AgentDestructionModel { get; set; } = new AgentDestructionModel();
+        [Category("Determinism")]
+        [DisplayName("Seed")]
+        public int? Seed { get; set; } = 0;
+
+        public Random CreateRandom()
+        {
+            return new Random(Seed ?? Guid.NewGuid().GetHashCode());
+        }
+
+        public SimulationModelConfiguration Clone()
+        {
+            return new SimulationModelConfiguration()
+            {
+                IterationLimit = IterationLimit,
+                AgentsCollisionModel = AgentsCollisionModel,
+                AgentDestructionModel = AgentDestructionModel,
+                Seed = Seed,
+            };
+        }
+    }
+
+    public class SimulationTemplateDefinition : IValidatable, INamed
+    {
+        [Category("General")]
+        public string Name { get; set; }
+        [Category("Simulation")]
+        [DisplayName("Configuration")]
+        [TypeConverter(typeof(ExpandableObjectConverter))]
+        [EditorBrowsable(EditorBrowsableState.Always)]
+        public SimulationModelConfiguration Model { get; set; } = new SimulationModelConfiguration();
+        [Category("Space")]
+        [TypeConverter(typeof(DropDownStringConverter))]
+        [DisplayName("Movement System")]
+        public string MovementSystem { get; set; } = typeof(CardinalMovement).FullName;
+        [Category("Space")]
+        [TypeConverter(typeof(DropDownStringConverter))]
+        [DisplayName("Goal System")]
+        public string GoalSystem { get; set; } = "Random Renewable";
+        [Category("Space")]
+        [TypeConverter(typeof(DropDownStringConverter))]
+        [DisplayName("Template")]
+        public string Space { get; set; }
+        [Category("Agent")]
+        [TypeConverter(typeof(DropDownStringConverter))]
+        [DisplayName("Definition")]
+        public string SimulationPlugin { get; set; }
         [Category("Visualisation")]
         [DisplayName("Animation Interval")]
-        public int AnimationInterval { get; set; } = 100;
+        public int AnimationInterval { get; set; } = 50;
         [Browsable(false)]
         [JsonIgnore]
         public Workspace Workspace { get; private set; }
@@ -80,7 +108,7 @@ namespace Labs.Agents
 
         public IEnumerable<string> GetSimulationPlugins()
         {
-            return Workspace.SimulationPlugins.Select(driver => driver.Name);
+            return Workspace.SimulationPlugins.Select(plugin => plugin.Name);
         }
 
         public ISpaceTemplateFactory GetSpaceTemplateFactory() => Workspace.Spaces.GetByName(Space);
@@ -88,7 +116,7 @@ namespace Labs.Agents
 
         public override string ToString()
         {
-            return $"{AgentsCollisionModel}";
+            return $"{Model.AgentsCollisionModel}";
         }
     }
 }

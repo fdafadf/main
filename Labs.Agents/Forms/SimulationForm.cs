@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace Labs.Agents.Forms
@@ -35,6 +36,12 @@ namespace Labs.Agents.Forms
                 environmentControl.Refresh();
             });
             return result;
+        }
+
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+            Simulation.Initialise();
         }
     }
 }

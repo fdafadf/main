@@ -16,7 +16,7 @@ namespace Labs.Agents.NeuralNetworks
         }
 
         public IEnumerable<string> NetworkNames => NetworksDirectory.EnumerateFiles2("*.model").Select(file => Path.GetFileNameWithoutExtension(file.Name));
-        DirectoryInfo NetworksDirectory;
+        public readonly DirectoryInfo NetworksDirectory;
 
         private Workspace()
         {
@@ -58,31 +58,6 @@ namespace Labs.Agents.NeuralNetworks
             }
 
             return description;
-        }
-    }
-
-    public class AgentNetworkFile
-    {
-        FileInfo File;
-
-        public AgentNetworkFile(FileInfo file)
-        {
-            File = file;
-
-            if (File.Exists == false)
-            {
-                throw new ArgumentException();
-            }
-        }
-
-        public AgentNetwork Load()
-        {
-            return new AgentNetwork(File);
-        }
-
-        public void Save(AgentNetwork network)
-        {
-            network.Save(File);
         }
     }
 }

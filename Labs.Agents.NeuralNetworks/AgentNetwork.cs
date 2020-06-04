@@ -8,8 +8,6 @@ namespace Labs.Agents.NeuralNetworks
 {
     public class AgentNetwork
     {
-        static int All;
-        static int Zeros;
         public readonly AgentNetworkInputCoder InputCoder;
         public readonly Network Network;
 
@@ -49,6 +47,11 @@ namespace Labs.Agents.NeuralNetworks
             Network = NetworkBuilder.Build(networkDefinition, initializer);
         }
 
+        public void InitializeLayers(int seed)
+        {
+            Network.InitializeLayers(new He(seed));
+        }
+
         public AgentNetworkPrediction Predict(NeuralAgent agent)
         {
             return Predict(InputCoder.Encode(agent));
@@ -63,18 +66,6 @@ namespace Labs.Agents.NeuralNetworks
             {
                 InputCoder.EncodeAction(input, action);
                 double predictedValue = Network.Evaluate(input)[0];
-                All++;
-
-                if (predictedValue == 0)
-                {
-                    Zeros++;
-                }
-
-                if (All % 1000000 == 0)
-                {
-                    Console.WriteLine($"{Zeros}/{All}");
-                    //System.Diagnostics.Debugger.Break();
-                }
 
                 if (predictedValue > bestValue)
                 {
@@ -96,7 +87,7 @@ namespace Labs.Agents.NeuralNetworks
 
         public void Fit(IEnumerable<MarkovHistoryItem> batch, AgentNetworkTrainingConfiguration configuration, Random random)
         {
-            var optimizer = new SGDMomentum(Network, configuration.LearningRate, configuration.Momentum, Console.Out);
+            var optimizer = new SGDMomentum(Network, configuration.LearningRate, configuration.Momentum);
             var trainer = new Trainer(optimizer, random);
             var nextQ = batch.Select(item => new Projection(item.Input, new double[] { item.Reward + configuration.Gamma * Predict(item.State).Value })).ToArray();
             trainer.Train(nextQ, configuration.EpochesPerIteration, configuration.BatchSize);

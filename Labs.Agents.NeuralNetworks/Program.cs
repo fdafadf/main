@@ -1,8 +1,13 @@
-﻿using Labs.Agents.Forms;
+﻿using AI.NeuralNetworks;
+using Labs.Agents.Forms;
+using Labs.Agents.NeuralNetworks.Properties;
 using Labs.Agents.Simulations.AStar;
 using Labs.Agents.Simulations.Dijkstra;
 using System;
+using System.IO;
+using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Labs.Agents.NeuralNetworks
@@ -19,6 +24,7 @@ namespace Labs.Agents.NeuralNetworks
             Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+
             var workspace = Workspace.Instance;
             var form = new LabForm();
             form.Workspace = workspace;

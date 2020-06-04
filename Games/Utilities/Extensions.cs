@@ -9,7 +9,7 @@ namespace Games.Utilities
 {
     public static class Extensions
     {
-        public static void Initialize<T>(this T[] self, Func<T> initializer)
+        public static void InitializeArray<T>(this T[] self, Func<T> initializer)
         {
             for (int i = 0; i < self.Length; i++)
             {

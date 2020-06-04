@@ -1,27 +1,32 @@
-﻿//#define MOMENTUM
-
-using System.IO;
+﻿using System.IO;
 
 namespace AI.NeuralNetworks
 {
+#if DIAGNOSTICS
+    public class SGDDignostics
+    {
+        public int Exploded;
+        public int Burned;
+
+        public override string ToString()
+        {
+            return $"Exploded: {Exploded} Burned: {Burned}";
+        }
+    }
+#endif
+
     // Stochastic Gradient Descent
     public class SGD : Optimizer
     {
         public Gradient gradient;
+#if DIAGNOSTICS
+        public SGDDignostics Diagnostics = new SGDDignostics();
+#endif
 
         public SGD(Network network, double learningRate) : base(network, learningRate)
         {
             gradient = new Gradient(network);
         }
-
-#if OPTIMIZER_DIAGNOSTICS
-        TextWriter Writer;
-
-        public SGD(Network network, double learningRate, TextWriter writer) : this(network, learningRate)
-        {
-            Writer = writer;
-        }
-#endif
 
         public override double[] Evaluate(double[] features, double[] labels)
         {
@@ -30,30 +35,15 @@ namespace AI.NeuralNetworks
             return output;
         }
 
-#if OPTIMIZER_DIAGNOSTICS
-        protected int UpdateDiag_NaNs;
-
         public override void Update(int batchSize)
         {
-            UpdateDiag_NaNs = 0;
-
             for (int layerIndex = 0; layerIndex < gradient.Values.Length; layerIndex++)
             {
                 UpdateLayerWeights(layerIndex, batchSize);
             }
 
             gradient.Clear();
-            Writer.WriteLine($"UpdateDiag_NaNs: {UpdateDiag_NaNs}");
         }
-#else
-        public override void Update(int batchSize)
-        {
-            for (int layerIndex = 0; layerIndex < gradient.Values.Length; layerIndex++)
-            {
-                UpdateLayerWeights(layerIndex, batchSize);
-            }
-        }
-#endif
 
         protected virtual void UpdateLayerWeights(int layerIndex, int batchSize)
         {
