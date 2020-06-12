@@ -13,7 +13,7 @@ namespace Labs.Agents.NeuralNetworks
             AddNewAgentMenuItem("&Neural Agent", menuItemNewAgentOnClick);
             labForm.Agents.AddContextMenuItem("&Randomise Agent Network", RandomiseAgentNetwork, IsNeuralSimulationPlugin);
             labForm.Simulations.AddContextMenuItem("&Train", Train, IsNeuralSimulationTemplate);
-            labForm.Spaces.AddContextMenuItem("&Auto-Train", AutoTrain);
+            labForm.Spaces.AddContextMenuItem("&Train Neural Agent", TrainOnSpace);
             //ToolStripMenuItem menuItemNewNetwork = new ToolStripMenuItem();
             //menuItemNewNetwork.Name = "menuItemNewNetwork";
             //menuItemNewNetwork.Size = new System.Drawing.Size(98, 22);
@@ -40,7 +40,7 @@ namespace Labs.Agents.NeuralNetworks
             }
         }
 
-        private void AutoTrain(ListViewItem item)
+        private void TrainOnSpace(ListViewItem item)
         {
             if (item.Tag is ISpaceTemplateFactory spaceFactory)
             {

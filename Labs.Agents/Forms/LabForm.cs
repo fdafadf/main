@@ -189,7 +189,7 @@ namespace Labs.Agents.Forms
         {
             var item = new ListViewItem(simulationTemplate.Definition.Space);
             item.SubItems.Add(simulationTemplate.Definition.SimulationPlugin);
-            item.SubItems.Add(simulationTemplate.Definition.Model.IterationLimit.ToString());
+            item.SubItems.Add("NotImplemented"); // simulationTemplate.Definition.Model.IterationLimit.ToString());
             item.SubItems.Add(simulationTemplate.ToString());
             item.Tag = simulationTemplate;
             listViewSimulationTemplates.AddWithAutoResize(item);

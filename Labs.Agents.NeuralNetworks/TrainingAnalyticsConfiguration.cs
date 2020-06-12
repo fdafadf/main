@@ -1,6 +1,6 @@
 ﻿namespace Labs.Agents.NeuralNetworks
 {
-    public class TrainingAnalyticsConfiguration
+    public class TrainingProgressTrackerConfiguration
     {
         public bool Enabled { get; set; } = true;
         public int Interval { get; set; } = 100;

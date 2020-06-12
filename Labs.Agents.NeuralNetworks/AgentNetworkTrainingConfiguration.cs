@@ -8,7 +8,7 @@ namespace Labs.Agents.NeuralNetworks
         public double Momentum { get; set; } = 0.04;
         public double Epsilon { get; set; } = 0.2;
         public double Gamma { get; set; } = 0.99;
-        public int IterationLimit { get; set; } = 50000;
+        //public int IterationLimit { get; set; } = 50000;
         public int FirstTrainingIteration { get; set; } = 256;
         public int HistorySubsetSize { get; set; } = 64;
         public int EpochesPerIteration { get; set; } = 1;
