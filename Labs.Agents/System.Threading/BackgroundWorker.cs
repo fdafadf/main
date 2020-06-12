@@ -10,11 +10,11 @@ namespace Labs.Agents
         public event Action Resumed;
         public bool IsPaused { get; private set; }
         public bool IsCompleted => CompletionSource != null;
+        public bool SingleStep;
         Func<bool> BackgroundAction;
         CancellationTokenSource CancellationSource;
         TaskCompletionSource<object> CompletionSource;
         EventWaitHandle PauseHandle = new EventWaitHandle(false, EventResetMode.ManualReset);
-        public int Interval = 100;
 
         public BackgroundWorker(Func<bool> backgroundAction)
         {
@@ -43,21 +43,13 @@ namespace Labs.Agents
                         }
                         else
                         {
-                            if (Interval > 0)
-                            {
-                                var now = DateTime.Now;
-                                TimeSpan time = now - prev;
-
-                                if (time.TotalMilliseconds < Interval)
-                                {
-                                    Thread.Sleep(Interval - (int)time.TotalMilliseconds);
-                                }
-
-                                prev = now;
-                            }
-
                             if (BackgroundAction() == false)
                             {
+                                Pause();
+                            }
+                            else if (SingleStep)
+                            {
+                                SingleStep = false;
                                 Pause();
                             }
                         }

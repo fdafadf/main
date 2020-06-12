@@ -1,6 +1,9 @@
 ﻿using AI.NeuralNetworks;
+using Labs.Agents.Forms;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -8,22 +11,22 @@ namespace Labs.Agents.NeuralNetworks
 {
     public class NeuralSimulationPlugin : SimulationPlugin<DestructibleInteractiveSpace<CardinalMovementSpace<NeuralAgent>, NeuralAgent>, NeuralAgent>
     {
-        public Random Random;
+        public Random TrainingRandom;
         public AgentNetwork Network;
         public bool TrainingMode => TrainingConfiguration != null;
         AgentNetworkTrainingConfiguration TrainingConfiguration;
-        public AgentNetworkFile NetworkFile;
+        public FileInfo NetworkFile;
         public List<MarkovHistoryItem> MarkovHistory = new List<MarkovHistoryItem>();
         public double TotalReward;
         public int[] Predictions = new int[CardinalMovement.All.Length];
         public int Collisions;
         List<double> TotalRewardSerie = new List<double>();
 
-        public NeuralSimulationPlugin(AgentNetworkFile networkFile, AgentNetworkTrainingConfiguration trainingConfiguration, int seed) : base(new NeuralAgentFactory())
+        public NeuralSimulationPlugin(FileInfo networkFile, AgentNetworkTrainingConfiguration trainingConfiguration, int trainingSeed) : base(new NeuralAgentFactory())
         {
-            Random = new Random(seed);
+            TrainingRandom = new Random(trainingSeed);
             NetworkFile = networkFile;
-            Network = NetworkFile.Load();
+            Network = new AgentNetwork(networkFile);
             TrainingConfiguration = trainingConfiguration;
         }
 
@@ -78,7 +81,7 @@ namespace Labs.Agents.NeuralNetworks
             {
                 if (MarkovHistory.Count > TrainingConfiguration.FirstTrainingIteration)
                 {
-                    Network.Fit(MarkovHistory.Subset(TrainingConfiguration.HistorySubsetSize, Random), TrainingConfiguration, Random);
+                    Network.Fit(MarkovHistory.Subset(TrainingConfiguration.HistorySubsetSize, TrainingRandom), TrainingConfiguration, TrainingRandom);
                 }
             }
         }
@@ -91,9 +94,9 @@ namespace Labs.Agents.NeuralNetworks
             {
                 foreach (NeuralAgent agent in undestroyedAgents)
                 {
-                    if (Random.NextDouble() < TrainingConfiguration.Epsilon)
+                    if (TrainingRandom.NextDouble() < TrainingConfiguration.Epsilon)
                     {
-                        agent.Interaction.Action = Random.Next(CardinalMovement.All);
+                        agent.Interaction.Action = TrainingRandom.Next(CardinalMovement.All);
                         agent.NetworkLastInput = Network.CreateInput(agent, agent.Interaction.Action);
                     }
                     else
@@ -122,7 +125,7 @@ namespace Labs.Agents.NeuralNetworks
             {
                 if (MessageBox.Show("Do you want to update neural network?", "Training", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
-                    NetworkFile.Save(Network);
+                    Network.Save(NetworkFile);
                 }
             }
         }
@@ -135,6 +138,11 @@ namespace Labs.Agents.NeuralNetworks
             {
                 Console.WriteLine($"{index++}: {Network.Predict(historyItem.Input)}");
             }
+        }
+
+        public override void OnSimulationCreated(SimulationForm form, ISimulation<NeuralAgent> simulation)
+        {
+            new AgentViewLayer(form.Space, simulation, Network.InputCoder.ViewRadius);
         }
     }
 }

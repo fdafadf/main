@@ -63,7 +63,7 @@ namespace Labs.Agents.NeuralNetworks
                 for (int x = 0; x < ViewLength; x++)
                 {
                     var field = space[px + x, py + y];
-                    input[i++] = field.IsOutside || field.IsObstacle ? 1 : 0;
+                    input[i++] = field.IsOutside || field.HasObstacle ? 1 : 0;
                 }
             }
 
@@ -76,7 +76,7 @@ namespace Labs.Agents.NeuralNetworks
                 for (int x = 0; x < ViewLength; x++)
                 {
                     var field = space[px + x, py + y];
-                    input[i++] = field.IsAgent ? 1 : 0;
+                    input[i++] = field.HasAgent ? 1 : 0;
                 }
             }
         }

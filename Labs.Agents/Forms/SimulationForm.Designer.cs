@@ -34,7 +34,6 @@ namespace Labs.Agents.Forms
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.simulationStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripContainer1.BottomToolStripPanel.SuspendLayout();
-            this.toolStripContainer1.ContentPanel.SuspendLayout();
             this.toolStripContainer1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -71,18 +70,17 @@ namespace Labs.Agents.Forms
             this.simulationStatusLabel.Name = "simulationStatusLabel";
             this.simulationStatusLabel.Size = new System.Drawing.Size(0, 17);
             // 
-            // SimulationForm2
+            // SimulationForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(784, 561);
             this.Controls.Add(this.toolStripContainer1);
             this.DoubleBuffered = true;
-            this.Name = "SimulationForm2";
+            this.Name = "SimulationForm";
             this.Text = "Simulation";
             this.toolStripContainer1.BottomToolStripPanel.ResumeLayout(false);
             this.toolStripContainer1.BottomToolStripPanel.PerformLayout();
-            this.toolStripContainer1.ContentPanel.ResumeLayout(false);
             this.toolStripContainer1.ResumeLayout(false);
             this.toolStripContainer1.PerformLayout();
             this.statusStrip1.ResumeLayout(false);

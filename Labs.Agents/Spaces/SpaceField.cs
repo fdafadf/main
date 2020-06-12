@@ -10,12 +10,12 @@ namespace Labs.Agents
 
         public ISpace Space { get; }
         public bool IsOutside { get; }
-        public bool IsEmpty => IsOutside == false && isObstacle == false && IsDestroyed == false && anchors.Count == 0;
-        public bool IsAgent => anchors.Count > 0;
+        public bool IsEmpty => IsOutside == false && hasObstacle == false && IsDestroyed == false && anchors.Count == 0;
+        public bool HasAgent => anchors.Count > 0;
         public int X { get; }
         public int Y { get; }
-        List<AgentAnchor<TAgent>> anchors = new List<AgentAnchor<TAgent>>();
-        bool isObstacle;
+        List<AgentSpaceAnchor<TAgent>> anchors = new List<AgentSpaceAnchor<TAgent>>();
+        bool hasObstacle;
         internal bool IsDestroyed;
         readonly bool MultipleAnchorsAllowed;
 
@@ -33,28 +33,28 @@ namespace Labs.Agents
             MultipleAnchorsAllowed = multipleAnchorsAllowed;
         }
 
-        public bool IsObstacle 
+        public bool HasObstacle 
         {
             get
             {
-                return isObstacle;
+                return hasObstacle;
             }
             internal set
             {
-                if (IsAgent)
+                if (HasAgent)
                 {
                     throw new Exception();
                 }
                 else
                 {
-                    isObstacle = value;
+                    hasObstacle = value;
                 }
             }
         }
 
-        internal void AddAnchor(AgentAnchor<TAgent> anchor)
+        internal void AddAnchor(AgentSpaceAnchor<TAgent> anchor)
         {
-            if (isObstacle || (MultipleAnchorsAllowed == false && anchors.Count > 0))
+            if (hasObstacle || (MultipleAnchorsAllowed == false && anchors.Count > 0))
             {
                 throw new Exception();
             }
@@ -67,6 +67,11 @@ namespace Labs.Agents
         internal void RemoveAnchors()
         {
             anchors.Clear();
+        }
+
+        internal bool RemoveAnchor(AgentSpaceAnchor<TAgent> anchor)
+        {
+            return anchors.Remove(anchor);
         }
 
         //internal AgentAnchor<TAgent> Anchor

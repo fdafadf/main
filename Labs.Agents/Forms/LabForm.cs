@@ -14,6 +14,7 @@ namespace Labs.Agents.Forms
         public ToolStripMenuItem MenuNewAgent => menuItemNewAgent;
         public ListView Simulations => listViewSimulationTemplates;
         public ListView Agents => listViewAgents;
+        public ListView Spaces => listViewEnvironments;
         public Workspace Workspace;
         protected SpaceTemplateGeneratorForm EnvironmentGeneratorForm = new SpaceTemplateGeneratorForm();
 
@@ -77,12 +78,14 @@ namespace Labs.Agents.Forms
         {
             if (item.Tag is SimulationTemplate template)
             {
-                var results = template.CreateSimulationForm().Show();
+                var simulationForm = template.CreateSimulationForm();
+                simulationForm.Show();
+                var simulationResults = simulationForm.Simulation.Results;
 
-                if (results.Series.First().Value.Count > 0)
+                if (simulationResults.Series.First().Value.Count > 0)
                 {
-                    Workspace.SimulationResults.Add(results);
-                    Add(results, true);
+                    Workspace.SimulationResults.Add(simulationResults);
+                    Add(simulationResults, true);
                 }
             }
         }
@@ -210,7 +213,7 @@ namespace Labs.Agents.Forms
                 var oldImage = pictureBoxSpacePreview.Image;
                 pictureBoxSpacePreview.Image = null;
                 oldImage?.Dispose();
-                pictureBoxSpacePreview.Image = Painter.CreatePreviewImage(spaceTemplate);
+                pictureBoxSpacePreview.Image = spaceTemplate.CreatePreviewImage(3);
             }
         }
 

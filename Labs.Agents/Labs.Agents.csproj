@@ -54,16 +54,35 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Agents.Features\AgentAnchor.cs" />
+    <Compile Include="Agents.Features\AgentSpaceAnchor.cs" />
     <Compile Include="Agents.Features\AgentGoal.cs" />
     <Compile Include="Agents.Features\AgentRotation.cs" />
+    <Compile Include="Forms.Animation\AnimatedLayer.cs" />
+    <Compile Include="Forms.Animation\AnimatedLayerObject.cs" />
+    <Compile Include="Forms.Animation\AnimatedLayersControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Forms.Animation\AnimatedShape.cs" />
+    <Compile Include="Forms.Animation\BitmapGridLayer.cs" />
+    <Compile Include="Forms.Animation\IAnimated.cs" />
+    <Compile Include="Forms.Animation\IPaintable.cs" />
+    <Compile Include="Forms.Animation\AnimatedRectangle.cs" />
+    <Compile Include="Forms.Animation\PaintableLayer.cs" />
     <Compile Include="Forms\ListViewContextMenuItem.cs" />
+    <Compile Include="Properties\Icons.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Icons.resx</DependentUpon>
+    </Compile>
     <Compile Include="Simulations.AStar\AStarLabFormExtension.cs" />
     <Compile Include="Simulations.AStar\AStarAgentFactory.cs" />
     <Compile Include="Simulations.AStar\AStarSimulationPluginFactory.cs" />
     <Compile Include="Simulations.AStar\AStarSimulationPlugin.cs" />
     <Compile Include="Simulations.AStar\AStarAgent.cs" />
     <Compile Include="Simulations\AgentDestructionModel.cs" />
+    <Compile Include="Simulations\AgentLayerObject.cs" />
+    <Compile Include="Simulations\GoalLayerObject.cs" />
+    <Compile Include="Simulations\SimulationModelConfiguration.cs" />
     <Compile Include="Simulations\SimulationResultsDescription.cs" />
     <Compile Include="Simulations\SimulationTemplate.cs" />
     <Compile Include="System\Assert.cs" />
@@ -74,7 +93,6 @@
     <Compile Include="Simulations.Dijkstra\DijkstraLabFormExtension.cs" />
     <Compile Include="Simulations.Dijkstra\DijkstraAgentFactory.cs" />
     <Compile Include="System\INamed.cs" />
-    <Compile Include="Simulations\ISimulationViualisation.cs" />
     <Compile Include="System\IValidatable.cs" />
     <Compile Include="Extensibility\LabFormExtension.cs" />
     <Compile Include="Forms\LabForm.cs">
@@ -105,7 +123,6 @@
       <DependentUpon>SimulationForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Simulations\SimulationPlugin.cs" />
-    <Compile Include="Simulations\SimulationModel1Visualisation.cs" />
     <Compile Include="Simulations\SimulationResults.cs" />
     <Compile Include="Spaces.Templating\SpaceTemplateGeneratorDefinition.cs" />
     <Compile Include="Simulations\ISimulationPluginFactory.cs" />
@@ -151,7 +168,6 @@
       <DependentUpon>SpaceTemplateGeneratorForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Spaces.Templating\SpaceTemplateGeneratorProperties.cs" />
-    <Compile Include="System.Drawing\Painter.cs" />
     <Compile Include="Spaces.Interaction\RotableMovement.cs" />
     <Compile Include="Spaces.Interaction\CardinalPoint.cs" />
     <Compile Include="Extensions.cs" />
@@ -180,6 +196,10 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\SpaceTemplateGeneratorForm.resx">
       <DependentUpon>SpaceTemplateGeneratorForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Icons.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Icons.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
@@ -223,6 +243,33 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Bottleneck-Small-1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Example1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Example2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Example3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\control.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\control-pause.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\control-stop.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\control-stop-square.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\control-double.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\control-double-180.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

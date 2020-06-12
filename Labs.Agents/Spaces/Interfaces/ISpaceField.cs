@@ -5,7 +5,7 @@
         ISpace Space { get; }
         bool IsOutside { get; }
         bool IsEmpty { get; }
-        bool IsObstacle { get; }
-        bool IsAgent { get; }
+        bool HasObstacle { get; }
+        bool HasAgent { get; }
     }
 }

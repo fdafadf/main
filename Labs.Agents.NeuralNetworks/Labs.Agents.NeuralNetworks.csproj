@@ -62,12 +62,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AgentNetworkFile.cs" />
+    <Compile Include="AgentViewLayer.cs" />
     <Compile Include="NeuralAgent.cs" />
     <Compile Include="AgentNetwork.cs" />
     <Compile Include="AgentNetworkDefinition.cs" />
     <Compile Include="AgentNetworkInputCoder.cs" />
     <Compile Include="MarkovHistoryItem.cs" />
+    <Compile Include="NeuralAgentTrainer.cs" />
     <Compile Include="NeuralSimulationPlugin.cs" />
     <Compile Include="NeuralSimulationPluginFactory.cs" />
     <Compile Include="NeuralLabFormExtension.cs" />

@@ -23,18 +23,22 @@ namespace Labs.Agents.Forms
         {
             if (DialogResult == DialogResult.OK)
             {
-                if (PropertyGrid.SelectedObject is IValidatable validatable)
+                try
                 {
-                    try
+                    if (PropertyGrid.SelectedObject is IValidatable validatable)
                     {
                         validatable.Validate();
                         OKAction?.Invoke();
                     }
-                    catch (Exception exception)
+                    else
                     {
-                        e.Cancel = true;
-                        MessageBox.Show(exception.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        OKAction?.Invoke();
                     }
+                }
+                catch (Exception exception)
+                {
+                    e.Cancel = true;
+                    MessageBox.Show(exception.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
         }

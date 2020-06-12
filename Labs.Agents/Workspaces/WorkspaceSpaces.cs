@@ -79,7 +79,7 @@ namespace Labs.Agents
 
         public ISpaceTemplateFactory GetByName(string name)
         {
-            return Items.FirstOrDefault(space => space.Name == name);
+            return Items.First(space => space.Name == name);
         }
 
         public bool Remove(ISpaceTemplateFactory space)

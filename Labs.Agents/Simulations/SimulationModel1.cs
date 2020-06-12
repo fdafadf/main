@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace Labs.Agents
 {
-    public class SimulationModel1<TPlugin, TAgent> : ISimulation
+    public class SimulationModel1<TPlugin, TAgent> : ISimulation, ISimulation<TAgent>, IShufflable
         where TPlugin : SimulationPlugin<DestructibleInteractiveSpace<CardinalMovementSpace<TAgent>, TAgent>, TAgent> 
         where TAgent : IAnchoredAgent<TAgent>, IInteractiveAgent<CardinalMovement, InteractionResult>, IDestructibleAgent, IGoalAgent
     {
@@ -18,33 +18,28 @@ namespace Labs.Agents
         public List<TAgent> Agents = new List<TAgent>();
         public int Iteration { get; private set; }
         public int TotalReachedGoals => Goals.TotalReachedGoals;
+        public event Action<TAgent> AgentCreated;
         internal TPlugin Plugin;
         SimulationModelConfiguration ModelConfiguration;
         List<double> ConsumedTime = new List<double>();
         Stopwatch Stopwatch = new Stopwatch();
+        bool shuffleRequested = false;
+        IEnumerable<TAgent> ISimulation<TAgent>.Agents => Agents;
 
         public SimulationModel1(ISpaceTemplateFactory spaceDefinition, TPlugin plugin, string pluginName, SimulationModelConfiguration modelConfiguration)
         {
+            Plugin = plugin;
             var spaceTemplate = spaceDefinition.CreateSpaceTemplate();
             var cardinalSpace = new CardinalMovementSpace<TAgent>(spaceTemplate, modelConfiguration.AgentsCollisionModel);
             Space = new DestructibleInteractiveSpace<CardinalMovementSpace<TAgent>, TAgent>(cardinalSpace);
-            Agents.AddRange(spaceTemplate.AgentMap.SelectTrue((x, y) => plugin.CreateAgent(Space, x, y)));
             Goals = new RandomRenewableGoals<TAgent>(Space.InteractiveSpace, modelConfiguration.CreateRandom());
-            Goals.Initialize(Agents);
+            spaceTemplate.AgentMap.ForEachTrue(CreateAgent);
             Results = new SimulationResults(pluginName, spaceDefinition.Name);
             Results.Series.Add("Reached Goals", Goals.ReachedGoals);
             Results.Series.Add("Collisions", Space.Collisions);
             Results.Series.Add("ConsumedTime", ConsumedTime);
-            Plugin = plugin;
             ModelConfiguration = modelConfiguration;
         }
-
-        //public ISpace CreateSpace()
-        //{
-        //    var spaceTemplate = spaceDefinition.CreateSpaceTemplate();
-        //    var cardinalSpace = new CardinalMovementSpace<TAgent>(spaceTemplate, agentsCollisionModel);
-        //    Space = new DestructibleInteractiveSpace<CardinalMovementSpace<TAgent>, TAgent>(cardinalSpace);
-        //}
 
         public void Initialise()
         {
@@ -53,21 +48,25 @@ namespace Labs.Agents
 
         public bool Iterate()
         {
+            if (shuffleRequested)
+            {
+                DoShuffle();
+            }
+
             Iteration++;
             Stopwatch.Start();
-
+            Goals.OnIterationStarted(Agents);
             Plugin.OnIterationStarted(Agents);
             Space.Interact(Agents);
             Plugin.OnInteractionCompleted(Agents);
-            Goals.Update(Agents);
+            Goals.OnInteractionCompleted(Agents);
             int destroyed = Agents.Count(agent => agent.Interaction.ActionResult == InteractionResult.Collision);
 
             for (int i = 0; i < destroyed; i++)
             {
                 if (ModelConfiguration.AgentDestructionModel.CreateNew)
                 {
-                    var field = Random.GetUnusedField(Space.InteractiveSpace);
-                    Agents.Add(Plugin.CreateAgent(Space, field.X, field.Y));
+                    CreateAgent();
                 }
             }
 
@@ -90,6 +89,36 @@ namespace Labs.Agents
         public void Pause()
         {
             Plugin.OnSimulationPaused();
+        }
+
+        public void Shuffle()
+        {
+            shuffleRequested = true;
+        }
+
+        private void DoShuffle()
+        {
+            shuffleRequested = false;
+            var undestroyedAgents = Agents.Where(agent => agent.Fitness.IsDestroyed == false);
+
+            foreach (var agent in undestroyedAgents)
+            {
+                Space.InteractiveSpace.MoveAgentAnchor(agent.Anchor, Random.GetEmptyField(Space.InteractiveSpace));
+            }
+        }
+
+        private void CreateAgent()
+        {
+            var field = Random.GetEmptyField(Space.InteractiveSpace);
+            CreateAgent(field.X, field.Y);
+        }
+
+        private void CreateAgent(int x, int y)
+        {
+            var agent = Plugin.CreateAgent(Space, x, y);
+            Goals.Initialize(agent);
+            Agents.Add(agent);
+            AgentCreated?.Invoke(agent);
         }
 
         public override string ToString()
@@ -115,21 +144,34 @@ namespace Labs.Agents
         {
             foreach (var agent in agents)
             {
-                if (agent.Goal.Position == Point.Empty)
-                {
-                    agent.Goal.Position = Random.GetUnusedField(Space);
-                }
-                else if (agent.IsGoalReached())
-                {
-                    TotalReachedGoals++;
-                    agent.Goal.Position = Random.GetUnusedField(Space);
-                }
+                Initialize(agent);
             }
         }
 
-        public void Update(IEnumerable<TAgent> agents)
+        public void Initialize(TAgent agent)
+        {
+            if (agent.Goal.Position == null || agent.IsGoalReached())
+            {
+                agent.Goal.Position = Random.GetEmptyField(Space);
+            }
+        }
+
+        public void OnIterationStarted(IEnumerable<TAgent> agents)
         {
             Initialize(agents);
+            ReachedGoals.Add(TotalReachedGoals);
+        }
+
+        public void OnInteractionCompleted(IEnumerable<TAgent> agents)
+        {
+            foreach (var agent in agents)
+            {
+                if (agent.IsGoalReached())
+                {
+                    TotalReachedGoals++;
+                }
+            }
+
             ReachedGoals.Add(TotalReachedGoals);
         }
     }

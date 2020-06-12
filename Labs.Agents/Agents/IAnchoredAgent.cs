@@ -2,6 +2,6 @@
 {
     public interface IAnchoredAgent<TAgent>
     {
-        AgentAnchor<TAgent> Anchor { get; }
+        AgentSpaceAnchor<TAgent> Anchor { get; }
     }
 }

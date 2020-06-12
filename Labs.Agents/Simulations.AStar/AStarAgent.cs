@@ -5,7 +5,7 @@ namespace Labs.Agents.Simulations.AStar
 {
     public class AStarAgent : IAnchoredAgent<AStarAgent>, IDestructibleAgent, IInteractiveAgent<CardinalMovement, InteractionResult>, IGoalAgent
     {
-        public AgentAnchor<AStarAgent> Anchor { get; }
+        public AgentSpaceAnchor<AStarAgent> Anchor { get; }
         public Interaction<CardinalMovement, InteractionResult> Interaction { get; }
         public AgentFitness Fitness { get; }
         public AgentGoal Goal { get; }
@@ -66,7 +66,7 @@ namespace Labs.Agents.Simulations.AStar
                     distances[point] = int.MaxValue;
                     predecessors[point] = default;
 
-                    if (space[x, y].IsEmpty || space[x, y].IsAgent)
+                    if (space[x, y].IsEmpty || space[x, y].HasAgent)
                     {
                         unvisited.Add(point);
                     }

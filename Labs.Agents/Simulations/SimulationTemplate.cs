@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Labs.Agents.Forms;
+using System;
 using System.Linq;
 using System.Reflection;
 
@@ -19,8 +20,7 @@ namespace Labs.Agents
 
         public ISimulation CreateSimulation()
         {
-            var simulationPlugin = SimulationPluginFactory.CreatePlugin();
-            return CreateSimulation(simulationPlugin, SimulationPluginFactory.Name, SpaceTemplateFactory, Definition.Model);
+            return CreateSimulation(SimulationPluginFactory.CreatePlugin(), SimulationPluginFactory.Name, SpaceTemplateFactory, Definition.Model);
         }
 
         public static ISimulation CreateSimulation(SimulationPlugin plugin, string pluginName, ISpaceTemplateFactory spaceTemplateFactory, SimulationModelConfiguration modelConfiguration)
@@ -37,20 +37,42 @@ namespace Labs.Agents
             return new SimulationModel1<TPlugin, TAgent>(spaceTemplateFactory, simulationPlugin, pluginName, modelConfiguration);
         }
 
-        public ISimulationViualisation CreateSimulationForm()
+        public SimulationForm CreateSimulationForm()
         {
-            var simulationPlugin = SimulationPluginFactory.CreatePlugin();
-            var method = GetType().GetMethods(BindingFlags.Static | BindingFlags.Public).Where(m => m.Name == nameof(CreateSimulationForm)).First();
-            method = method.MakeGenericMethod(simulationPlugin.GetType(), simulationPlugin.AgentType);
-            return method.Invoke(this, new object[] { simulationPlugin, SimulationPluginFactory.Name, SpaceTemplateFactory, Definition.Model, Definition.AnimationInterval }) as ISimulationViualisation;
+            return CreateSimulationForm(SimulationPluginFactory.CreatePlugin(), SimulationPluginFactory.Name, SpaceTemplateFactory, Definition.Model, Definition.AnimationInterval);
         }
 
-        public static ISimulationViualisation CreateSimulationForm<TPlugin, TAgent>(TPlugin simulationPlugin, string pluginName, ISpaceTemplateFactory spaceTemplateFactory, SimulationModelConfiguration modelConfiguration, int animationInterval)
+        public static SimulationForm CreateSimulationForm(SimulationPlugin simulationPlugin, string pluginName, ISpaceTemplateFactory spaceTemplateFactory, SimulationModelConfiguration modelConfiguration, int animationInterval)
+        {
+            var method = typeof(SimulationTemplate).GetMethods(BindingFlags.Static | BindingFlags.Public).Where(m => m.Name == nameof(CreateSimulationForm)).Skip(1).First();
+            method = method.MakeGenericMethod(simulationPlugin.GetType(), simulationPlugin.AgentType);
+            return method.Invoke(null, new object[] { simulationPlugin, pluginName, spaceTemplateFactory, modelConfiguration, animationInterval }) as SimulationForm;
+        }
+
+        public static SimulationForm CreateSimulationForm<TPlugin, TAgent>(TPlugin simulationPlugin, string pluginName, ISpaceTemplateFactory spaceTemplateFactory, SimulationModelConfiguration modelConfiguration, int animationInterval)
             where TPlugin : SimulationPlugin<DestructibleInteractiveSpace<CardinalMovementSpace<TAgent>, TAgent>, TAgent>
             where TAgent : IAnchoredAgent<TAgent>, IInteractiveAgent<CardinalMovement, InteractionResult>, IDestructibleAgent, IGoalAgent
         {
             var simulation = new SimulationModel1<TPlugin, TAgent>(spaceTemplateFactory, simulationPlugin, pluginName, modelConfiguration);
-            return new SimulationModel1Visualisation<TPlugin, TAgent>(simulation, animationInterval);
+            var form = new SimulationForm();
+            form.Simulation = simulation;
+            var width = simulation.Space.InteractiveSpace.Width;
+            var height = simulation.Space.InteractiveSpace.Height;
+            var obstaclesLayer = new BitmapLayer(form.Space, simulation.Space.InteractiveSpace.GetObstacles());
+            var agentsLayer = new AnimatedLayer(form.Space, width, height);
+            var goalsLayer = new AnimatedLayer(form.Space, width, height);
+
+            void CreateAgentLayerObject(TAgent agent)
+            {
+                var agentOnLayer = new AgentLayerObject<TAgent>(agent);
+                agentsLayer.Objects.Add(agentOnLayer);
+                goalsLayer.Objects.Add(new GoalLayerObject<TAgent>(agentOnLayer));
+            }
+
+            simulation.Agents.ForEach(CreateAgentLayerObject);
+            simulation.AgentCreated += CreateAgentLayerObject;
+            simulationPlugin.OnSimulationCreated(form, simulation);
+            return form;
         }
 
         public SimulationTemplate Clone()

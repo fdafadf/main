@@ -5,7 +5,7 @@ namespace Labs.Agents.Simulations.Dijkstra
 {
     public class DijkstraAgent : IAnchoredAgent<DijkstraAgent>, IDestructibleAgent, IInteractiveAgent<CardinalMovement, InteractionResult>, IGoalAgent
     {
-        public AgentAnchor<DijkstraAgent> Anchor { get; }
+        public AgentSpaceAnchor<DijkstraAgent> Anchor { get; }
         public Interaction<CardinalMovement, InteractionResult> Interaction { get; }
         public AgentFitness Fitness { get; }
         public AgentGoal Goal { get; }
@@ -84,7 +84,7 @@ namespace Labs.Agents.Simulations.Dijkstra
                     distances[point] = int.MaxValue;
                     predecessors[point] = default;
 
-                    if (space[x, y].IsEmpty || space[x, y].IsAgent)
+                    if (space[x, y].IsEmpty || space[x, y].HasAgent)
                     {
                         unvisited.Add(point);
                     }
@@ -110,7 +110,7 @@ namespace Labs.Agents.Simulations.Dijkstra
                     UShortPoint neighbor = currentMin.Add(move);
                     var neighborField = space[neighbor.X, neighbor.Y];
 
-                    if (neighborField.IsEmpty || neighborField.IsAgent)
+                    if (neighborField.IsEmpty || neighborField.HasAgent)
                     {
                         int newDistance = currentDistance + 1;
                         int neighborDistance = distances[neighbor];

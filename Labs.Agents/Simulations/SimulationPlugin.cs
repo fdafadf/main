@@ -1,10 +1,14 @@
-﻿using System;
+﻿using Labs.Agents.Forms;
+using System;
 using System.Collections.Generic;
+using System.Drawing;
 
 namespace Labs.Agents
 {
     public abstract class SimulationPlugin
     {
+        public abstract Type AgentType { get; }
+
         public virtual void OnSimulationStarted(ISimulation simulation)
         {
         }
@@ -16,10 +20,6 @@ namespace Labs.Agents
         public virtual void OnSimulationPaused()
         {
         }
-
-        public abstract Type AgentType { get; }
-
-        //public abstract ISimulation CreateSimulation();
     }
 
     public abstract class SimulationPlugin<TSpace, TAgent> : SimulationPlugin
@@ -39,7 +39,16 @@ namespace Labs.Agents
             return agent;
         }
 
+        public virtual void PaintAgent(Graphics graphics, TAgent agent)
+        {
+        }
+
         public override Type AgentType => typeof(TAgent);
+
+        public virtual void OnSimulationCreated(SimulationForm form, ISimulation<TAgent> simulation)
+        {
+
+        }
 
         public virtual void OnInteractionCompleted(IEnumerable<TAgent> agents)
         {

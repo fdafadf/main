@@ -23,17 +23,24 @@ namespace Labs.Agents.NeuralNetworks
             NetworksDirectory = Settings.ProductDirectory.GetDirectory("Networks").Ensure();
         }
 
-        public void Add(string name, AgentNetwork network)
+        public void Add(string name, AgentNetwork network) => SaveNetwork(name, network, false);
+
+        public FileInfo GetNetworkFile(string name)
+        {
+            return NetworksDirectory.GetFile($"{name}.model");
+        }
+
+        public void SaveNetwork(string name, AgentNetwork network, bool overwrite)
         {
             if (string.IsNullOrWhiteSpace(name))
             {
                 throw new ArgumentException($"Name can't be empty.");
             }
 
-            var fileName = $"{name}.model";
+            var fileName = GetNetworkFileName(name);
             var networkFile = NetworksDirectory.GetFile(fileName);
 
-            if (networkFile.Exists)
+            if (networkFile.Exists && overwrite == false)
             {
                 throw new ArgumentException($"File '{fileName}' already exists.");
             }
@@ -43,21 +50,18 @@ namespace Labs.Agents.NeuralNetworks
             }
         }
 
-        public AgentNetworkFile GetNetworkFile(string name)
-        {
-            return new AgentNetworkFile(NetworksDirectory.GetFile($"{name}.model"));
-        }
-
         Dictionary<string, string> networksDescriptions = new Dictionary<string, string>();
 
         public string GetNetworkDescription(string name)
         {
             if (networksDescriptions.TryGetValue(name, out string description) == false)
             {
-                description = networksDescriptions[name] = GetNetworkFile(name).Load().ToString();
+                description = networksDescriptions[name] = new AgentNetwork(GetNetworkFile(name)).ToString();
             }
 
             return description;
         }
+
+        private string GetNetworkFileName(string name) => $"{name}.model";
     }
 }

@@ -9,5 +9,6 @@ namespace Labs.Agents
         ToolStripMenuItem MenuNewAgent { get; }
         ListView Simulations { get; }
         ListView Agents { get; }
+        ListView Spaces { get; }
     }
 }

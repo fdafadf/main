@@ -19,13 +19,13 @@ namespace Labs.Agents.NeuralNetworks
         public TrainingAnalyticsConfiguration TrainingAnalyticsConfiguration { get; set; }
         [TypeConverter(typeof(DropDownStringConverter))]
         public string Network { get; set; }
-        public int Seed { get; set; }
+        public int TrainingSeed { get; set; }
 
-        public NeuralSimulationPluginFactory(string name, string network, int seed)
+        public NeuralSimulationPluginFactory(string name, string network, int trainingSeed)
         {
             Name = name;
             Network = network;
-            Seed = seed;
+            TrainingSeed = trainingSeed;
             TrainingConfiguration = new AgentNetworkTrainingConfiguration();
             TrainingAnalyticsConfiguration = new TrainingAnalyticsConfiguration();
         }
@@ -34,13 +34,13 @@ namespace Labs.Agents.NeuralNetworks
         public SimulationPlugin CreatePlugin()
         {
             var network = Workspace.Instance.GetNetworkFile(Network);
-            return new NeuralSimulationPlugin(network, null, Seed);
+            return new NeuralSimulationPlugin(network, null, TrainingSeed);
         }
 
         public NeuralSimulationPlugin CreateTrainingPlugin()
         {
             var network = Workspace.Instance.GetNetworkFile(Network);
-            return new NeuralSimulationPlugin(network, TrainingConfiguration, Seed);
+            return new NeuralSimulationPlugin(network, TrainingConfiguration, TrainingSeed);
         }
 
         public IEnumerable<string> GetNetworks()

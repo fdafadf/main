@@ -1,4 +1,6 @@
-﻿using System.ComponentModel;
+﻿using Labs.Agents.Properties;
+using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -11,6 +13,7 @@ namespace Labs.Agents.Forms
         private ToolStrip MainMenuControl;
         private ToolStripButton PauseButton;
         private ToolStripButton ResumeButton;
+        private ToolStripButton StepButton;
 
         public SimulationWorkerForm()
         {
@@ -39,17 +42,7 @@ namespace Labs.Agents.Forms
 
         protected virtual void InitializeMenu(ToolStripContainer container)
         {
-            MainMenuControl = new ToolStrip();
-            MainMenuControl.SuspendLayout();
-            container.TopToolStripPanel.Controls.Add(MainMenuControl);
-            MainMenuControl.Dock = DockStyle.None;
-            InitializeMenuItems(MainMenuControl);
-            MainMenuControl.Location = new Point(3, 0);
-            MainMenuControl.Name = "mainMenuControl";
-            MainMenuControl.Size = new Size(478, 25);
-            MainMenuControl.TabIndex = 1;
-            MainMenuControl.ResumeLayout(false);
-            MainMenuControl.PerformLayout();
+            CreateMenu(container, InitializeMenuItems);
         }
 
         protected virtual void InitializeMenuItems(ToolStrip menu)
@@ -57,10 +50,15 @@ namespace Labs.Agents.Forms
             InitializeMenuStart(menu);
         }
 
-        protected void InitializeMenuStart(ToolStrip menu)
+        protected virtual void InitializeMenuStart(ToolStrip menu)
         {
-            PauseButton = menu.AddButton("&Pause", SimulationWorker.Pause);
-            ResumeButton = menu.AddButton("&Resume", SimulationWorker.Resume);
+            ResumeButton = menu.AddButton(Icons.control, SimulationWorker.Resume);
+            PauseButton = menu.AddButton(Icons.control_pause, SimulationWorker.Pause);
+            StepButton = menu.AddButton(Icons.control_stop, () =>
+            {
+                SimulationWorker.SingleStep = true;
+                SimulationWorker.Resume(); 
+            });
         }
 
         protected virtual void OnPaused()
@@ -68,7 +66,7 @@ namespace Labs.Agents.Forms
             Simulation?.Pause();
             this.InvokeAction(() =>
             {
-                ResumeButton.Enabled = true;
+                ResumeButton.Enabled = StepButton.Enabled = true;
                 PauseButton.Enabled = false;
             });
         }
@@ -77,20 +75,36 @@ namespace Labs.Agents.Forms
         {
             this.InvokeAction(() =>
             {
-                ResumeButton.Enabled = false;
+                ResumeButton.Enabled = StepButton.Enabled = false;
                 PauseButton.Enabled = true;
             });
+        }
+
+        protected void CreateMenu(ToolStripContainer container, Action<ToolStrip> itemsInitializer)
+        {
+            MainMenuControl = new ToolStrip();
+            MainMenuControl.SuspendLayout();
+            container.TopToolStripPanel.Controls.Add(MainMenuControl);
+            MainMenuControl.Dock = DockStyle.None;
+            itemsInitializer(MainMenuControl);
+            MainMenuControl.Location = new Point(3, 0);
+            MainMenuControl.Name = "mainMenuControl";
+            MainMenuControl.Size = new Size(478, 25);
+            MainMenuControl.TabIndex = 1;
+            MainMenuControl.ResumeLayout(false);
+            MainMenuControl.PerformLayout();
         }
 
         private void InitializeComponent()
         {
             this.SuspendLayout();
             // 
-            // SimulationForm
+            // SimulationWorkerForm
             // 
             this.ClientSize = new System.Drawing.Size(284, 261);
-            this.Name = "SimulationForm";
+            this.Name = "SimulationWorkerForm";
             this.ResumeLayout(false);
+
         }
     }
 }

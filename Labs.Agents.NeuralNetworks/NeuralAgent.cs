@@ -4,7 +4,7 @@ namespace Labs.Agents.NeuralNetworks
 {
     public class NeuralAgent : IAnchoredAgent<NeuralAgent>, IDestructibleAgent, IInteractiveAgent<CardinalMovement, InteractionResult>, IGoalAgent
     {
-        public AgentAnchor<NeuralAgent> Anchor { get; }
+        public AgentSpaceAnchor<NeuralAgent> Anchor { get; }
         public Interaction<CardinalMovement, InteractionResult> Interaction { get; }
         public AgentFitness Fitness { get; }
         public AgentGoal Goal { get; }

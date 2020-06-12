@@ -11,7 +11,7 @@ namespace Labs.Agents.NeuralNetworks
         public readonly AgentNetworkInputCoder InputCoder;
         public readonly Network Network;
 
-        public AgentNetwork(AgentNetworkInputCoder inputCoder, IEnumerable<Layer> layers)
+        public AgentNetwork(AgentNetworkInputCoder inputCoder, IEnumerable<AI.NeuralNetworks.Layer> layers)
         {
             InputCoder = inputCoder;
             Network = new Network(layers);
@@ -19,6 +19,11 @@ namespace Labs.Agents.NeuralNetworks
 
         public AgentNetwork(FileInfo fileInfo)
         {
+            if (fileInfo.Exists == false)
+            {
+                throw new ArgumentException();
+            }
+
             using (FileStream stream = fileInfo.OpenRead())
             {
                 var layers = NetworkSerializer.LoadLayers(new BinaryReader(stream));

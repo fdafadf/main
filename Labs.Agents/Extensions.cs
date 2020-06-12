@@ -53,14 +53,9 @@ namespace Labs.Agents
 
         public static bool IsGoalReached<TAgent>(this TAgent self) where TAgent : IGoalAgent, IAnchoredAgent<TAgent>
         {
-            if (self.Goal.Position == Point.Empty)
-            {
-                return false;
-            }
-            else
-            {
-                return self.Goal.Position.X == self.Anchor.Field.X && self.Goal.Position.Y == self.Anchor.Field.Y;
-            }
+            return self.Goal.Position == null
+                ? false
+                : self.Goal.Position.X == self.Anchor.Field.X && self.Goal.Position.Y == self.Anchor.Field.Y;
         }
 
         public static void ForEachTrue(this bool[,] self, Action<int, int> action)
@@ -91,19 +86,19 @@ namespace Labs.Agents
             }
         }
 
-        public static Point GetUnusedField(this Random self, ISpace space)
-        {
-            Point point = new Point();
-        
-            do
-            {
-                point.X = self.Next(space.Width);
-                point.Y = self.Next(space.Height);
-            }
-            while (space[point.X, point.Y].IsEmpty == false);
-        
-            return point;
-        }
+        //public static Point GetUnusedField(this Random self, ISpace space)
+        //{
+        //    Point point = new Point();
+        //
+        //    do
+        //    {
+        //        point.X = self.Next(space.Width);
+        //        point.Y = self.Next(space.Height);
+        //    }
+        //    while (space[point.X, point.Y].IsEmpty == false);
+        //
+        //    return point;
+        //}
 
         public static void AddRange<T>(this List<T> self, int count, Func<T> factory)
         {
@@ -144,6 +139,13 @@ namespace Labs.Agents
         }
 
         public static double Distance(this IPoint self, Point p)
+        {
+            double dx = self.X - p.X;
+            double dy = self.Y - p.Y;
+            return Math.Sqrt(dx * dx + dy * dy);
+        }
+
+        public static double Distance(this IPoint self, IPoint p)
         {
             double dx = self.X - p.X;
             double dy = self.Y - p.Y;
@@ -213,6 +215,20 @@ namespace Labs.Agents
             else
             {
                 action();
+            }
+        }
+
+        public static void PaintMap(this Graphics self, Brush brush, int width, int height, int scale, Func<int, int, bool> map)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    if (map(x, y))
+                    {
+                        self.FillRectangle(brush, x * scale, y * scale, scale, scale);
+                    }
+                }
             }
         }
 
@@ -326,6 +342,18 @@ namespace Labs.Agents
             self.Items.Add(button);
             return button;
         }
+
+        public static ToolStripButton AddButton(this ToolStrip self, Bitmap icon, Action action)
+        {
+            var button = new ToolStripButton();
+            button.Image = icon;
+            button.ImageTransparentColor = Color.Magenta;
+            button.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            button.Click += new EventHandler((sender, e) => action());
+            self.Items.Add(button);
+            return button;
+        }
+
         public static IEnumerable<FileInfo> EnumerateFiles2(this DirectoryInfo self, string searchPattern)
         {
             if (self.Exists)
@@ -441,6 +469,19 @@ namespace Labs.Agents
             }
 
             return self;
+        }
+
+        public static ISpaceField GetEmptyField(this Random self, ISpace space)
+        {
+            ISpaceField field;
+
+            do
+            {
+                field = space[self.Next(space.Width), self.Next(space.Height)];
+            }
+            while (field.IsEmpty == false);
+
+            return field;
         }
     }
 }

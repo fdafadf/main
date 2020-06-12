@@ -31,13 +31,26 @@ namespace Labs.Agents
             AddObstacles(template.Obstacles);
         }
 
-        public AgentAnchor<TAgent> CreateAgentAnchor(TAgent agent, int x, int y)
+        public void MoveAgentAnchor(AgentSpaceAnchor<TAgent> anchor, ISpaceField field)
+        {
+            this[anchor.Field].RemoveAnchor(anchor);
+            fields[field.X, field.Y].AddAnchor(anchor);
+            anchor.Field = field;
+        }
+
+        public void MoveAgentAnchor(AgentSpaceAnchor<TAgent> anchor, int x, int y)
+        {
+            this[anchor.Field].RemoveAnchor(anchor);
+            fields[x, y].AddAnchor(anchor);
+        }
+
+        public AgentSpaceAnchor<TAgent> CreateAgentAnchor(TAgent agent, int x, int y)
         {
             var field = fields[x, y];
 
             if (field.IsEmpty)
             {
-                var anchor = new AgentAnchor<TAgent>(agent, field);
+                var anchor = new AgentSpaceAnchor<TAgent>(agent, field);
                 fields[x, y].AddAnchor(anchor);
                 return anchor;
             }
@@ -70,9 +83,11 @@ namespace Labs.Agents
             {
                 for (int ox = x; ox < ex; ox++)
                 {
-                    fields[ox, oy].IsObstacle = true;
+                    fields[ox, oy].HasObstacle = true;
                 }
             }
         }
+
+        protected SpaceField<TAgent> this[ISpaceField f] => fields[f.X, f.Y];
     }
 }

@@ -77,5 +77,18 @@ namespace Labs.Agents
                 }
             }
         }
+
+        public Bitmap CreatePreviewImage(int scale)
+        {
+            Bitmap obstacles = new Bitmap(Width * scale, Height * scale);
+
+            using (Graphics bufferGraphics = Graphics.FromImage(obstacles))
+            {
+                bufferGraphics.PaintMap(Brushes.DarkGray, Width, Height, scale, (x, y) => Obstacles[x, y]);
+                bufferGraphics.PaintMap(Brushes.Red, Width, Height, scale, (x, y) => AgentMap[x, y]);
+            }
+
+            return obstacles;
+        }
     }
 }

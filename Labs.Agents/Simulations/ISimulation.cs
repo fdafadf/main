@@ -1,4 +1,5 @@
 ﻿using Labs.Agents.Forms;
+using System.Collections.Generic;
 
 namespace Labs.Agents
 {
@@ -11,5 +12,15 @@ namespace Labs.Agents
         void Initialise();
         void Complete();
         void Pause();
+    }
+
+    public interface ISimulation<TAgent>
+    {
+        IEnumerable<TAgent> Agents { get; }
+    }
+
+    public interface IShufflable
+    {
+        void Shuffle();
     }
 }
