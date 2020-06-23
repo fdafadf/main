@@ -95,3 +95,5 @@
 /Labs.Agents.NeuralNetworks/obj/Release
 /Labs.AI.NeuralNetworks.Ants/obj
 /Labs.AI.NeuralNetworks.Ants/bin
+/Labs.AI/bin/Debug
+/Labs.AI/obj
