@@ -2,7 +2,7 @@
 {
     public class AgentDestructionModel
     {
-        public bool RemoveDestoryed { get; set; } = false;
+        public bool RemoveDestoryed { get; set; } = true;
         public bool CreateNew { get; set; } = true;
     }
 }

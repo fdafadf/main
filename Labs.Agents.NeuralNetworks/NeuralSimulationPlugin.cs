@@ -46,24 +46,24 @@ namespace Labs.Agents.NeuralNetworks
 
                     if (agent.IsGoalReached())
                     {
-                        reward = 2;
+                        reward = 1;
                     }
                     else
                     {
                         if (agent.Interaction.ActionResult == InteractionResult.Collision)
                         {
                             Collisions++;
-                            reward = -2;
+                            reward = -1;
                         }
                         else if (agent.Interaction.Action == CardinalMovement.Nothing)
                         {
-                            reward = -0.1;
+                            reward = -0.0625;
                         }
                         else
                         {
                             double distanceBeforeInteraction = agent.Interaction.From.Distance(agent.Goal.Position);
                             double distanceAfterInteraction = agent.Interaction.To.Distance(agent.Goal.Position);
-                            reward = distanceBeforeInteraction - distanceAfterInteraction;
+                            reward = (distanceBeforeInteraction - distanceAfterInteraction) / 8;
                         }
                     }
 

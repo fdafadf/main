@@ -19,6 +19,8 @@ namespace Labs.Agents.NeuralNetworks
 
         public AgentNetwork(FileInfo fileInfo)
         {
+            fileInfo.Refresh();
+
             if (fileInfo.Exists == false)
             {
                 throw new ArgumentException();

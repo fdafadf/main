@@ -1,4 +1,5 @@
-﻿using Labs.Agents.Forms;
+﻿using Games.Utilities;
+using Labs.Agents.Forms;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -19,11 +20,13 @@ namespace Labs.Agents
         public int Iteration { get; private set; }
         public int TotalReachedGoals => Goals.TotalReachedGoals;
         public event Action<TAgent> AgentCreated;
+        public event Action<TAgent> AgentRemoved;
         internal TPlugin Plugin;
         SimulationModelConfiguration ModelConfiguration;
         List<double> ConsumedTime = new List<double>();
         Stopwatch Stopwatch = new Stopwatch();
         bool shuffleRequested = false;
+        int AgentsToCreate;
         IEnumerable<TAgent> ISimulation<TAgent>.Agents => Agents;
 
         public SimulationModel1(ISpaceTemplateFactory spaceDefinition, TPlugin plugin, string pluginName, SimulationModelConfiguration modelConfiguration)
@@ -53,16 +56,7 @@ namespace Labs.Agents
                 DoShuffle();
             }
 
-            Iteration++;
-            Stopwatch.Start();
-            Goals.OnIterationStarted(Agents);
-            Plugin.OnIterationStarted(Agents);
-            Space.Interact(Agents);
-            Plugin.OnInteractionCompleted(Agents);
-            Goals.OnInteractionCompleted(Agents);
-            int destroyed = Agents.Count(agent => agent.Interaction.ActionResult == InteractionResult.Collision);
-
-            for (int i = 0; i < destroyed; i++)
+            for (int i = 0; i < AgentsToCreate; i++)
             {
                 if (ModelConfiguration.AgentDestructionModel.CreateNew)
                 {
@@ -70,8 +64,18 @@ namespace Labs.Agents
                 }
             }
 
+            Iteration++;
+            Stopwatch.Start();
+            Goals.OnIterationStarted(Agents);
+            Plugin.OnIterationStarted(Agents);
+            Space.Interact(Agents);
+            Plugin.OnInteractionCompleted(Agents);
+            Goals.OnInteractionCompleted(Agents);
+            AgentsToCreate = Agents.Count(agent => agent.Interaction.ActionResult == InteractionResult.Collision);
+
             if (ModelConfiguration.AgentDestructionModel.RemoveDestoryed)
             {
+                Agents.Where(agent => agent.Fitness.IsDestroyed).ForEach(agent => AgentRemoved?.Invoke(agent));
                 Agents.RemoveAll(agent => agent.Fitness.IsDestroyed);
             }
 

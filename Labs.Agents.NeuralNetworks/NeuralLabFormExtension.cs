@@ -52,10 +52,12 @@ namespace Labs.Agents.NeuralNetworks
 
                     if (gridForm.ShowDialog() == DialogResult.OK)
                     {
-                        var trainer = new NeuralAgentTrainer(trainerSettings);
-                        trainer.Train();
-                        trainer.Simulate();
-                        trainer.SaveAsTemplate();
+                        using (var trainer = new NeuralAgentTrainer(trainerSettings))
+                        {
+                            trainer.Train();
+                            trainer.Simulate();
+                            trainer.SaveAsTemplate();
+                        }
                     }
                 }
             }

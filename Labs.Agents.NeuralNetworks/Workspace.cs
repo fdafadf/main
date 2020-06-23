@@ -17,10 +17,12 @@ namespace Labs.Agents.NeuralNetworks
 
         public IEnumerable<string> NetworkNames => NetworksDirectory.EnumerateFiles2("*.model").Select(file => Path.GetFileNameWithoutExtension(file.Name));
         public readonly DirectoryInfo NetworksDirectory;
+        public readonly DirectoryInfo NeuralTrainingsDirectory;
 
         private Workspace()
         {
-            NetworksDirectory = Settings.ProductDirectory.GetDirectory("Networks").Ensure();
+            NetworksDirectory = Settings.ProductDirectory.GetDirectory("Neural Networks").Ensure();
+            NeuralTrainingsDirectory = Settings.ProductDirectory.GetDirectory("Neural Trainings").Ensure();
         }
 
         public void Add(string name, AgentNetwork network) => SaveNetwork(name, network, false);

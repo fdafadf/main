@@ -79,7 +79,7 @@ namespace Labs.Agents.Forms
             if (item.Tag is SimulationTemplate template)
             {
                 var simulationForm = template.CreateSimulationForm();
-                simulationForm.Show();
+                simulationForm.ShowDialog();
                 var simulationResults = simulationForm.Simulation.Results;
 
                 if (simulationResults.Series.First().Value.Count > 0)
@@ -189,7 +189,7 @@ namespace Labs.Agents.Forms
         {
             var item = new ListViewItem(simulationTemplate.Definition.Space);
             item.SubItems.Add(simulationTemplate.Definition.SimulationPlugin);
-            item.SubItems.Add("NotImplemented"); // simulationTemplate.Definition.Model.IterationLimit.ToString());
+            item.SubItems.Add(simulationTemplate.Definition.Model.IterationLimit.ToString());
             item.SubItems.Add(simulationTemplate.ToString());
             item.Tag = simulationTemplate;
             listViewSimulationTemplates.AddWithAutoResize(item);

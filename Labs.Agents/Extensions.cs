@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
 
@@ -13,6 +14,11 @@ namespace Labs.Agents
 {
     public static class Extensions
     {
+        public static void SetContent(this FileInfo self, string content)
+        {
+            File.WriteAllText(self.FullName, content);
+        }
+
         public static T Deserialize<T>(this FileInfo self) where T : class
         {
             JsonSerializer serializer = new JsonSerializer();
@@ -24,6 +30,24 @@ namespace Labs.Agents
                 var reader = new JsonTextReader(new StreamReader(stream));
                 return serializer.Deserialize(reader) as T;
             }
+        }
+
+        public static string ConvertToJson(this object self)
+        {
+            JsonSerializer serializer = new JsonSerializer();
+            serializer.TypeNameHandling = TypeNameHandling.All;
+            serializer.Formatting = Formatting.Indented;
+            serializer.Converters.Add(new StringEnumConverter());
+            StringBuilder builder = new StringBuilder();
+
+            using (var stringWriter = new StringWriter(builder))
+            {
+                var writer = new JsonTextWriter(stringWriter);
+                serializer.Serialize(writer, self);
+                writer.Flush();
+            }
+
+            return builder.ToString();
         }
 
         public static void Serialize(this FileInfo self, object value)

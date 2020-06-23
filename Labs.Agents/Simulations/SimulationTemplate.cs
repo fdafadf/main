@@ -62,15 +62,24 @@ namespace Labs.Agents
             var agentsLayer = new AnimatedLayer(form.Space, width, height);
             var goalsLayer = new AnimatedLayer(form.Space, width, height);
 
-            void CreateAgentLayerObject(TAgent agent)
+            void OnAgentCreated(TAgent agent)
             {
                 var agentOnLayer = new AgentLayerObject<TAgent>(agent);
                 agentsLayer.Objects.Add(agentOnLayer);
                 goalsLayer.Objects.Add(new GoalLayerObject<TAgent>(agentOnLayer));
             }
 
-            simulation.Agents.ForEach(CreateAgentLayerObject);
-            simulation.AgentCreated += CreateAgentLayerObject;
+            void OnAgentRemoved(TAgent agent)
+            {
+                var agentOnLayer = agentsLayer.Objects.OfType<AgentLayerObject<TAgent>>().FirstOrDefault(o => o.Agent.Equals(agent));
+                agentsLayer.Objects.Remove(agentOnLayer);
+                var goalOnLayer = goalsLayer.Objects.OfType<GoalLayerObject<TAgent>>().FirstOrDefault(o => o.Agent.Equals(agentOnLayer));
+                goalsLayer.Objects.Remove(goalOnLayer);
+            }
+
+            simulation.Agents.ForEach(OnAgentCreated);
+            simulation.AgentCreated += OnAgentCreated;
+            simulation.AgentRemoved += OnAgentRemoved;
             simulationPlugin.OnSimulationCreated(form, simulation);
             return form;
         }

@@ -24,10 +24,14 @@ namespace Labs.Agents.NeuralNetworks
 
         public override void Paint(Graphics graphics)
         {
-            var agent = Simulation.Agents.First();
-            ISpaceField field = agent.Interaction.From ?? agent.Anchor.Field;
-            float size = ViewRadius * 2 + 1;
-            graphics.FillRectangle(Brush, field.X - ViewRadius, field.Y - ViewRadius, size, size);
+            var agent = Simulation.Agents.FirstOrDefault();
+
+            if (agent != null)
+            {
+                ISpaceField field = agent.Interaction.From ?? agent.Anchor.Field;
+                float size = ViewRadius * 2 + 1;
+                graphics.FillRectangle(Brush, field.X - ViewRadius, field.Y - ViewRadius, size, size);
+            }
         }
     }
 }

@@ -16,7 +16,7 @@ namespace Labs.Agents.NeuralNetworks
         [DisplayName("Training Analytics")]
         [TypeConverter(typeof(ExpandableObjectConverter))]
         [EditorBrowsable(EditorBrowsableState.Always)]
-        public TrainingProgressTrackerConfiguration TrainingAnalyticsConfiguration { get; set; }
+        public TrainingProgressTrackerConfiguration TrainingProgressTrackerConfiguration { get; set; }
         [TypeConverter(typeof(DropDownStringConverter))]
         public string Network { get; set; }
         public int TrainingSeed { get; set; }
@@ -27,7 +27,7 @@ namespace Labs.Agents.NeuralNetworks
             Network = network;
             TrainingSeed = trainingSeed;
             TrainingConfiguration = new AgentNetworkTrainingConfiguration();
-            TrainingAnalyticsConfiguration = new TrainingProgressTrackerConfiguration();
+            TrainingProgressTrackerConfiguration = new TrainingProgressTrackerConfiguration();
         }
 
         // TODO: otypować mocniej

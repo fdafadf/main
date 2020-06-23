@@ -1,106 +1,17 @@
 ﻿using AI.NeuralNetworks;
 using Labs.Agents.Forms;
+using Newtonsoft.Json;
 using System;
-using System.ComponentModel;
+using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Labs.Agents.NeuralNetworks
 {
-    public class NeuralAgentTrainerConfiguration
-    {
-        [Category("General")]
-        public int ViewRadius { get; set; } = 3;
-        [Category("General")]
-        public int[] LayersSizes { get; set; } = new int[] { 84, 42, 21, 7, 1 };
-        [Category("General")]
-        public string Space { get; set; }
-        [Category("General")]
-        public int NetworkSeed { get; set; } = 0;
-        [Category("Shortcuts")]
-        [DisplayName("TrainingSimulationConfiguration.IterationLimit")]
-        public int TrainingIterations
-        {
-            get
-            {
-                return TrainingSimulationConfiguration.IterationLimit;
-            }
-            set
-            {
-                TrainingSimulationConfiguration.IterationLimit = value;
-            }
-        }
-        [Category("Shortcuts")]
-        [DisplayName("TrainingSimulationConfiguration.Seed")]
-        public int? TrainingSeed
-        {
-            get
-            {
-                return TrainingSimulationConfiguration.Seed;
-            }
-            set
-            {
-                TrainingSimulationConfiguration.Seed = value;
-            }
-        }
-        [Category("Shortcuts")]
-        [DisplayName("TrainingProgressTrackerConfiguration.IterationLimit")]
-        public int TestingIterations
-        {
-            get
-            {
-                return TrainingProgressTrackerConfiguration.IterationLimit;
-            }
-            set
-            {
-                TrainingProgressTrackerConfiguration.IterationLimit = value;
-            }
-        }
-        [Category("Shortcuts")]
-        [DisplayName("TrainingProgressTrackerConfiguration.Interval")]
-        public int TestingInterval
-        {
-            get
-            {
-                return TrainingProgressTrackerConfiguration.Interval;
-            }
-            set
-            {
-                TrainingProgressTrackerConfiguration.Interval = value;
-            }
-        }
-        [Category("Advanced")]
-        [TypeConverter(typeof(ExpandableObjectConverter))]
-        [EditorBrowsable(EditorBrowsableState.Always)]
-        public AgentNetworkTrainingConfiguration TrainingPluginConfiguration { get; set; }
-        [Category("Advanced")]
-        [TypeConverter(typeof(ExpandableObjectConverter))]
-        [EditorBrowsable(EditorBrowsableState.Always)]
-        public SimulationModelConfiguration TrainingSimulationConfiguration { get; set; }
-        [Category("Advanced")]
-        [TypeConverter(typeof(ExpandableObjectConverter))]
-        [EditorBrowsable(EditorBrowsableState.Always)]
-        public TrainingProgressTrackerConfiguration TrainingProgressTrackerConfiguration { get; set; }
-        [Category("Advanced")]
-        [TypeConverter(typeof(ExpandableObjectConverter))]
-        [EditorBrowsable(EditorBrowsableState.Always)]
-        public SimulationModelConfiguration TrainingProgressSimulationConfiguration { get; set; }
-
-        public NeuralAgentTrainerConfiguration()
-        {
-            TrainingPluginConfiguration = new AgentNetworkTrainingConfiguration();
-            TrainingSimulationConfiguration = new SimulationModelConfiguration();
-            TrainingProgressTrackerConfiguration = new TrainingProgressTrackerConfiguration();
-            TrainingProgressSimulationConfiguration = new SimulationModelConfiguration();
-            TrainingSimulationConfiguration.AgentDestructionModel.RemoveDestoryed = true;
-            TrainingSimulationConfiguration.IterationLimit = 50000;
-            TrainingProgressSimulationConfiguration.AgentDestructionModel.RemoveDestoryed = true;
-        }
-    }
-
-    public class NeuralAgentTrainer
+    public class NeuralAgentTrainer : IDisposable
     {
         public static void InitialiseNetwork(string networkName, NeuralAgentTrainerConfiguration configuration)
         {
@@ -128,6 +39,8 @@ namespace Labs.Agents.NeuralNetworks
         ISpaceTemplateFactory SpaceTemplateFactory;
         string NetworkName;
         int lines;
+        DirectoryInfo TrainingOuputDirectory;
+        StringBuilder Log = new StringBuilder();
 
         public NeuralAgentTrainer(NeuralAgentTrainerConfiguration configuration)
         {
@@ -138,6 +51,24 @@ namespace Labs.Agents.NeuralNetworks
             TrainingProgressTrackerConfiguration = configuration.TrainingProgressTrackerConfiguration;
             TestingSimulationConfiguration = configuration.TrainingProgressSimulationConfiguration;
             SpaceTemplateFactory = Workspace.Instance.Spaces.GetByName(configuration.Space);
+            TrainingOuputDirectory = Workspace.Instance.NeuralTrainingsDirectory.Ensure().CreateSubdirectory($"{NetworkName}-{DateTime.Now:yyyy_MM_dd-HH_mm}");
+            WriteLine("Training Plugin Configuration");
+            WriteLine("-----------------------------");
+            WriteLine(TrainingPluginConfiguration.ConvertToJson());
+            WriteLine("");
+            WriteLine("Training Simulation Configuration");
+            WriteLine("---------------------------------");
+            WriteLine(TrainingSimulationConfiguration.ConvertToJson());
+            WriteLine("");
+            WriteLine("Training Progress Tracker Configuration");
+            WriteLine("---------------------------------------");
+            
+            WriteLine(TrainingProgressTrackerConfiguration.ConvertToJson());
+            WriteLine("");
+            WriteLine("Training Simulation Configuration");
+            WriteLine("---------------------------------");
+            WriteLine(TestingSimulationConfiguration.ConvertToJson());
+            WriteLine("");
         }
 
         public void Train()
@@ -148,8 +79,8 @@ namespace Labs.Agents.NeuralNetworks
 
             if (TrainingProgressTrackerConfiguration.Enabled)
             {
-                var testingNetworkFile = new FileInfo("Testing.model");
-                var testingBestNetworkFile = new FileInfo("Testing-Best.model");
+                var testingNetworkFile = TrainingOuputDirectory.GetFile("Last.model");
+                var testingBestNetworkFile = TrainingOuputDirectory.GetFile("Best.model");
                 trainingPlugin.Network.Save(testingNetworkFile);
                 var testingBestReward = 0.0;
                 var testingBestReachedGoals = 0;
@@ -159,6 +90,9 @@ namespace Labs.Agents.NeuralNetworks
                 {
                     try
                     {
+                        DateTime startTime = DateTime.Now;
+                        WriteLine($"Training Start: {startTime}");
+
                         while (trainingSimulation.Iterate())
                         {
                             Console.Title = trainingSimulation.ToString();
@@ -170,16 +104,30 @@ namespace Labs.Agents.NeuralNetworks
                             }
                         }
 
-                        string message = $"Do you want to update network '{NetworkName}'?\r\n\r\nTotal Reached Goals: {testingBestReachedGoals}\r\nTotal Reward: {testingBestReward}";
+                        WriteLine($"Training Finished: {DateTime.Now}");
+                        WriteLine($"Training Time: {DateTime.Now - startTime}");
 
-                        if (MessageBox.Show(message, "Training Results", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                        chartForm.InvokeAction(() =>
                         {
-                            new AgentNetwork(testingBestNetworkFile).Save(trainingPlugin.NetworkFile);
+                            Bitmap chartScreenshot = new Bitmap(chartForm.Width, chartForm.Height);
+                            chartForm.DrawToBitmap(chartScreenshot, new Rectangle(0, 0, chartForm.Width, chartForm.Height));
+                            var chartScreenshotFile = TrainingOuputDirectory.GetFile("Progress.png");
+                            chartScreenshot.Save(chartScreenshotFile.FullName);
+                        });
+
+                        if (testingBestReward > 0)
+                        {
+                            string message = $"Do you want to update network '{NetworkName}'?\r\n\r\nTotal Reached Goals: {testingBestReachedGoals}\r\nTotal Reward: {testingBestReward}";
+
+                            if (MessageBox.Show(message, "Training Results", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                            {
+                                new AgentNetwork(testingBestNetworkFile).Save(trainingPlugin.NetworkFile);
+                            }
                         }
                     }
                     catch (Exception exception)
                     {
-                        Console.WriteLine(exception);
+                        WriteLine(exception.ToString());
                     }
                 });
 
@@ -190,7 +138,7 @@ namespace Labs.Agents.NeuralNetworks
         public void Simulate()
         {
             var simulationNetwork = Workspace.Instance.GetNetworkFile(NetworkName);
-            var simulationPlugin = new NeuralSimulationPlugin(simulationNetwork, TrainingPluginConfiguration, 0);
+            var simulationPlugin = new NeuralSimulationPlugin(simulationNetwork, null, 0);
             SimulationTemplate.CreateSimulationForm(simulationPlugin, "", SpaceTemplateFactory, TestingSimulationConfiguration, 50).Show();
         }
 
@@ -218,6 +166,11 @@ namespace Labs.Agents.NeuralNetworks
             }
         }
 
+        public void Dispose()
+        {
+            TrainingOuputDirectory.GetFile("Log.txt").SetContent(Log.ToString());
+        }
+
         private void Test(NeuralSimulationPlugin trainingPlugin, FileInfo testingNetworkFile, FileInfo testingBestNetworkFile, ref double testingBestReward, ref int testingBestReachedGoals, ChartForm chartForm)
         {
             trainingPlugin.Network.Save(testingNetworkFile);
@@ -237,8 +190,8 @@ namespace Labs.Agents.NeuralNetworks
             if (lines % 20 == 0)
             {
                 var headers = testingSimulation.Results.ToHeaderStrings();
-                Console.WriteLine($"      {headers[0]}  Predictions (-,N,S,E,W)");
-                Console.WriteLine($"      {headers[1]}  ============================");
+                WriteLine($"      {headers[0]}  Predictions (-,N,S,E,W)");
+                WriteLine($"      {headers[1]}  ============================");
             }
 
             if (testingPlugin.TotalReward - testingBestReward > -0.00001)
@@ -246,12 +199,18 @@ namespace Labs.Agents.NeuralNetworks
                 testingBestReward = testingPlugin.TotalReward;
                 testingBestReachedGoals = testingSimulation.TotalReachedGoals;
                 trainingPlugin.Network.Save(testingBestNetworkFile.Ensure());
-                Console.WriteLine($"Saved {testingSimulation.Results.ToDataString()}  {predictions}");
+                WriteLine($"Saved {testingSimulation.Results.ToDataString()}  {predictions}");
             }
             else
             {
-                Console.WriteLine($"      {testingSimulation.Results.ToDataString()}  {predictions}");
+                WriteLine($"      {testingSimulation.Results.ToDataString()}  {predictions}");
             }
+        }
+
+        private void WriteLine(string text)
+        {
+            Console.WriteLine(text);
+            Log.AppendLine(text);
         }
     }
 }
