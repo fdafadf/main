@@ -17,7 +17,7 @@ namespace Labs.AI
             var b = new Scalar(0.0);
             var diff = y - (x * a + b);
             var loss = (diff * diff).Sum;
-            var grad_a = (-2.0 * x.Transposition * diff).Sum;
+            var grad_a = (-2.0 * x.Transposed * diff).Sum;
             var grad_b = (-2.0 * diff).Sum;
 
             do
@@ -26,7 +26,7 @@ namespace Labs.AI
                 a.Value -= grad_a * 0.01;
                 b.Value -= grad_b * 0.01;
             }
-            while (Math.Max(Math.Abs(grad_a), Math.Abs(grad_b)) > 0.1);
+            while (Math.Max(grad_a.Abs, grad_b.Abs) > 0.1);
         }
     }
 
@@ -63,7 +63,7 @@ namespace Labs.AI
         public Scalar(double value)
         {
             this.value = value;
-            this.IsEvaluated = true;
+            IsEvaluated = true;
         }
         
         public double Value 
@@ -85,15 +85,9 @@ namespace Labs.AI
             }
         }
 
-        public static double operator -(Scalar s, double c)
-        {
-            return s.Value - c;
-        }
+        public static double operator -(Scalar s, double c) => s.Value - c;
 
-        public static implicit operator double(Scalar s)
-        {
-            return s.Value;
-        }
+        public static implicit operator double(Scalar s) => s.Value;
 
         protected virtual void Evaluate()
         {
@@ -111,10 +105,9 @@ namespace Labs.AI
             this.IsEvaluated = false;
         }
 
-        protected override void Evaluate()
-        {
-            value = vector.Value.Sum();
-        }
+        public double Abs => Math.Abs(Value);
+
+        protected override void Evaluate() => value = vector.Value.Sum();
     }
 
     class Vector : Expression
@@ -140,64 +133,44 @@ namespace Labs.AI
             }
         }
 
-        public VectorSum Sum
-        {
-            get
-            {
-                return new VectorSum(this);
-            }
-        }
+        public VectorSum Sum => new VectorSum(this);
 
-        public Vector Transposition
-        {
-            get
-            {
-                return this;
-            }
-        }
+        public Vector Transposed => this;
 
-        public static VectorMultiplication operator *(double c, Vector v)
-        {
-            return new VectorMultiplication(v, new Scalar(c));
-        }
+        public static VectorMultiplication operator *(double c, Vector v) => new VectorMultiplication(v, new Scalar(c));
 
-        public static VectorMultiplication operator *(Vector v, Scalar s)
-        {
-            return new VectorMultiplication(v, s);
-        }
+        public static VectorMultiplication operator *(Vector v, Scalar s) => new VectorMultiplication(v, s);
 
-        public static VectorsMultiplication operator *(Vector v1, Vector v2)
-        {
-            return new VectorsMultiplication(v1, v2);
-        }
+        public static VectorsMultiplication operator *(Vector v1, Vector v2) => new VectorsMultiplication(v1, v2);
 
-        public static VectorAddition operator +(Vector v, Scalar s)
-        {
-            return new VectorAddition(v, s);
-        }
+        public static VectorAddition operator +(Vector v, Scalar s) => new VectorAddition(v, s);
 
-        public static VectorsSubstraction operator -(Vector v1, Vector v2)
-        {
-            return new VectorsSubstraction(v1, v2);
-        }
+        public static VectorsSubstraction operator -(Vector v1, Vector v2) => new VectorsSubstraction(v1, v2);
 
         protected virtual void Evaluate()
         {
         }
     }
 
-    class VectorsMultiplication : Vector
+    class VectorVectorOperation : Vector
     {
-        Vector vector1;
-        Vector vector2;
+        protected Vector vector1;
+        protected Vector vector2;
 
-        public VectorsMultiplication(Vector vector1, Vector vector2) : base(new double[vector1.Value.Length])
+        public VectorVectorOperation(Vector vector1, Vector vector2) : base(new double[vector1.Value.Length])
         {
             Assert.Equals(vector1.Value.Length, vector2.Value.Length);
             this.vector1 = vector1;
             this.vector1.References.Add(this);
             this.vector2 = vector2;
             this.vector2.References.Add(this);
+        }
+    }
+
+    class VectorsMultiplication : VectorVectorOperation
+    {
+        public VectorsMultiplication(Vector vector1, Vector vector2) : base(vector1, vector2)
+        {
         }
 
         protected override void Evaluate()
@@ -212,18 +185,10 @@ namespace Labs.AI
         }
     }
 
-    class VectorsSubstraction : Vector
+    class VectorsSubstraction : VectorVectorOperation
     {
-        Vector vector1;
-        Vector vector2;
-
-        public VectorsSubstraction(Vector vector1, Vector vector2) : base(new double[vector1.Value.Length])
+        public VectorsSubstraction(Vector vector1, Vector vector2) : base(vector1, vector2)
         {
-            Assert.Equals(vector1.Value.Length, vector2.Value.Length);
-            this.vector1 = vector1;
-            this.vector1.References.Add(this);
-            this.vector2 = vector2;
-            this.vector2.References.Add(this);
         }
 
         protected override void Evaluate()
@@ -238,17 +203,24 @@ namespace Labs.AI
         }
     }
 
-    class VectorAddition : Vector
+    class VectorScalarOperation : Vector
     {
-        Vector vector;
-        Scalar scalar;
+        protected Vector vector;
+        protected Scalar scalar;
 
-        public VectorAddition(Vector vector, Scalar scalar) : base(new double[vector.Value.Length])
+        public VectorScalarOperation(Vector vector, Scalar scalar) : base(new double[vector.Value.Length])
         {
             this.vector = vector;
             this.vector.References.Add(this);
             this.scalar = scalar;
             this.scalar.References.Add(this);
+        }
+    }
+
+    class VectorAddition : VectorScalarOperation
+    {
+        public VectorAddition(Vector vector, Scalar scalar) : base(vector, scalar)
+        {
         }
 
         protected override void Evaluate()
@@ -263,17 +235,10 @@ namespace Labs.AI
         }
     }
 
-    class VectorMultiplication : Vector
+    class VectorMultiplication : VectorScalarOperation
     {
-        Vector vector;
-        Scalar scalar;
-
-        public VectorMultiplication(Vector vector, Scalar scalar) : base(new double[vector.Value.Length])
+        public VectorMultiplication(Vector vector, Scalar scalar) : base(vector, scalar)
         {
-            this.vector = vector;
-            this.vector.References.Add(this);
-            this.scalar = scalar;
-            this.scalar.References.Add(this);
         }
 
         protected override void Evaluate()
