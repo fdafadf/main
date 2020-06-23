@@ -3,6 +3,7 @@ using AI.NeuralNetworks.TicTacToe;
 using AI.NeuralNetworks;
 using AI.NeuralNetworks.Games;
 using Games.TicTacToe;
+using System;
 
 namespace Demos.TicTacToe
 {
@@ -30,16 +31,18 @@ namespace Demos.TicTacToe
         {
         }
 
-        //static double[][] Features = DataLoader.TestingFeatures;
-        //static TicTacToeResultProbabilities[] Labels = DataLoader.TestingLabels;
-
         public static Accuracy CalculateAccuracy(TicTacToeValueNetwork network, LabeledState<GameState, TicTacToeValue>[] data)
+        {
+            return CalculateAccuracy(network.Network.Evaluate, data);
+        }
+
+        public static Accuracy CalculateAccuracy(Func<double[], double[]> predictor, LabeledState<GameState, TicTacToeValue>[] data)
         {
             int correctPredictionCount = 0;
 
             for (int i = 0; i < data.Length; i++)
             {
-                double[] prediction = network.Network.Evaluate(data[i].Input);
+                double[] prediction = predictor(data[i].Input);
 
                 if (data[i].Label.IsPredictionCorrect(prediction))
                 {

@@ -35,32 +35,16 @@ namespace AI.TicTacToe
                     {
                     }
                 }
-                //FileInfo featuresCacheFile = new FileInfo(Path.Combine(Application.UserAppDataPath, @"TicTacToe-DataLoader-Features.txt"));
-                //FileInfo labelsCacheFile = new FileInfo(Path.Combine(Application.UserAppDataPath, @"TicTacToe-DataLoader-Labels.txt"));
-
-                //if (featuresCacheFile.Exists && labelsCacheFile.Exists)
-                //{
-                //    testingFeatures = JsonConvert.DeserializeObject<double[][]>(File.ReadAllText(featuresCacheFile.FullName));
-                //    testingLabels = JsonConvert.DeserializeObject<TicTacToeResultProbabilities[]>(File.ReadAllText(labelsCacheFile.FullName));
-                //}
-                //else
-                //{
-                //    TicTacToeTrainingData.Load(InputTransform, out testingFeatures, out testingLabels);
-                //    File.WriteAllText(featuresCacheFile.FullName, JsonConvert.SerializeObject(testingFeatures));
-                //    File.WriteAllText(labelsCacheFile.FullName, JsonConvert.SerializeObject(testingLabels));
-                //}
-                //
-                //trainingFeatures = testingFeatures.Clone() as double[][];
-                //trainingLabels = testingLabels.Select(o => o.Probabilities).ToArray();
-
-
-
             }
 
             return AllUniqueStates;
+        }
 
-            //inputs = trainingData.Select(d => d.Input).ToArray();
-            //expectedPredictions = trainingData.Select(d => d.Label).ToArray();
+        public static LabeledState<GameState, TicTacToeValue>[] LoadAllUniqueStates(Func<GameState, double[]> inputTransform)
+        {
+            var evaluator = new TicTacToeValueEvaluator(inputTransform);
+            var generator = TicTacToeLabeledStateGenerator<TicTacToeValue>.Instance;
+            return generator.GetAllUniqueStates(evaluator).ToArray();
         }
     }
 }
