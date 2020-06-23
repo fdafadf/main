@@ -26,7 +26,7 @@ namespace Labs.AI
                 a.Value -= grad_a * 0.01;
                 b.Value -= grad_b * 0.01;
             }
-            while (Math.Max(grad_a.Abs, grad_b.Abs) > 0.1);
+            while (Math.Max(grad_a.Abs, grad_b.Abs) > 0.01);
         }
     }
 
@@ -137,13 +137,13 @@ namespace Labs.AI
 
         public Vector Transposed => this;
 
-        public static VectorMultiplication operator *(double c, Vector v) => new VectorMultiplication(v, new Scalar(c));
+        public static VectorScalarMultiplication operator *(double c, Vector v) => new VectorScalarMultiplication(v, new Scalar(c));
 
-        public static VectorMultiplication operator *(Vector v, Scalar s) => new VectorMultiplication(v, s);
+        public static VectorScalarMultiplication operator *(Vector v, Scalar s) => new VectorScalarMultiplication(v, s);
 
         public static VectorsMultiplication operator *(Vector v1, Vector v2) => new VectorsMultiplication(v1, v2);
 
-        public static VectorAddition operator +(Vector v, Scalar s) => new VectorAddition(v, s);
+        public static VectorScalarAddition operator +(Vector v, Scalar s) => new VectorScalarAddition(v, s);
 
         public static VectorsSubstraction operator -(Vector v1, Vector v2) => new VectorsSubstraction(v1, v2);
 
@@ -152,12 +152,12 @@ namespace Labs.AI
         }
     }
 
-    class VectorVectorOperation : Vector
+    class VectorsOperation : Vector
     {
         protected Vector vector1;
         protected Vector vector2;
 
-        public VectorVectorOperation(Vector vector1, Vector vector2) : base(new double[vector1.Value.Length])
+        public VectorsOperation(Vector vector1, Vector vector2) : base(new double[vector1.Value.Length])
         {
             Assert.Equals(vector1.Value.Length, vector2.Value.Length);
             this.vector1 = vector1;
@@ -167,7 +167,7 @@ namespace Labs.AI
         }
     }
 
-    class VectorsMultiplication : VectorVectorOperation
+    class VectorsMultiplication : VectorsOperation
     {
         public VectorsMultiplication(Vector vector1, Vector vector2) : base(vector1, vector2)
         {
@@ -185,7 +185,7 @@ namespace Labs.AI
         }
     }
 
-    class VectorsSubstraction : VectorVectorOperation
+    class VectorsSubstraction : VectorsOperation
     {
         public VectorsSubstraction(Vector vector1, Vector vector2) : base(vector1, vector2)
         {
@@ -217,9 +217,9 @@ namespace Labs.AI
         }
     }
 
-    class VectorAddition : VectorScalarOperation
+    class VectorScalarAddition : VectorScalarOperation
     {
-        public VectorAddition(Vector vector, Scalar scalar) : base(vector, scalar)
+        public VectorScalarAddition(Vector vector, Scalar scalar) : base(vector, scalar)
         {
         }
 
@@ -235,9 +235,9 @@ namespace Labs.AI
         }
     }
 
-    class VectorMultiplication : VectorScalarOperation
+    class VectorScalarMultiplication : VectorScalarOperation
     {
-        public VectorMultiplication(Vector vector, Scalar scalar) : base(vector, scalar)
+        public VectorScalarMultiplication(Vector vector, Scalar scalar) : base(vector, scalar)
         {
         }
 
