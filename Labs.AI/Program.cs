@@ -77,14 +77,16 @@ namespace Labs.AI
             var grad_w2 = w1_out.T * grad_w2_out;
             var grad_w1_out = grad_w2_out * w2.T;
             var grad_w1 = x.T * Max(grad_w1_out, 0);
+            var step_w1 = learningRate * grad_w1;
+            var step_w2 = learningRate * grad_w2;
 
             for (int i = 0; i < 50000; i++)
             {
                 Print($"Loss: {loss.Value}");
-                var step_w1 = (learningRate * grad_w1).Value;
-                var step_w2 = (learningRate * grad_w2).Value;
-                w1.Subtract(step_w1);
-                w2.Subtract(step_w2);
+                var step_w1_value = step_w1.Value;
+                var step_w2_value = step_w2.Value;
+                w1.Subtract(step_w1_value);
+                w2.Subtract(step_w2_value);
             }
         }
     }
