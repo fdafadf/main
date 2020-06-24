@@ -1,265 +1,89 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CNTK;
+﻿using Math.Algebra.ComputationalGraph;
+using System;
+using static Math.Algebra.ComputationalGraph.ExpressionHelper;
 
 namespace Labs.AI
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
+        {
+            NeuralNetworkWithTwoLayers();
+        }
+
+        static void GradientDescentLinearRegression()
         {
             var x = new Vector(0.5, 2.3, 2.9);
             var y = new Vector(1.4, 1.9, 3.2);
-            var a = new Scalar(1.0);
-            var b = new Scalar(0.0);
+            var a = new Scalar(1);
+            var b = new Scalar(0);
             var diff = y - (x * a + b);
-            var loss = (diff * diff).Sum;
-            var grad_a = (-2.0 * x.Transposed * diff).Sum;
-            var grad_b = (-2.0 * diff).Sum;
+            var loss = Sum(diff * diff);
+            var grad_a = Sum(-2.0 * x.T * diff);
+            var grad_b = Sum(-2.0 * diff);
 
             do
             {
-                Console.WriteLine($"Loss: {loss.Value}");
+                Print($"Loss: {loss.Value}");
                 a.Value -= grad_a * 0.01;
                 b.Value -= grad_b * 0.01;
             }
-            while (Math.Max(grad_a.Abs, grad_b.Abs) > 0.01);
+            while (Max(grad_a.Abs, grad_b.Abs) > 0.01);
         }
-    }
 
-    class Expression
-    {
-        public List<Expression> References = new List<Expression>();
-        bool isEvaluated;
-
-        protected bool IsEvaluated
+        static void GradientDescentLinearRegressionWithMathSymbols()
         {
-            get
+            var x = new Vector(0.5, 2.3, 2.9);
+            var y = new Vector(1.4, 1.9, 3.2);
+            var α = 0.01;
+            var γ = 0.2;
+
+            var a = new Scalar(1);
+            var b = new Scalar(0);
+            var ŷ = x * a + b;
+            var δy = y - ŷ;
+            var Ｌ = Sum(δy * δy);
+            var Δa = Sum(-2 * x.T * δy);
+            var Δb = Sum(-2 * δy);
+
+            do
             {
-                return isEvaluated;
+                Print($"Loss: {Ｌ}");
+                a.Value -= Δa * α;
+                b.Value -= Δb * α;
             }
-            set
+            while (Max(Abs(Δa), Abs(Δb)) > γ);
+        }
+
+        static void NeuralNetworkWithTwoLayers()
+        {
+            var random = new Random();
+            var batchSize = 64;
+            var inputSize = 100;
+            var hiddenLayerSize = 10;
+            var outputSize = 1;
+            var learningRate = 1e-6;
+            var x = Matrix.Normal(random, rows: batchSize, cols: inputSize);
+            var y = Matrix.Normal(random, rows: batchSize, cols: outputSize);
+            var w1 = Matrix.Normal(random, rows: inputSize, cols: hiddenLayerSize);
+            var w2 = Matrix.Normal(random, rows: hiddenLayerSize, cols: outputSize);
+            var w1_sum = x * w1;
+            var w1_out = Max(w1_sum, 0);
+            var w2_sum = w1_out * w2;
+            var diff = y - w2_sum;
+            var loss = Sum(Square(diff));
+            var grad_w2_out = -2.0 * (y - w2_sum);
+            var grad_w2 = w1_out.T * grad_w2_out;
+            var grad_w1_out = grad_w2_out * w2.T;
+            var grad_w1 = x.T * Max(grad_w1_out, 0);
+
+            for (int i = 0; i < 500; i++)
             {
-                if (value == false)
-                {
-                    foreach (var reference in References)
-                    {
-                        reference.IsEvaluated = false;
-                    }
-                }
-
-                isEvaluated = value;
-            }
-        }
-    }
-
-    class Scalar : Expression
-    {
-        protected double value;
-
-        public Scalar(double value)
-        {
-            this.value = value;
-            IsEvaluated = true;
-        }
-        
-        public double Value 
-        { 
-            get
-            {
-                if (IsEvaluated == false)
-                {
-                    Evaluate();
-                    IsEvaluated = true;
-                }
-
-                return value;
-            }
-            set
-            {
-                this.value = value;
-                IsEvaluated = false;
-            }
-        }
-
-        public static double operator -(Scalar s, double c) => s.Value - c;
-
-        public static implicit operator double(Scalar s) => s.Value;
-
-        protected virtual void Evaluate()
-        {
-        }
-    }
-
-    class VectorSum : Scalar 
-    {
-        Vector vector;
-
-        public VectorSum(Vector vector) : base(0)
-        {
-            this.vector = vector;
-            this.vector.References.Add(this);
-            this.IsEvaluated = false;
-        }
-
-        public double Abs => Math.Abs(Value);
-
-        protected override void Evaluate() => value = vector.Value.Sum();
-    }
-
-    class Vector : Expression
-    {
-        protected double[] value;
-
-        public Vector(params double[] value)
-        {
-            this.value = value;
-        }
-
-        public double[] Value 
-        { 
-            get
-            {
-                if (IsEvaluated == false)
-                {
-                    Evaluate();
-                    IsEvaluated = true;
-                }
-
-                return value;
-            }
-        }
-
-        public VectorSum Sum => new VectorSum(this);
-
-        public Vector Transposed => this;
-
-        public static VectorScalarMultiplication operator *(double c, Vector v) => new VectorScalarMultiplication(v, new Scalar(c));
-
-        public static VectorScalarMultiplication operator *(Vector v, Scalar s) => new VectorScalarMultiplication(v, s);
-
-        public static VectorsMultiplication operator *(Vector v1, Vector v2) => new VectorsMultiplication(v1, v2);
-
-        public static VectorScalarAddition operator +(Vector v, Scalar s) => new VectorScalarAddition(v, s);
-
-        public static VectorsSubstraction operator -(Vector v1, Vector v2) => new VectorsSubstraction(v1, v2);
-
-        protected virtual void Evaluate()
-        {
-        }
-    }
-
-    class VectorsOperation : Vector
-    {
-        protected Vector vector1;
-        protected Vector vector2;
-
-        public VectorsOperation(Vector vector1, Vector vector2) : base(new double[vector1.Value.Length])
-        {
-            Assert.Equals(vector1.Value.Length, vector2.Value.Length);
-            this.vector1 = vector1;
-            this.vector1.References.Add(this);
-            this.vector2 = vector2;
-            this.vector2.References.Add(this);
-        }
-    }
-
-    class VectorsMultiplication : VectorsOperation
-    {
-        public VectorsMultiplication(Vector vector1, Vector vector2) : base(vector1, vector2)
-        {
-        }
-
-        protected override void Evaluate()
-        {
-            var vector1Value = vector1.Value;
-            var vector2Value = vector2.Value;
-
-            for (int i = 0; i < value.Length; i++)
-            {
-                value[i] = vector1Value[i] * vector2Value[i];
-            }
-        }
-    }
-
-    class VectorsSubstraction : VectorsOperation
-    {
-        public VectorsSubstraction(Vector vector1, Vector vector2) : base(vector1, vector2)
-        {
-        }
-
-        protected override void Evaluate()
-        {
-            var vector1Value = vector1.Value;
-            var vector2Value = vector2.Value;
-
-            for (int i = 0; i < value.Length; i++)
-            {
-                value[i] = vector1Value[i] - vector2Value[i];
-            }
-        }
-    }
-
-    class VectorScalarOperation : Vector
-    {
-        protected Vector vector;
-        protected Scalar scalar;
-
-        public VectorScalarOperation(Vector vector, Scalar scalar) : base(new double[vector.Value.Length])
-        {
-            this.vector = vector;
-            this.vector.References.Add(this);
-            this.scalar = scalar;
-            this.scalar.References.Add(this);
-        }
-    }
-
-    class VectorScalarAddition : VectorScalarOperation
-    {
-        public VectorScalarAddition(Vector vector, Scalar scalar) : base(vector, scalar)
-        {
-        }
-
-        protected override void Evaluate()
-        {
-            var vectorValue = vector.Value;
-            var scalarValue = scalar.Value;
-
-            for (int i = 0; i < value.Length; i++)
-            {
-                value[i] = vectorValue[i] + scalarValue;
-            }
-        }
-    }
-
-    class VectorScalarMultiplication : VectorScalarOperation
-    {
-        public VectorScalarMultiplication(Vector vector, Scalar scalar) : base(vector, scalar)
-        {
-        }
-
-        protected override void Evaluate()
-        {
-            var vectorValue = vector.Value;
-            var scalarValue = scalar.Value;
-
-            for (int i = 0; i < value.Length; i++)
-            {
-                value[i] = vectorValue[i] * scalarValue;
-            }
-        }
-    }
-
-    class Assert
-    {
-        public static void Equals(int a, int b)
-        {
-            if (a != b)
-            {
-                throw new ArgumentException();
+                Print($"Loss: {loss.Value}");
+                var step_w1 = (learningRate * grad_w1).Value;
+                var step_w2 = (learningRate * grad_w2).Value;
+                w1.Subtract(step_w1);
+                w2.Subtract(step_w2);
             }
         }
     }
