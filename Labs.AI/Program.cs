@@ -1,5 +1,6 @@
 ﻿using Math.Algebra.ComputationalGraph;
 using System;
+using System.Diagnostics;
 using static Math.Algebra.ComputationalGraph.ExpressionHelper;
 
 namespace Labs.AI
@@ -59,9 +60,9 @@ namespace Labs.AI
         {
             var random = new Random();
             var batchSize = 64;
-            var inputSize = 100;
-            var hiddenLayerSize = 10;
-            var outputSize = 1;
+            var inputSize = 30;
+            var hiddenLayerSize = 20;
+            var outputSize = 10;
             var learningRate = 1e-6;
             var x = Matrix.Normal(random, rows: batchSize, cols: inputSize);
             var y = Matrix.Normal(random, rows: batchSize, cols: outputSize);
@@ -77,7 +78,7 @@ namespace Labs.AI
             var grad_w1_out = grad_w2_out * w2.T;
             var grad_w1 = x.T * Max(grad_w1_out, 0);
 
-            for (int i = 0; i < 500; i++)
+            for (int i = 0; i < 50000; i++)
             {
                 Print($"Loss: {loss.Value}");
                 var step_w1 = (learningRate * grad_w1).Value;

@@ -1,4 +1,6 @@
-﻿namespace Math.Algebra.ComputationalGraph
+﻿using System;
+
+namespace Math.Algebra.ComputationalGraph
 {
     class ExpressionHelper
     {
