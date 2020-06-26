@@ -60,22 +60,6 @@ namespace Math.Algebra.ComputationalGraph
             IsEvaluated = false;
         }
 
-        public static Matrix Normal(Random random, int rows, int cols)
-        {
-            var matrix = new Matrix(rows, cols);
-            var matrixValue = matrix.Value;
-
-            for (int i = 0; i < rows; i++)
-            {
-                for (int j = 0; j < cols; j++)
-                {
-                    matrixValue[i][j] = random.NextDouble();
-                }
-            }
-
-            return matrix;
-        }
-
         public static MatricesDotProduct operator *(Matrix m1, Matrix m2) => new MatricesDotProduct(m1, m2);
         public static MatrixScalarMultiplication operator *(Matrix m, double c) => new MatrixScalarMultiplication(m, new Scalar(c));
         public static MatrixScalarMultiplication operator *(double c, Matrix m) => new MatrixScalarMultiplication(m, new Scalar(c));
