@@ -73,7 +73,7 @@
 <body>
     <h1>TicTacToe Bot Generator</h1>
     <button id="startButton" onclick="start()">Start Generating</button>
-    <button id="loadPrecalculatedResultsButton" onclick="loadPrecalculatedResults()">Load Precalculated Generating Results</button>
+    <button id="loadPrecalculatedResultsButton" onclick="loadPrecalculatedResults()">Load Precalculated Results</button>
     <h2 id="preparingTrainingDataSectionHeader">⚪ Preparing Training Data</h2>
     <section>
         <div id="preparingTrainingDataProgress" class="progress"><div></div></div>
@@ -916,11 +916,6 @@ function worker_train()
                 function setupLayers1(network)
                 {
                     this.layers = [];
-                    // this.layers.push(Network._he(Tensor.empty([72, 19])));
-                    // this.layers.push(Network._he(Tensor.empty([72, 73])));
-                    // this.layers.push(Network._he(Tensor.empty([36, 73])));
-                    // this.layers.push(Network._he(Tensor.empty([18, 37])));
-                    // this.layers.push(Network._he(Tensor.empty([3, 19])));
                     this.layers.push(Network._he(Tensor.empty([36, 19])));
                     this.layers.push(Network._he(Tensor.empty([18, 37])));
                     this.layers.push(Network._he(Tensor.empty([18, 19])));
@@ -942,120 +937,6 @@ function worker_train()
             }
             else
             {
-                function setupLayers1(network)
-                {
-                    this.layers = [];
-                    this.layers.push(Network._he(Tensor.empty([36, 19])));
-                    this.layers.push(Network._he(Tensor.empty([36, 37])));
-                    this.layers.push(Network._he(Tensor.empty([18, 37])));
-                    //this.layers.push(Network._he(Tensor.empty([18, 19])));
-                    //this.layers.push(Network._he(Tensor.empty([18, 19])));
-                    //this.layers.push(Network._he(Tensor.empty([18, 19])));
-                    this.layers.push(Network._he(Tensor.empty([18, 19])));
-                    this.layers.push(Network._he(Tensor.empty([9, 19])));
-                    this.learningRate = 0.001;
-                }
-                function setupLayers2(network)
-                {
-                    network.layers = [];
-                    network.layers.push(Network._he(Tensor.empty([18, 19])));
-                    network.layers.push(Network._he(Tensor.empty([9, 19])));
-                    network.learningRate = 0.0001;
-                    // accuracy: 0.859375
-                    // error: 1.4932187739282585
-                    // i: 9864000000
-                }
-                function setupLayers3a(network)
-                {
-                    network.layers = [];
-                    network.layers.push(Network._he(Tensor.empty([36, 19])));
-                    network.layers.push(Network._he(Tensor.empty([18, 37])));
-                    network.layers.push(Network._he(Tensor.empty([9, 19])));
-                    network.learningRate = 0.0001;
-                    // accuracy: 0.7422416940489229
-                    // error: 384.772931134482
-                    // i: 500
-                    // accuracy: 0.8309602044541804
-                    // error: 251.8704731726834
-                    // i: 1000
-                }
-                function setupLayers3b(network)
-                {
-                    network.layers = [];
-                    network.layers.push(Network._he(Tensor.empty([36, 19])));
-                    network.layers.push(Network._he(Tensor.empty([18, 37])));
-                    network.layers.push(Network._he(Tensor.empty([9, 19])));
-                    network.learningRate = 0.001;
-                    // accuracy: 0.8953997809419496
-                    // error: 199.66723387157222
-                    // i: 500
-                    // accuracy: 0.9094560058415481
-                    // error: 182.84607642594776
-                    // i: 1000
-                }
-                function setupLayers3c(network)
-                {
-                    network.layers = [];
-                    network.layers.push(Network._he(Tensor.empty([36, 19])));
-                    network.layers.push(Network._he(Tensor.empty([18, 37])));
-                    network.layers.push(Network._he(Tensor.empty([9, 19])));
-                    network.learningRate = 0.005;
-                    // accuracy: 0.8943044906900328
-                    // error: 168.98464681807462
-                    // i: 500
-                    // accuracy: 0.9034319094560058
-                    // error: 157.6872184695889
-                    // i: 1000
-                }
-                function setupLayers3d(network)
-                {
-                    network.layers = [];
-                    network.layers.push(Network._he(Tensor.empty([36, 19])));
-                    network.layers.push(Network._he(Tensor.empty([18, 37])));
-                    network.layers.push(Network._he(Tensor.empty([9, 19])));
-                    network.learningRate = 0.01;
-                    // accuracy: 0.8910186199342826
-                    // error: 197.66528986683844
-                    // i: 500
-                }
-                function setupLayers3e(network)
-                {
-                    network.layers = [];
-                    network.layers.push(Network._he(Tensor.empty([36, 19])));
-                    //network.layers.push(Network._he(Tensor.empty([36, 73])));
-                    //network.layers.push(Network._he(Tensor.empty([18, 37])));
-                    //network.layers.push(Network._he(Tensor.empty([36, 37])));
-                    network.layers.push(Network._he(Tensor.empty([18, 37])));
-                    network.layers.push(Network._he(Tensor.empty([9, 19])));
-                    network.learningRate = 0.01;
-                    network.learningRate = (i, e) => {
-                        return e > 300 ? 0.01 : 0.0001;
-                    }
-                    // network.learningRate = (i, e) => {
-                    //     return e > 300 ? 0.005 : ((0.0000001985 * Math.pow(e, 3.7819019674)) / 1000000);
-                    //     //return e > 200 ? 0.002 : ((-0.0021 * e * e + 1.9412 * e - 255.8824) / 10000);
-                    //     //return e < 200 ? (e < 160 ? (e < 140 ? 0.00005 : 0.0002) : 0.0005) : 0.002;
-                    // }
-                }
-                function setupLayers4(network)
-                {
-                    network.layers = [];
-                    network.layers.push(Network._he(Tensor.empty([36, 19])));
-                    network.layers.push(Network._he(Tensor.empty([36, 37])));
-                    network.layers.push(Network._he(Tensor.empty([18, 37])));
-                    network.layers.push(Network._he(Tensor.empty([18, 19])));
-                    network.layers.push(Network._he(Tensor.empty([9, 19])));
-                    network.learningRate = 0.005;
-                    // accuracy: 0.7716319824753559
-                    // error: 188.99869983619638
-                    // i: 100
-                    // accuracy: 0.8723986856516976
-                    // error: 127.42532697857357
-                    // i: 500
-                    // accuracy: 0.8791529755385177
-                    // error: 112.55554496519005
-                    // i: 1000
-                }
                 function setupLayers5(network)
                 {
                     network.layers = [];
@@ -1078,19 +959,6 @@ function worker_train()
                 }
                 setupLayers6(this);
             }
-            //setupLayers5(this);
-            /*this.layers = [];
-            this.layers.push(Tensor.empty([2, 3]).set([
-                [0.157035887241363, 0.425805509090423, 0.234518527984619],
-                [-0.452128201723098, -0.366580039262771, -0.347697347402572]
-            ]));
-            this.layers.push(Tensor.empty([2, 3]).set([
-                [0.513188421726226, 0.076995313167572, -0.305898278951644],
-                [0.406894147396087, -0.0652549266815185, -0.588228046894073]
-            ]));*/
-            //this.layers.push(Network._he(Tensor.empty([9, 10])));
-            //this.layers.push(Tensor.empty([9, 10]).randomize());
-            //this.layers.push(Tensor.empty([9, 10]).randomize());
         }
         eval(input)
         {
